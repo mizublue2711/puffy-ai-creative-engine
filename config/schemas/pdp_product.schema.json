@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://puffy.com/schemas/pdp_product.schema.json",
+  "title": "Puffy Interactive PDP Product Contract",
+  "description": "Schema-driven data contract for the Puffy Interactive Product Detail Page (PDP), enforcing brand token compliance and structured variant/layer specifications.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "product_id",
+    "name",
+    "tagline",
+    "description",
+    "rating",
+    "announcement",
+    "gallery",
+    "variants",
+    "value_propositions",
+    "trust_badges",
+    "layers",
+    "cta"
+  ],
+  "properties": {
+    "product_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tagline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rating": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "max_score", "review_count_label"],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "max_score": {
+          "type": "number",
+          "const": 5
+        },
+        "review_count_label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "announcement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promo_badge",
+        "message",
+        "countdown_seconds",
+        "free_gift_label",
+        "free_gift_value"
+      ],
+      "properties": {
+        "promo_badge": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "countdown_seconds": { "type": "integer", "minimum": 0 },
+        "free_gift_label": { "type": "string", "minLength": 1 },
+        "free_gift_value": { "type": "number", "minimum": 0 }
+      }
+    },
+    "gallery": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "view_type", "asset_key", "alt", "caption"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "view_type": { "type": "string", "enum": ["cutout", "lifestyle"] },
+          "asset_key": { "type": "string", "minLength": 1 },
+          "alt": { "type": "string", "minLength": 1 },
+          "caption": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "size",
+          "dimensions",
+          "sale_price",
+          "original_price",
+          "is_default"
+        ],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "size": { "type": "string", "minLength": 1 },
+          "dimensions": { "type": "string", "minLength": 1 },
+          "sale_price": { "type": "number", "minimum": 1 },
+          "original_price": { "type": "number", "minimum": 1 },
+          "is_default": { "type": "boolean" }
+        }
+      }
+    },
+    "value_propositions": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "subtitle"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "subtitle": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "trust_badges": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "source", "asset_key"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "minLength": 1 },
+          "asset_key": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["layer_number", "name", "thickness", "summary", "benefit"],
+        "properties": {
+          "layer_number": { "type": "integer", "minimum": 1, "maximum": 6 },
+          "name": { "type": "string", "minLength": 1 },
+          "thickness": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "benefit": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "cta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_label", "checkout_label", "bg_color", "text_color"],
+      "properties": {
+        "primary_label": { "type": "string", "minLength": 1 },
+        "checkout_label": { "type": "string", "minLength": 1 },
+        "bg_color": { "type": "string", "const": "#067A57" },
+        "text_color": { "type": "string", "const": "#FFFFFF" }
+      }
+    }
+  }
+}
