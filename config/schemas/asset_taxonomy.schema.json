@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://puffy.com/schemas/asset_taxonomy.schema.json",
+  "title": "Puffy Canonical Asset Catalog Manifest",
+  "description": "Schema validating assets/catalog_manifest.json and enforcing canonical taxonomy paths under assets/catalog/.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "updated_at",
+    "total_assets",
+    "items"
+  ],
+  "properties": {
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "description": "ISO-8601 UTC timestamp of when the catalog manifest was generated."
+    },
+    "total_assets": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of indexed assets in items."
+    },
+    "items": {
+      "type": "array",
+      "description": "Sorted list of indexed catalog assets adhering to canonical taxonomy.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "path",
+          "file_path",
+          "category",
+          "product_slug",
+          "intent",
+          "variant",
+          "resolution",
+          "dimensions",
+          "format",
+          "verified_drift_free",
+          "zero_product_drift_verified"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9\\-]+/[a-z0-9\\-]+/(cutout|hero|detail|badge)_[a-z0-9\\-]+_[a-z0-9\\-]+$",
+            "description": "Canonical unique taxonomy ID ({category}/{product_slug}/{intent}_{variant}_{resolution})."
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^assets/catalog/[a-z0-9\\-]+/[a-z0-9\\-]+/(cutout|hero|detail|badge)_[a-z0-9\\-]+_[a-z0-9\\-]+\\.(png|webp|svg|jpg)$",
+            "description": "Repository-relative canonical path to the catalog asset."
+          },
+          "file_path": {
+            "type": "string",
+            "pattern": "^assets/catalog/[a-z0-9\\-]+/[a-z0-9\\-]+/(cutout|hero|detail|badge)_[a-z0-9\\-]+_[a-z0-9\\-]+\\.(png|webp|svg|jpg)$",
+            "description": "Repository-relative canonical file path matching the strict asset taxonomy."
+          },
+          "category": {
+            "type": "string",
+            "pattern": "^[a-z0-9\\-]+$",
+            "description": "Kebab-case product or badge category (e.g., mattresses, bed-frames, pillows, bedding, trust-badges)."
+          },
+          "product_slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9\\-]+$",
+            "description": "Kebab-case product slug (e.g., puffy-lux-hybrid, awards)."
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "cutout",
+              "hero",
+              "detail",
+              "badge"
+            ],
+            "description": "Semantic creative role of the asset."
+          },
+          "variant": {
+            "type": "string",
+            "pattern": "^[a-z0-9\\-]+$",
+            "description": "Kebab-case variant token (no underscores)."
+          },
+          "resolution": {
+            "type": "string",
+            "pattern": "^([1-9][0-9]*x[1-9][0-9]*|vector)$",
+            "description": "Exact raster pixel resolution ({width}x{height}) or 'vector' for SVG assets."
+          },
+          "dimensions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "width",
+              "height"
+            ],
+            "properties": {
+              "width": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "description": "Pixel width for raster images, parsed width or null for SVG vectors."
+              },
+              "height": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "description": "Pixel height for raster images, parsed height or null for SVG vectors."
+              },
+              "vector": {
+                "type": "boolean",
+                "description": "True when the asset is a scalable vector graphic (SVG)."
+              },
+              "viewBox": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Original SVG viewBox attribute if present."
+              }
+            }
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "webp",
+              "svg",
+              "jpg"
+            ],
+            "description": "File extension / container format."
+          },
+          "verified_drift_free": {
+            "type": "boolean",
+            "description": "Indicates whether the asset is verified drift-free."
+          },
+          "zero_product_drift_verified": {
+            "type": "boolean",
+            "description": "Zero Product Drift verification flag confirming product geometry and details are unaltered."
+          }
+        }
+      }
+    }
+  }
+}

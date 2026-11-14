@@ -1,0 +1,2676 @@
+{
+  "updated_at": "2026-11-14T10:16:00.497Z",
+  "total_assets": 156,
+  "items": [
+    {
+      "id": "bed-frames/puffy-adjustable-base/hero_seed-studio_1200x900",
+      "path": "assets/catalog/bed-frames/puffy-adjustable-base/hero_seed-studio_1200x900.png",
+      "file_path": "assets/catalog/bed-frames/puffy-adjustable-base/hero_seed-studio_1200x900.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-adjustable-base",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "dimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100",
+      "path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100.png",
+      "file_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-cannell-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "dimensions": {
+        "width": 1728,
+        "height": 1100
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127",
+      "path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-cannell-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-cannell-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "129x77",
+      "dimensions": {
+        "width": 129,
+        "height": 77
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x999",
+      "dimensions": {
+        "width": 1920,
+        "height": 999
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "863x512",
+      "dimensions": {
+        "width": 863,
+        "height": 512
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45-v2",
+      "resolution": "1920x999",
+      "dimensions": {
+        "width": 1920,
+        "height": 999
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x104",
+      "dimensions": {
+        "width": 200,
+        "height": 104
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x119",
+      "dimensions": {
+        "width": 200,
+        "height": 119
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x104",
+      "dimensions": {
+        "width": 200,
+        "height": 104
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x119",
+      "dimensions": {
+        "width": 200,
+        "height": 119
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119",
+      "path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119.png",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v3",
+      "resolution": "200x119",
+      "dimensions": {
+        "width": 200,
+        "height": 119
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100",
+      "path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100.png",
+      "file_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-carmel-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "dimensions": {
+        "width": 1728,
+        "height": 1100
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123",
+      "path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123.png",
+      "file_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-carmel-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x123",
+      "dimensions": {
+        "width": 200,
+        "height": 123
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127",
+      "path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-carmel-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127",
+      "path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-cloud-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127",
+      "path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-cloud-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549",
+      "path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549.png",
+      "file_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-cloud-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "dimensions": {
+        "width": 864,
+        "height": 549
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238",
+      "path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238.png",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1238",
+      "dimensions": {
+        "width": 1920,
+        "height": 1238
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129",
+      "path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129.png",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x129",
+      "dimensions": {
+        "width": 200,
+        "height": 129
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150",
+      "path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150.png",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150",
+      "path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150.png",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x150",
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100",
+      "path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100.png",
+      "file_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-kyoto-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "dimensions": {
+        "width": 1728,
+        "height": 1100
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127",
+      "path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-kyoto-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-kyoto-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549",
+      "path": "assets/catalog/bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549.png",
+      "file_path": "assets/catalog/bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-legacy-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "dimensions": {
+        "width": 864,
+        "height": 549
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127",
+      "path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-lux-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127",
+      "path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-lux-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549",
+      "path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549.png",
+      "file_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-lux-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "dimensions": {
+        "width": 864,
+        "height": 549
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-midnight-foundation/cutout_angle45_808x507",
+      "path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_angle45_808x507.png",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_angle45_808x507.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "dimensions": {
+        "width": 808,
+        "height": 507
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120",
+      "path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120.png",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120",
+      "path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120.png",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "detail",
+      "variant": "thumb-studio-v2",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507",
+      "path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507.png",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "dimensions": {
+        "width": 808,
+        "height": 507
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512",
+      "path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512.png",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "812x512",
+      "dimensions": {
+        "width": 812,
+        "height": 512
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126",
+      "path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126.png",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x126",
+      "dimensions": {
+        "width": 200,
+        "height": 126
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116",
+      "path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116.png",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x116",
+      "dimensions": {
+        "width": 200,
+        "height": 116
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150",
+      "path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150.png",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127",
+      "path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-monarch-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127",
+      "path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-monarch-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549",
+      "path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549.png",
+      "file_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-monarch-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "dimensions": {
+        "width": 864,
+        "height": 549
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100",
+      "path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100.png",
+      "file_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-monza-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "dimensions": {
+        "width": 1728,
+        "height": 1100
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127",
+      "path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-monza-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-monza-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127",
+      "path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-royal-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127",
+      "path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-royal-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549",
+      "path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549.png",
+      "file_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-royal-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "dimensions": {
+        "width": 864,
+        "height": 549
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100",
+      "path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100.png",
+      "file_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-sedona-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "dimensions": {
+        "width": 1728,
+        "height": 1100
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127",
+      "path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-sedona-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-sedona-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380",
+      "path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380.png",
+      "file_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-selene-swivel-chair",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "640x380",
+      "dimensions": {
+        "width": 640,
+        "height": 380
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119",
+      "path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119.png",
+      "file_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-selene-swivel-chair",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x119",
+      "dimensions": {
+        "width": 200,
+        "height": 119
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119",
+      "path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119.png",
+      "file_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-selene-swivel-chair",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x119",
+      "dimensions": {
+        "width": 200,
+        "height": 119
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1188",
+      "dimensions": {
+        "width": 1920,
+        "height": 1188
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "828x512",
+      "dimensions": {
+        "width": 828,
+        "height": 512
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "angle45-v2",
+      "resolution": "828x512",
+      "dimensions": {
+        "width": 828,
+        "height": 512
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x124",
+      "dimensions": {
+        "width": 200,
+        "height": 124
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x124",
+      "dimensions": {
+        "width": 200,
+        "height": 124
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v3",
+      "resolution": "200x124",
+      "dimensions": {
+        "width": 200,
+        "height": 124
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v4",
+      "resolution": "200x124",
+      "dimensions": {
+        "width": 200,
+        "height": 124
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120",
+      "path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120.png",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350",
+      "path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350.png",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "560x350",
+      "dimensions": {
+        "width": 560,
+        "height": 350
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125",
+      "path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125.png",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125",
+      "path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125.png",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v3",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100",
+      "path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100.png",
+      "file_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-solace-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "dimensions": {
+        "width": 1728,
+        "height": 1100
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127",
+      "path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-solace-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "file_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-solace-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238",
+      "path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238.png",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1238",
+      "dimensions": {
+        "width": 1920,
+        "height": 1238
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117",
+      "path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117.png",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x117",
+      "dimensions": {
+        "width": 200,
+        "height": 117
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129",
+      "path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129.png",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x129",
+      "dimensions": {
+        "width": 200,
+        "height": 129
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150",
+      "path": "assets/catalog/bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150.png",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150.png",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-bamboo-sheets/hero_seed-lifestyle_1024x1024",
+      "path": "assets/catalog/bedding/puffy-bamboo-sheets/hero_seed-lifestyle_1024x1024.png",
+      "file_path": "assets/catalog/bedding/puffy-bamboo-sheets/hero_seed-lifestyle_1024x1024.png",
+      "category": "bedding",
+      "product_slug": "puffy-bamboo-sheets",
+      "intent": "hero",
+      "variant": "seed-lifestyle",
+      "resolution": "1024x1024",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-blanket/cutout_angle45_640x385",
+      "path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_angle45_640x385.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_angle45_640x385.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "640x385",
+      "dimensions": {
+        "width": 640,
+        "height": 385
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155",
+      "path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1155",
+      "dimensions": {
+        "width": 1920,
+        "height": 1155
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "dimensions": {
+        "width": 808,
+        "height": 507
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1680x1050",
+      "dimensions": {
+        "width": 1680,
+        "height": 1050
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-rug/detail_thumb-detail_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-rug/detail_thumb-hero_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-hero_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-hero_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152",
+      "path": "assets/catalog/bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1920x1152",
+      "dimensions": {
+        "width": 1920,
+        "height": 1152
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502",
+      "path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x502",
+      "dimensions": {
+        "width": 808,
+        "height": 502
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124",
+      "path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x124",
+      "dimensions": {
+        "width": 200,
+        "height": 124
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120",
+      "path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-mattress-protector/hero_seed-studio_1024x1024",
+      "path": "assets/catalog/bedding/puffy-mattress-protector/hero_seed-studio_1024x1024.png",
+      "file_path": "assets/catalog/bedding/puffy-mattress-protector/hero_seed-studio_1024x1024.png",
+      "category": "bedding",
+      "product_slug": "puffy-mattress-protector",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1024x1024",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_angle45_808x507",
+      "path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_angle45_808x507.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_angle45_808x507.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "dimensions": {
+        "width": 808,
+        "height": 507
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120",
+      "path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125",
+      "path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120",
+      "path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120",
+      "path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120",
+      "path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152",
+      "path": "assets/catalog/bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1920x1152",
+      "dimensions": {
+        "width": 1920,
+        "height": 1152
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "bedding/puffy-signature-sleep-mask/cutout_angle45_808x504",
+      "path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_angle45_808x504.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_angle45_808x504.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x504",
+      "dimensions": {
+        "width": 808,
+        "height": 504
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150",
+      "path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x150",
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150",
+      "path": "assets/catalog/bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150.png",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150.png",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-cloud/detail_cross-section-seed_1024x1024",
+      "path": "assets/catalog/mattresses/puffy-cloud/detail_cross-section-seed_1024x1024.png",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_cross-section-seed_1024x1024.png",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "cross-section-seed",
+      "resolution": "1024x1024",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-cloud/detail_thumb-detail_200x127",
+      "path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-cloud/detail_thumb-detail-v2_200x127",
+      "path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail-v2_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail-v2_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-cloud/detail_thumb-hero_200x127",
+      "path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-hero_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-cloud/hero_lifestyle_1296x824",
+      "path": "assets/catalog/mattresses/puffy-cloud/hero_lifestyle_1296x824.png",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/hero_lifestyle_1296x824.png",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "dimensions": {
+        "width": 1296,
+        "height": 824
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-cloud/hero_seed-studio_1200x900",
+      "path": "assets/catalog/mattresses/puffy-cloud/hero_seed-studio_1200x900.png",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/hero_seed-studio_1200x900.png",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "dimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-legacy/detail_thumb-detail_200x127",
+      "path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-legacy/detail_thumb-detail-v2_200x127",
+      "path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail-v2_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail-v2_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-legacy/detail_thumb-hero_200x127",
+      "path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-hero_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-legacy/hero_lifestyle_1296x824",
+      "path": "assets/catalog/mattresses/puffy-legacy/hero_lifestyle_1296x824.png",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/hero_lifestyle_1296x824.png",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "dimensions": {
+        "width": 1296,
+        "height": 824
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/cutout_angle45_1200x720",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1200x720",
+      "dimensions": {
+        "width": 1200,
+        "height": 720
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/cutout_studio_720x246",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_studio_720x246.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_studio_720x246.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "cutout",
+      "variant": "studio",
+      "resolution": "720x246",
+      "dimensions": {
+        "width": 720,
+        "height": 246
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "seed-detail",
+      "resolution": "1024x1024",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "dimensions": {
+        "width": 1296,
+        "height": 824
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "hero",
+      "variant": "nordic-bedroom",
+      "resolution": "1920x1080",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900",
+      "path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900.png",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900.png",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "dimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127",
+      "path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127",
+      "path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127",
+      "path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824",
+      "path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824.png",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824.png",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "dimensions": {
+        "width": 1296,
+        "height": 824
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900",
+      "path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900.png",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900.png",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "dimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127",
+      "path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127",
+      "path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127",
+      "path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127.png",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127.png",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "dimensions": {
+        "width": 200,
+        "height": 127
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824",
+      "path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824.png",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824.png",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "dimensions": {
+        "width": 1296,
+        "height": 824
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900",
+      "path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900.png",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900.png",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "dimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "pillows/puffy-signature-pillow/cutout_angle45_640x385",
+      "path": "assets/catalog/pillows/puffy-signature-pillow/cutout_angle45_640x385.png",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_angle45_640x385.png",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "640x385",
+      "dimensions": {
+        "width": 640,
+        "height": 385
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120",
+      "path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120.png",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120.png",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125",
+      "path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125.png",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125.png",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "dimensions": {
+        "width": 200,
+        "height": 125
+      },
+      "format": "png",
+      "verified_drift_free": true,
+      "zero_product_drift_verified": true
+    },
+    {
+      "id": "pillows/puffy-signature-pillow/detail_thumb-detail_200x120",
+      "path": "assets/catalog/pillows/puffy-signature-pillow/detail_thumb-detail_200x120.png",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/detail_thumb-detail_200x120.png",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "dimensions": {
+        "width": 200,
+        "height": 120
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "pillows/puffy-signature-pillow/hero_seed-studio_1024x1024",
+      "path": "assets/catalog/pillows/puffy-signature-pillow/hero_seed-studio_1024x1024.png",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/hero_seed-studio_1024x1024.png",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1024x1024",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_ad-best-cooling-2026_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "ad-best-cooling-2026",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_ad-best-hybrid-2025_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_ad-best-hybrid-2025_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_ad-best-hybrid-2025_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "ad-best-hybrid-2025",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_cnn-best-firm-2025_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_cnn-best-firm-2025_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_cnn-best-firm-2025_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "cnn-best-firm-2025",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_cnn-side-sleepers-2025_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_cnn-side-sleepers-2025_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_cnn-side-sleepers-2025_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "cnn-side-sleepers-2025",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_consumer-mattress-cooling-2027_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_consumer-mattress-cooling-2027_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_consumer-mattress-cooling-2027_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "consumer-mattress-cooling-2027",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_consumer-mattress-luxury-2027_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_consumer-mattress-luxury-2027_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_consumer-mattress-luxury-2027_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "consumer-mattress-luxury-2027",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_mattress-rank-back-pain-2027_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_mattress-rank-back-pain-2027_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_mattress-rank-back-pain-2027_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "mattress-rank-back-pain-2027",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_mattress-rank-luxury-2027_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_mattress-rank-luxury-2027_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_mattress-rank-luxury-2027_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "mattress-rank-luxury-2027",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    },
+    {
+      "id": "trust-badges/awards/badge_theroundup-eco-mattress-2026_vector",
+      "path": "assets/catalog/trust-badges/awards/badge_theroundup-eco-mattress-2026_vector.svg",
+      "file_path": "assets/catalog/trust-badges/awards/badge_theroundup-eco-mattress-2026_vector.svg",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "theroundup-eco-mattress-2026",
+      "resolution": "vector",
+      "dimensions": {
+        "width": 400,
+        "height": 400,
+        "vector": true,
+        "viewBox": "0 0 400 400"
+      },
+      "format": "svg",
+      "verified_drift_free": false,
+      "zero_product_drift_verified": false
+    }
+  ]
+}

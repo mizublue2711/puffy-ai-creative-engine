@@ -1,0 +1,4098 @@
+{
+  "version": "1.0.0",
+  "last_synced_at": "2026-11-14T10:16:00.592Z",
+  "total_assets": 156,
+  "stats": {
+    "cutout": 80,
+    "hero": 21,
+    "detail": 46,
+    "badge": 9
+  },
+  "registry": {
+    "bed-frames/puffy-adjustable-base/hero_seed-studio_1200x900": {
+      "id": "bed-frames/puffy-adjustable-base/hero_seed-studio_1200x900",
+      "file_path": "assets/catalog/bed-frames/puffy-adjustable-base/hero_seed-studio_1200x900.png",
+      "sha256": "6522c5fd2b89c0375050ff3fb692f15373cc6eaa18443f2412b8419fc26075f0",
+      "category": "bed-frames",
+      "product_slug": "puffy-adjustable-base",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-adjustable-base",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "bed-frame",
+        "adjustable-base",
+        "ergonomic"
+      ]
+    },
+    "bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100": {
+      "id": "bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100",
+      "file_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100.png",
+      "sha256": "46a115fe8765d24b3cd596f55a65bc6fad325960a60e6502c1b2f50d5d9188fc",
+      "category": "bed-frames",
+      "product_slug": "puffy-cannell-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-cannell-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127": {
+      "id": "bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "sha256": "949e3c64f744ffb4eaf61d49971a40e31b9ba77efdad4be8ff918d92709b8894",
+      "category": "bed-frames",
+      "product_slug": "puffy-cannell-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-cannell-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127": {
+      "id": "bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127.png",
+      "sha256": "4d5901a5506f518bb69bd6461170aa2c99959091b7969504161f4b3a45d00828",
+      "category": "bed-frames",
+      "product_slug": "puffy-cannell-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-cannell-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999.png",
+      "sha256": "0615dbf93f507bf2e24e8d8db1f01c993634ba88f238fc46fce3906d5f4af475",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45-v2",
+      "resolution": "1920x999",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77.png",
+      "sha256": "b191cf1383d226943b47b71f15dc31cda2af51bdda0a6f27addcc39b56a0c544",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "129x77",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999.png",
+      "sha256": "73b9993b6c6fa6fa7a43c90a96695f1f83319b4b0dba28378f52792e8606aae6",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x999",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512.png",
+      "sha256": "a61457229fe109cd19f13e2749b26bafa9bb5e500434b2e6d49b529b1637827d",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "863x512",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104.png",
+      "sha256": "7790b7dc70abba376877d1c0f0ce1da58db800dfa2b3b7b7cbaa43737b9ed202",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x104",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119.png",
+      "sha256": "07e3a206595f345447c499da3801c656ccf5d965ee00fd1a64abb61f2f6015c0",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x119",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119.png",
+      "sha256": "dc025d52fe9217499a03a0fed3228e78a0778defb8844ed2350b0aafc69d56e6",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v3",
+      "resolution": "200x119",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "thumb-angle45-v3",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104.png",
+      "sha256": "abca51c1ce480e091192b6996ba916513d1ab3f2bd58a405896346cc8934f867",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x104",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119": {
+      "id": "bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119",
+      "file_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119.png",
+      "sha256": "cba2ebf110e3a5844c61201a96348dcd309d9e25a2a8f1aa781f86f9d58e6d20",
+      "category": "bed-frames",
+      "product_slug": "puffy-capri-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x119",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-capri-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100": {
+      "id": "bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100",
+      "file_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100.png",
+      "sha256": "4376f6fa116a046e1e29b359982874ca3b38f8121ee4701bea6fc22ca84a2c60",
+      "category": "bed-frames",
+      "product_slug": "puffy-carmel-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-carmel-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123": {
+      "id": "bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123",
+      "file_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123.png",
+      "sha256": "69523a22ccaeebf281086b769953420d3c8d467538aaa7b507fe2aa028093456",
+      "category": "bed-frames",
+      "product_slug": "puffy-carmel-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x123",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-carmel-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127": {
+      "id": "bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127.png",
+      "sha256": "b097b1cc5867072deacd456ac920302c693e8cd11015cf39ff0c9b65a5a2fa09",
+      "category": "bed-frames",
+      "product_slug": "puffy-carmel-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-carmel-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127": {
+      "id": "bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127.png",
+      "sha256": "13a688fcbcb168e06d345bcd4254dd6dfa19feb2e532ad8ce405ed955e5d13d7",
+      "category": "bed-frames",
+      "product_slug": "puffy-cloud-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-cloud-smart-bed-set",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127": {
+      "id": "bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127.png",
+      "sha256": "732c85a6a9eefa51bca8c169dbd9f3ea01931aa5bd47ca2f9f89076878f56e49",
+      "category": "bed-frames",
+      "product_slug": "puffy-cloud-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-cloud-smart-bed-set",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549": {
+      "id": "bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549",
+      "file_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549.png",
+      "sha256": "501a2ed9caafb3ac650a0ac1683debb4a49fe31f77345b56be0b2e321759db3e",
+      "category": "bed-frames",
+      "product_slug": "puffy-cloud-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-cloud-smart-bed-set",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238": {
+      "id": "bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238.png",
+      "sha256": "11aeeeaa26690cb778cd0ef0bd1faf82d6dc2028e4b47f71cd002041beba0c06",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1238",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-dusk-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129": {
+      "id": "bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129.png",
+      "sha256": "fc3f4d13a21613645c36f9009ea713f902a47dfffe8ca8e3c4ee5666f273099d",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x129",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-dusk-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150": {
+      "id": "bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150.png",
+      "sha256": "06b9ca08131906305bab7ed37bca3f8b80741f3ccb6ddf2c2dee7f1222351181",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x150",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-dusk-bed-frame",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150": {
+      "id": "bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150",
+      "file_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150.png",
+      "sha256": "ec695731755d64f771838bd5946455281f5060b38aabe7da38ec77792ebbc2ff",
+      "category": "bed-frames",
+      "product_slug": "puffy-dusk-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-dusk-bed-frame",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100": {
+      "id": "bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100",
+      "file_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100.png",
+      "sha256": "4dd4704d4240d1ed70047db681a011f7c363f9a8d642075d72173b23de805ab5",
+      "category": "bed-frames",
+      "product_slug": "puffy-kyoto-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-kyoto-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127": {
+      "id": "bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "sha256": "c662ceb6abc93eac4c219c64125b9510bc295132712889bb1f5b8345015e4287",
+      "category": "bed-frames",
+      "product_slug": "puffy-kyoto-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-kyoto-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127": {
+      "id": "bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127.png",
+      "sha256": "41f3cec69789c4c1f0631b54d8b87e1430e6116ff22898c9ebd046cd92249182",
+      "category": "bed-frames",
+      "product_slug": "puffy-kyoto-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-kyoto-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549": {
+      "id": "bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549",
+      "file_path": "assets/catalog/bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549.png",
+      "sha256": "6184c547d927aad9c32153ac964593e816894f77322801287dad76a802aba192",
+      "category": "bed-frames",
+      "product_slug": "puffy-legacy-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-legacy-smart-bed-set",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127": {
+      "id": "bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127.png",
+      "sha256": "5b561f65062d12af193e0864559d0bae82ffe95fb56ea6dbf8ff0835d96410be",
+      "category": "bed-frames",
+      "product_slug": "puffy-lux-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-lux-smart-bed-set",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127": {
+      "id": "bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127.png",
+      "sha256": "4005eba07631e345f0272007c07655237f62c6ddd8906f75fea712363082f466",
+      "category": "bed-frames",
+      "product_slug": "puffy-lux-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-lux-smart-bed-set",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549": {
+      "id": "bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549",
+      "file_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549.png",
+      "sha256": "3cefbfea8137d08ca5f0c0afc3fcc5adf9b05831d73e31ec559a201747ba2e8b",
+      "category": "bed-frames",
+      "product_slug": "puffy-lux-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-lux-smart-bed-set",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-midnight-foundation/cutout_angle45_808x507": {
+      "id": "bed-frames/puffy-midnight-foundation/cutout_angle45_808x507",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_angle45_808x507.png",
+      "sha256": "4a53d138318f54f2e7735682e804fccc62d6d19d934f5a6c5fe93487c47c2235",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-midnight-foundation",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125": {
+      "id": "bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125.png",
+      "sha256": "0f2f1cb5cb36a27a93d057c778f5fe9ecfbb3773c17fff3ffca0b7aa90589b47",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-midnight-foundation",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120": {
+      "id": "bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120.png",
+      "sha256": "9ece730d6244301fd829b9acfffffc726c3d8d8e786ecb90e1dad4e98c67e305",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "detail",
+      "variant": "thumb-studio-v2",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-midnight-foundation",
+        "detail",
+        "thumb-studio-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120": {
+      "id": "bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120",
+      "file_path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120.png",
+      "sha256": "424393b66e66b0d030fb79651098a796e28ee0164f423647b26f884dda615162",
+      "category": "bed-frames",
+      "product_slug": "puffy-midnight-foundation",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-midnight-foundation",
+        "detail",
+        "thumb-studio",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507": {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507.png",
+      "sha256": "dd5ecaa19ca764b8eee35b0e57bb4a9a252bfa986677c66b1544b14943ce82a4",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-milan-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512": {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512.png",
+      "sha256": "3d16588d80a8b99d437f259385247eaace95f7edceea6eecc663b3718e97090a",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "812x512",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-milan-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125": {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125.png",
+      "sha256": "f26b7a84af34bf29634c2e56fb1903febed8d3335b2f91a50151e5241fea7304",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-milan-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126": {
+      "id": "bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126.png",
+      "sha256": "f8195832e781346f8da457b487b9ad33060ce62f1f5c1962a476c7567b1a5279",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x126",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-milan-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116": {
+      "id": "bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116.png",
+      "sha256": "407fb241e331120ac8a3e259821a364ba7cd6413f03a9cbe1b2f88d9ec8a61d3",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x116",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-milan-bed-frame",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150": {
+      "id": "bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150",
+      "file_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150.png",
+      "sha256": "6f28b71173755184bc1f41cda30d582db7ff7767c06fd51475098f1e0ac5d124",
+      "category": "bed-frames",
+      "product_slug": "puffy-milan-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-milan-bed-frame",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127": {
+      "id": "bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127.png",
+      "sha256": "1e7328df2d7cabbebdcb306120a18dc80f1562a45ba2f8cf34ed9d36376bc811",
+      "category": "bed-frames",
+      "product_slug": "puffy-monarch-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-monarch-smart-bed-set",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127": {
+      "id": "bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127.png",
+      "sha256": "9e3b67776ab504196a393c60080f342cc7e29d1ed243a38f556a23e38da23921",
+      "category": "bed-frames",
+      "product_slug": "puffy-monarch-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-monarch-smart-bed-set",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549": {
+      "id": "bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549",
+      "file_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549.png",
+      "sha256": "59bf458bf026e5058579d12a75ce8c445871a6cde2534a19f383d74ca8e0e17a",
+      "category": "bed-frames",
+      "product_slug": "puffy-monarch-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-monarch-smart-bed-set",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100": {
+      "id": "bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100",
+      "file_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100.png",
+      "sha256": "b1763d9a5a4db4bae9fa0e4f91d5d7f8541e07ffbf9801c6b5e32ec86391c293",
+      "category": "bed-frames",
+      "product_slug": "puffy-monza-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-monza-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127": {
+      "id": "bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "sha256": "7a006d6a71dc71b3300935fdc161e603bdc6d8298554ef8d6679fc36f685b3ef",
+      "category": "bed-frames",
+      "product_slug": "puffy-monza-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-monza-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127": {
+      "id": "bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127.png",
+      "sha256": "cccf10a1a7637e2ff9b36c7430dafe4e309c749be1e157c3d7df39ba6691ef15",
+      "category": "bed-frames",
+      "product_slug": "puffy-monza-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-monza-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127": {
+      "id": "bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127.png",
+      "sha256": "aacdb6c6d4d5d40087fefcdd2ab7f2b3aec02fae4d294c37ca8f1883a7f049e5",
+      "category": "bed-frames",
+      "product_slug": "puffy-royal-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-royal-smart-bed-set",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127": {
+      "id": "bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127.png",
+      "sha256": "ebc6be3a2be266f722a67ec4899a2625dff2ee00e739b420b06ff137bef32881",
+      "category": "bed-frames",
+      "product_slug": "puffy-royal-smart-bed-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-royal-smart-bed-set",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549": {
+      "id": "bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549",
+      "file_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549.png",
+      "sha256": "080db1d6e546ca33341f2bc78dc3a511374e260fefb35fa473734ac7e71dc4c2",
+      "category": "bed-frames",
+      "product_slug": "puffy-royal-smart-bed-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "864x549",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-royal-smart-bed-set",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100": {
+      "id": "bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100",
+      "file_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100.png",
+      "sha256": "a7bf49e1bf3131ebb3a339d1d31d1c7e9282652150b1a046e01af77f0d2ffedd",
+      "category": "bed-frames",
+      "product_slug": "puffy-sedona-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-sedona-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127": {
+      "id": "bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "sha256": "e91fc8684f86e30d1842a8a24574e5b30189be2b24835892037988761d0ddefb",
+      "category": "bed-frames",
+      "product_slug": "puffy-sedona-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-sedona-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127": {
+      "id": "bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127.png",
+      "sha256": "498ead9fec53c5c41fb92014b1c4c672f170401fd51a2607e4c7f9a3517679d4",
+      "category": "bed-frames",
+      "product_slug": "puffy-sedona-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-sedona-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380": {
+      "id": "bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380",
+      "file_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380.png",
+      "sha256": "050ad998c308ce5004c7867f079c9cd2a8196db3be6f2082a961517c87c19fa3",
+      "category": "bed-frames",
+      "product_slug": "puffy-selene-swivel-chair",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "640x380",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-selene-swivel-chair",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119": {
+      "id": "bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119",
+      "file_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119.png",
+      "sha256": "cd102a48c3a0e67cc519f2bfdb87c0aed3efef6becfdeeabe32e05befa746bab",
+      "category": "bed-frames",
+      "product_slug": "puffy-selene-swivel-chair",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x119",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-selene-swivel-chair",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119": {
+      "id": "bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119",
+      "file_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119.png",
+      "sha256": "5bfb438fd82709d87a1267e76e4536ba4d1982d7a09800c82590d331790ab5b8",
+      "category": "bed-frames",
+      "product_slug": "puffy-selene-swivel-chair",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x119",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-selene-swivel-chair",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512.png",
+      "sha256": "753459e3ffc921e15764000091e1e2426a762f009c5c282810803984c48cbd2a",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "angle45-v2",
+      "resolution": "828x512",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188.png",
+      "sha256": "436297c2b79752f0c2a6334922e3212a7500fbbdecfd4b0b3de5973945a458d3",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1188",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512.png",
+      "sha256": "b2af9abbb056e273f8e6e3d1c7a6ca9624ca3a1776e65482381466be8d739e75",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "828x512",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124.png",
+      "sha256": "f628152126d69749552b8c674594850112d271a997d79881efca9aa97fa96f0f",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x124",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124.png",
+      "sha256": "9a2ee736a46d433f2d6c143d28a7fe3c845855809b0761e72cc902b418e1f072",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v3",
+      "resolution": "200x124",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "thumb-angle45-v3",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124.png",
+      "sha256": "a5617fca1673eeced006d970bbf6114b31f201cf325c5d583f3133cf04072fa2",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v4",
+      "resolution": "200x124",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "thumb-angle45-v4",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124.png",
+      "sha256": "95bd6ade4ebc2f78d9212121676a136c930d3f60e92901d3c542841bc0549dd1",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x124",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120": {
+      "id": "bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120",
+      "file_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120.png",
+      "sha256": "624ce1772b2d4483f5240f7ebd6c91bc410bf11b0c18843cf48737df4fc26306",
+      "category": "bed-frames",
+      "product_slug": "puffy-serenity-adjustable-base",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-serenity-adjustable-base",
+        "detail",
+        "thumb-studio",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350": {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350.png",
+      "sha256": "a5895d50a1a7bb7fef4c498828274646599d71ca334f2bdaf6bd0b2df54b018c",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "560x350",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-soho-sectional-sofa",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125": {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125.png",
+      "sha256": "d7c4bb491aab6817de90d00ea6b095d2f91530dd5e4f576adb9e34795578c4fa",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-soho-sectional-sofa",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125": {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125.png",
+      "sha256": "56193df3ebefadafcd35cb0a34b65ffe5427f0e713c2ec6e3595c57941b9b058",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v3",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-soho-sectional-sofa",
+        "cutout",
+        "thumb-angle45-v3",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125": {
+      "id": "bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125.png",
+      "sha256": "8a4055f8ae8445c66d2459be19da8fbf8568dd9d07009cc71d62aadbc0ab3aaf",
+      "category": "bed-frames",
+      "product_slug": "puffy-soho-sectional-sofa",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-soho-sectional-sofa",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100": {
+      "id": "bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100",
+      "file_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100.png",
+      "sha256": "4bc2d9e642885869cf2e848809751a555d7d952f4c0bff80944e498db883dcd4",
+      "category": "bed-frames",
+      "product_slug": "puffy-solace-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1728x1100",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-solace-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127": {
+      "id": "bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "sha256": "2e2057383cfc9c49888965d966f29a3005617dc69cea483364afefdf9039ca52",
+      "category": "bed-frames",
+      "product_slug": "puffy-solace-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-solace-bed-frame",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127": {
+      "id": "bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127",
+      "file_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127.png",
+      "sha256": "3b948a2f89d96d679add563bacca89b2fd84546a8e0bcc118f92f5033a33cbf0",
+      "category": "bed-frames",
+      "product_slug": "puffy-solace-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-solace-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238": {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238.png",
+      "sha256": "e27e44c640732e94fe8244fca8128e50f13cc592be7c6162dc8db5e1eae85fc4",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1238",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-zen-bed-frame",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117": {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117.png",
+      "sha256": "631d9e4d4005379683babe864bf1481db48d094083e235733fb8b7dc5fff614e",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x117",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-zen-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125": {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125.png",
+      "sha256": "05c40db6d27ce9671d02e0e465025e13c94bf2d7e650619ecab3cce338cd1b36",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-zen-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129": {
+      "id": "bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129.png",
+      "sha256": "fcebbac063607ba4318ae78cec33525e148fd041cdb332b9f53ab52d31a776b5",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x129",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-zen-bed-frame",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150": {
+      "id": "bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150",
+      "file_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150.png",
+      "sha256": "e831e5b36513136a1b1e6d87e9b2df853d4c3571638ecb4aed1f78b3214a5e82",
+      "category": "bed-frames",
+      "product_slug": "puffy-zen-bed-frame",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bed-frames",
+        "puffy-zen-bed-frame",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-bamboo-sheets/hero_seed-lifestyle_1024x1024": {
+      "id": "bedding/puffy-bamboo-sheets/hero_seed-lifestyle_1024x1024",
+      "file_path": "assets/catalog/bedding/puffy-bamboo-sheets/hero_seed-lifestyle_1024x1024.png",
+      "sha256": "b301176bedf5f97d67d7414f39c43afb014ef696be15c22ca51dad03f338e284",
+      "category": "bedding",
+      "product_slug": "puffy-bamboo-sheets",
+      "intent": "hero",
+      "variant": "seed-lifestyle",
+      "resolution": "1024x1024",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-bamboo-sheets",
+        "hero",
+        "seed-lifestyle",
+        "stitch-seed",
+        "bamboo",
+        "cooling",
+        "textile",
+        "lifestyle"
+      ]
+    },
+    "bedding/puffy-deluxe-blanket/cutout_angle45_640x385": {
+      "id": "bedding/puffy-deluxe-blanket/cutout_angle45_640x385",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_angle45_640x385.png",
+      "sha256": "102ec891f22e0e13c6e9d95145aebddc629361c98a383e102fc1df4fe458d3f2",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "640x385",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-blanket",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120": {
+      "id": "bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120.png",
+      "sha256": "9a0105d3d349f29f714ea54ec22081e589574c990c83329aac987049c9167341",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-blanket",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120": {
+      "id": "bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120.png",
+      "sha256": "3570eb88abb1eb90659cb8003a8e0e7c867c1f7a77f81ac97c340429e9f44b71",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-blanket",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125.png",
+      "sha256": "0f81325a728444dd3b8e412776547144bb678a199780021a18a5b6f8f022c352",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-blanket",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155": {
+      "id": "bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155.png",
+      "sha256": "01f562e3141839729c150f9e887eeca9328d1c27606c03ece59e80ea5be3d5fd",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1920x1155",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-comforter",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120": {
+      "id": "bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120.png",
+      "sha256": "52ed3240e7504bd8afee68bb3105d8726f038d0c7707933b6d1f5c5080950e40",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-comforter",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125.png",
+      "sha256": "3043a85e5af109b0f73f71978c170b6602a793b45e08e7c0f792da9bfbb1d54d",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-comforter",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120": {
+      "id": "bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120.png",
+      "sha256": "c6f475ef321e676de1d8a43041928d4c42e9c660b445c6d1c705ae1a731b7bf2",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-comforter",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-comforter",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507": {
+      "id": "bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507.png",
+      "sha256": "2a73204d53ee567d21702f92de923d3525999ff42f0645be94052fd2726d99b9",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-pad",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125.png",
+      "sha256": "2cc1a6dd23c015e78bd0a2c5c0e123f017b140dbf9f8e38983a164a3c7c18298",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-pad",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120": {
+      "id": "bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120.png",
+      "sha256": "47221426b935dfd74bede1da02b7b8800193132e794f42902613b321172a4ba9",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-pad",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120": {
+      "id": "bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120.png",
+      "sha256": "3cdf781b7c5a01239c118deb2427a0e06677a98efe977cc0bdd6aff9525d77f3",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-pad",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-pad",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050": {
+      "id": "bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050.png",
+      "sha256": "2bc54c8d186e69de7741544a074dc4b30a315ddc5f7d95ca9f3d693e5e0965bf",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1680x1050",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-topper",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120": {
+      "id": "bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120.png",
+      "sha256": "be31753454462c70672d0e334f5e44c53ac1aca990cd6a64cbe7b72801a1b327",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-topper",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125.png",
+      "sha256": "ea5f4f94343741e37a04a79862597cfe5a8d605142f55a33db8576404458320a",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-topper",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120": {
+      "id": "bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120.png",
+      "sha256": "2d9a4cb5c0ce8a522df6018b90a9f5f91954e11be4be4a3c218885f33f4d4844",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-mattress-topper",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-mattress-topper",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120": {
+      "id": "bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120.png",
+      "sha256": "d30377e3cadbba82960637957f78e81c3f3ab6be54659fe58322670e5b031d38",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-rug",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-rug/detail_thumb-detail_200x120": {
+      "id": "bedding/puffy-deluxe-rug/detail_thumb-detail_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail_200x120.png",
+      "sha256": "5853f7bf593a7b7cee5d78ced4a6cc5393f5fe8ea873ba6d4c02fa2299c1e8fd",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-rug",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-rug/detail_thumb-hero_200x120": {
+      "id": "bedding/puffy-deluxe-rug/detail_thumb-hero_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-hero_200x120.png",
+      "sha256": "48c380f76485645de87c58a22c255717a7e5886bcfdc0c5e461716944d5ad439",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-rug",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152": {
+      "id": "bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152.png",
+      "sha256": "9a4a57c97660efc91b2c4ef430fc68893fc143b28b7c6a50ae0945f128f5ced6",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-rug",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1920x1152",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-rug",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502": {
+      "id": "bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502.png",
+      "sha256": "5c01215e3c628234556339b5e16d37ad9f7ff47a51755f725673ce2274d07cb2",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x502",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-weighted-blanket",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124": {
+      "id": "bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124.png",
+      "sha256": "5d0dce18062285195c2aebda9c26bb76019149852509306ec8964a246d434c09",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x124",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-weighted-blanket",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125.png",
+      "sha256": "d80ec026b0b019eee016b4928bcca6c59c75489050ddbc8a36dd28d49b0d2381",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-weighted-blanket",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120": {
+      "id": "bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120",
+      "file_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120.png",
+      "sha256": "040cc0859223aff49f93003321c65e5e0e310b39d32a44b61000493541a59a3c",
+      "category": "bedding",
+      "product_slug": "puffy-deluxe-weighted-blanket",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-deluxe-weighted-blanket",
+        "detail",
+        "thumb-studio",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-mattress-protector/hero_seed-studio_1024x1024": {
+      "id": "bedding/puffy-mattress-protector/hero_seed-studio_1024x1024",
+      "file_path": "assets/catalog/bedding/puffy-mattress-protector/hero_seed-studio_1024x1024.png",
+      "sha256": "302d7bdec5b51a97f85a76035cf3ea71ea84a1c734e6a7ca195e2a0f46c5752b",
+      "category": "bedding",
+      "product_slug": "puffy-mattress-protector",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1024x1024",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-mattress-protector",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "accessories",
+        "protector",
+        "waterproof",
+        "breathable"
+      ]
+    },
+    "bedding/puffy-signature-mattress-protector/cutout_angle45_808x507": {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_angle45_808x507",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_angle45_808x507.png",
+      "sha256": "ad6def1ece608953afd66544b340b2a43ea2857258c75c0a8685133e31ae168e",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x507",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-mattress-protector",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125": {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125.png",
+      "sha256": "41e7852762a2df36b752a0e901c3d81eab352aa328556d456bf54fcd68286354",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "thumb-angle45-v2",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-mattress-protector",
+        "cutout",
+        "thumb-angle45-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120": {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120.png",
+      "sha256": "860240176c8d191f05c04f68c0963b5ecf6841a9813104db1917f51d4407584d",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-mattress-protector",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125.png",
+      "sha256": "a01d1d6bc2e4e8dacc687ddf54722a205256542d69c8cb0363f406dd70777e9d",
+      "category": "bedding",
+      "product_slug": "puffy-signature-mattress-protector",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-mattress-protector",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120": {
+      "id": "bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120.png",
+      "sha256": "e34fa0112f7bdd194afb28c814354b51a5ba65ce466fcd54d365027f50a8e2fd",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sheets-set",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120": {
+      "id": "bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120.png",
+      "sha256": "251c02128ee2373da66c280686d14fff2f23166862a3cf1595e33e20138de41d",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sheets-set",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120": {
+      "id": "bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120.png",
+      "sha256": "8e1c0f1a4b2112a2d02155b022889a9aa927ee5d76ea686789d3dd0fccefac51",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "detail",
+      "variant": "thumb-studio",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sheets-set",
+        "detail",
+        "thumb-studio",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152": {
+      "id": "bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152",
+      "file_path": "assets/catalog/bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152.png",
+      "sha256": "ce74f361e18e3b9952cae36969577bf35c922c8c4709ee911604358f7fc7a540",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sheets-set",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1920x1152",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sheets-set",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sleep-mask/cutout_angle45_808x504": {
+      "id": "bedding/puffy-signature-sleep-mask/cutout_angle45_808x504",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_angle45_808x504.png",
+      "sha256": "bc479ce4bfb8181b591bf975a59aea113e637eed2b532eac4e050c56ef8fa7c5",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "808x504",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sleep-mask",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125": {
+      "id": "bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125.png",
+      "sha256": "4597d55857b9a95823bc8d6bfcfdaf51eea61668374c9f8706ae712ba74da035",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sleep-mask",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150": {
+      "id": "bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150.png",
+      "sha256": "639a677f57045dd7fbd3452a929cf6fcbaf3509efc8700a1a55c620d123fb0ba",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x150",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sleep-mask",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150": {
+      "id": "bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150",
+      "file_path": "assets/catalog/bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150.png",
+      "sha256": "e7e3f454f03d5d4e1465e45619040a60979817c3ad9e6eb5ef136bb0341c2897",
+      "category": "bedding",
+      "product_slug": "puffy-signature-sleep-mask",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x150",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "bedding",
+        "puffy-signature-sleep-mask",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-cloud/detail_cross-section-seed_1024x1024": {
+      "id": "mattresses/puffy-cloud/detail_cross-section-seed_1024x1024",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_cross-section-seed_1024x1024.png",
+      "sha256": "0fd166a14fc4d594718ff0cda405853b3812ccceccb51fbd6a46d7895b56e266",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "cross-section-seed",
+      "resolution": "1024x1024",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-cloud",
+        "detail",
+        "cross-section-seed",
+        "stitch-seed",
+        "signature",
+        "all-foam",
+        "cloud-foam",
+        "cooling",
+        "cross-section"
+      ]
+    },
+    "mattresses/puffy-cloud/detail_thumb-detail-v2_200x127": {
+      "id": "mattresses/puffy-cloud/detail_thumb-detail-v2_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail-v2_200x127.png",
+      "sha256": "43135f02872e5636e0d879ba7bc9fe0f7f32bcbfbeec7fbcc45f09cfa81692b3",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-cloud",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-cloud/detail_thumb-detail_200x127": {
+      "id": "mattresses/puffy-cloud/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail_200x127.png",
+      "sha256": "d6a228d19af6f4046ac91608bb25f6eab4d74f1b4cd8f06177fe34dadf8037ca",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-cloud",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-cloud/detail_thumb-hero_200x127": {
+      "id": "mattresses/puffy-cloud/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-hero_200x127.png",
+      "sha256": "878d2ac585a967f1e76804eff06ef94735b30467e58813d8925e80f155047961",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-cloud",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-cloud/hero_lifestyle_1296x824": {
+      "id": "mattresses/puffy-cloud/hero_lifestyle_1296x824",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/hero_lifestyle_1296x824.png",
+      "sha256": "b04d532d445944dcc1bf570aeb8e59fbccb8d339e5ab0e2cb44f994a3c70fbfd",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-cloud",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-cloud/hero_seed-studio_1200x900": {
+      "id": "mattresses/puffy-cloud/hero_seed-studio_1200x900",
+      "file_path": "assets/catalog/mattresses/puffy-cloud/hero_seed-studio_1200x900.png",
+      "sha256": "a86303bcf129756973006572a9ce1490ae32b543d14654c5644d6327e508dec9",
+      "category": "mattresses",
+      "product_slug": "puffy-cloud",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-cloud",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "signature",
+        "all-foam",
+        "cloud-foam",
+        "cooling"
+      ]
+    },
+    "mattresses/puffy-legacy/detail_thumb-detail-v2_200x127": {
+      "id": "mattresses/puffy-legacy/detail_thumb-detail-v2_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail-v2_200x127.png",
+      "sha256": "fad8e2eec80c0bf1752cd908e362e642dd9909c71c6adb50e63cb0db67e01c63",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-legacy",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-legacy/detail_thumb-detail_200x127": {
+      "id": "mattresses/puffy-legacy/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail_200x127.png",
+      "sha256": "2691a711c0c3a10515cf18bc6d4a4889086e5570c7dc6c2326a92886fe07d77a",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-legacy",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-legacy/detail_thumb-hero_200x127": {
+      "id": "mattresses/puffy-legacy/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-hero_200x127.png",
+      "sha256": "a7295e00edc5871916277d286ea0001151d67e7ea4ce0cd630d36a620e8755d4",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-legacy",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-legacy/hero_lifestyle_1296x824": {
+      "id": "mattresses/puffy-legacy/hero_lifestyle_1296x824",
+      "file_path": "assets/catalog/mattresses/puffy-legacy/hero_lifestyle_1296x824.png",
+      "sha256": "9e061fe0b032a81fa3ea880c2447228587bfe55bc72c924ff98e6e4808ebea97",
+      "category": "mattresses",
+      "product_slug": "puffy-legacy",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-legacy",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/cutout_angle45_1200x720": {
+      "id": "mattresses/puffy-lux-hybrid/cutout_angle45_1200x720",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png",
+      "sha256": "b3e73498436f06d7871ae488721481109a648edf39d141ecbfc7fa545d4c8d3d",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "1200x720",
+      "format": "png",
+      "source_origin": "mock_asset_generator",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": true,
+        "used_in_remotion": true
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "cutout",
+        "angle45",
+        "mock-asset",
+        "zero-product-drift"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/cutout_studio_720x246": {
+      "id": "mattresses/puffy-lux-hybrid/cutout_studio_720x246",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_studio_720x246.png",
+      "sha256": "c21b55b7fab94d1e6cd187c4b1325a33e3e367e0f3c1ab272a6471a741a9c5a9",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "cutout",
+      "variant": "studio",
+      "resolution": "720x246",
+      "format": "png",
+      "source_origin": "mock_asset_generator",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "cutout",
+        "studio",
+        "mock-asset",
+        "zero-product-drift"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024": {
+      "id": "mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024.png",
+      "sha256": "41e8694f10ebdcef9e0052d511ede8281f63fc2ac702878c8598d7a6f7aaf80d",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "seed-detail",
+      "resolution": "1024x1024",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "detail",
+        "seed-detail",
+        "stitch-seed",
+        "luxury",
+        "hybrid",
+        "cloud-foam",
+        "contour-shadow"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127": {
+      "id": "mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127.png",
+      "sha256": "5e336af325f085beff8d5f5d658da5fe2a3f5839a9fdc515d8dfa2b6c493e149",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127": {
+      "id": "mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127.png",
+      "sha256": "d44a84e60928206b39d02cd76e1109708e3dc012b724dfc07ca64e1dea1755f1",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127": {
+      "id": "mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127.png",
+      "sha256": "4352ee603665e0f4513bb3a44bc27081152ba1f49017da2338c2c4154bb6cbea",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824": {
+      "id": "mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824.png",
+      "sha256": "a970709e37c3c2747ccadb0845d264600d7951a47bc5a078906923ec755e2365",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080": {
+      "id": "mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png",
+      "sha256": "e5f0891e32c8e0b77618c171f620e972d477dd35f98c6ed462410f9c73eea5b9",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "hero",
+      "variant": "nordic-bedroom",
+      "resolution": "1920x1080",
+      "format": "png",
+      "source_origin": "mock_asset_generator",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": true,
+        "used_in_remotion": true
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "hero",
+        "nordic-bedroom",
+        "mock-asset",
+        "environment"
+      ]
+    },
+    "mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900": {
+      "id": "mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900",
+      "file_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900.png",
+      "sha256": "86a28d479b8b315abc88cd8297f72c8e0172638d535f8c5ed03bcf9efdb343ff",
+      "category": "mattresses",
+      "product_slug": "puffy-lux-hybrid",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-lux-hybrid",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "luxury",
+        "hybrid",
+        "cloud-foam",
+        "contour-shadow"
+      ]
+    },
+    "mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127": {
+      "id": "mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127.png",
+      "sha256": "c51879fa33f03ee3f330b6f52b3dcc39a3fe57f7a02c141b8774af4539f19c43",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-monarch-hybrid",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127": {
+      "id": "mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127.png",
+      "sha256": "3b5731d3e7ce03a4244343742fbce6218270d1b12a8b532aee1b1bfd24dd42da",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-monarch-hybrid",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127": {
+      "id": "mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127.png",
+      "sha256": "01887287241374c13507bf1f08f15772b3e26a884b184ee26a938d2d9b626cb5",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-monarch-hybrid",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824": {
+      "id": "mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824.png",
+      "sha256": "fef2610133d62112c4cec2cdf539cfe4d13b698a9d345120d904ef493869a94a",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-monarch-hybrid",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900": {
+      "id": "mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900",
+      "file_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900.png",
+      "sha256": "c27f586fbe722fe02df892d7b86d1b361b3217480eca9547ffb682ed47c58256",
+      "category": "mattresses",
+      "product_slug": "puffy-monarch-hybrid",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-monarch-hybrid",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "ultra-luxury",
+        "hybrid",
+        "alpaca-wool",
+        "contour-shadow"
+      ]
+    },
+    "mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127": {
+      "id": "mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127.png",
+      "sha256": "877e4a37b752da7c47e3cdc7f7dd57e15a2b32dab6351ad60c9a9afc5a20d357",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail-v2",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-royal-hybrid",
+        "detail",
+        "thumb-detail-v2",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127": {
+      "id": "mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127.png",
+      "sha256": "88b40e2a69ba4ee0dcd756e326e8de7555f1d3f43b57f182a8bf844891c1532f",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-royal-hybrid",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127": {
+      "id": "mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127.png",
+      "sha256": "ddeeb1a62ee553e3136bc5e36af22f45aa10b089272b292c51a83d6fb7fd8318",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "detail",
+      "variant": "thumb-hero",
+      "resolution": "200x127",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-royal-hybrid",
+        "detail",
+        "thumb-hero",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824": {
+      "id": "mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824.png",
+      "sha256": "18f33f448f82de35a6359dff9d40c926f0df95753e2f00599ae7cfce13972e10",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "hero",
+      "variant": "lifestyle",
+      "resolution": "1296x824",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-royal-hybrid",
+        "hero",
+        "lifestyle",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900": {
+      "id": "mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900",
+      "file_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900.png",
+      "sha256": "4c9aa7b89e52da3a910f36818b84c4ef22e1feb990821996a27f7ab2a2cc99ae",
+      "category": "mattresses",
+      "product_slug": "puffy-royal-hybrid",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1200x900",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "mattresses",
+        "puffy-royal-hybrid",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "ultra-luxury",
+        "hybrid",
+        "zoned-support",
+        "cooling"
+      ]
+    },
+    "pillows/puffy-signature-pillow/cutout_angle45_640x385": {
+      "id": "pillows/puffy-signature-pillow/cutout_angle45_640x385",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_angle45_640x385.png",
+      "sha256": "821511f3cadd22a1e42082f90dd1b6f7fa55817ccc516ce555563c19ca2e5ab3",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "cutout",
+      "variant": "angle45",
+      "resolution": "640x385",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "pillows",
+        "puffy-signature-pillow",
+        "cutout",
+        "angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120": {
+      "id": "pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120.png",
+      "sha256": "0d83e41563a198fc7762d2bf6310c937e8969b9fc0d7e2ce47f7dda6a8de9b51",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "pillows",
+        "puffy-signature-pillow",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125": {
+      "id": "pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125.png",
+      "sha256": "ab6ab0cec20c0caffe5e2a255a4bc3c199828db2b3e9576091bb4559c91b90ef",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "cutout",
+      "variant": "thumb-angle45",
+      "resolution": "200x125",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": true,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "pillows",
+        "puffy-signature-pillow",
+        "cutout",
+        "thumb-angle45",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "pillows/puffy-signature-pillow/detail_thumb-detail_200x120": {
+      "id": "pillows/puffy-signature-pillow/detail_thumb-detail_200x120",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/detail_thumb-detail_200x120.png",
+      "sha256": "bc534d80f04bec1c361aad316b1c0f801763398226ebe8f63de64b4410512458",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "detail",
+      "variant": "thumb-detail",
+      "resolution": "200x120",
+      "format": "png",
+      "source_origin": "pomelli_catalog_export",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "pillows",
+        "puffy-signature-pillow",
+        "detail",
+        "thumb-detail",
+        "pomelli",
+        "catalog"
+      ]
+    },
+    "pillows/puffy-signature-pillow/hero_seed-studio_1024x1024": {
+      "id": "pillows/puffy-signature-pillow/hero_seed-studio_1024x1024",
+      "file_path": "assets/catalog/pillows/puffy-signature-pillow/hero_seed-studio_1024x1024.png",
+      "sha256": "235a7e0289b98ebba4c3dc91dc6135d9b9e806a7957074056c739ceb5049bc91",
+      "category": "pillows",
+      "product_slug": "puffy-signature-pillow",
+      "intent": "hero",
+      "variant": "seed-studio",
+      "resolution": "1024x1024",
+      "format": "png",
+      "source_origin": "stitch_catalog_seed",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "pillows",
+        "puffy-signature-pillow",
+        "hero",
+        "seed-studio",
+        "stitch-seed",
+        "accessory",
+        "pillow",
+        "memory-foam"
+      ]
+    },
+    "trust-badges/awards/badge_ad-best-cooling-2026_vector": {
+      "id": "trust-badges/awards/badge_ad-best-cooling-2026_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg",
+      "sha256": "17abcf069859fa62e876936e1a7bb1797c3e1b4b0a95141e8dfe1e44a4f603ef",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "ad-best-cooling-2026",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": true,
+        "used_in_remotion": true
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "ad-best-cooling-2026",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_ad-best-hybrid-2025_vector": {
+      "id": "trust-badges/awards/badge_ad-best-hybrid-2025_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_ad-best-hybrid-2025_vector.svg",
+      "sha256": "7ebeb1950b1dec4394844798286c04e9e7e7d6e1864a7d5675a9b853285f37cd",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "ad-best-hybrid-2025",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "ad-best-hybrid-2025",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_cnn-best-firm-2025_vector": {
+      "id": "trust-badges/awards/badge_cnn-best-firm-2025_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_cnn-best-firm-2025_vector.svg",
+      "sha256": "ea802b43a5d46627ae7fee674e131de98462f385ede4b58f421aba4d0016b9a1",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "cnn-best-firm-2025",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "cnn-best-firm-2025",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_cnn-side-sleepers-2025_vector": {
+      "id": "trust-badges/awards/badge_cnn-side-sleepers-2025_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_cnn-side-sleepers-2025_vector.svg",
+      "sha256": "aa639f79d5afe7232f3f47146429a5d7560c0242f31e4f2d88b9d504401f87b5",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "cnn-side-sleepers-2025",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "cnn-side-sleepers-2025",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_consumer-mattress-cooling-2027_vector": {
+      "id": "trust-badges/awards/badge_consumer-mattress-cooling-2027_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_consumer-mattress-cooling-2027_vector.svg",
+      "sha256": "bc0fd9a9391751d82f8e1ce92fd80b246e2112626c79532e703e75251766f941",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "consumer-mattress-cooling-2027",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "consumer-mattress-cooling-2027",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_consumer-mattress-luxury-2027_vector": {
+      "id": "trust-badges/awards/badge_consumer-mattress-luxury-2027_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_consumer-mattress-luxury-2027_vector.svg",
+      "sha256": "c4712312d39d47d12e4078cfa331ef7ecc47f3e18ceafc878d05e1fa753e4c04",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "consumer-mattress-luxury-2027",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "consumer-mattress-luxury-2027",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_mattress-rank-back-pain-2027_vector": {
+      "id": "trust-badges/awards/badge_mattress-rank-back-pain-2027_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_mattress-rank-back-pain-2027_vector.svg",
+      "sha256": "f94d20806538aa4377dac5176776ade7fd393ab5f52b0e5d68c22a62f62453b4",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "mattress-rank-back-pain-2027",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "mattress-rank-back-pain-2027",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_mattress-rank-luxury-2027_vector": {
+      "id": "trust-badges/awards/badge_mattress-rank-luxury-2027_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_mattress-rank-luxury-2027_vector.svg",
+      "sha256": "ebe83c181f4d85acd1452953daccb23f1b1679b7e3df03be5eb55a11dbf0b6e5",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "mattress-rank-luxury-2027",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "mattress-rank-luxury-2027",
+        "trust-badge",
+        "award"
+      ]
+    },
+    "trust-badges/awards/badge_theroundup-eco-mattress-2026_vector": {
+      "id": "trust-badges/awards/badge_theroundup-eco-mattress-2026_vector",
+      "file_path": "assets/catalog/trust-badges/awards/badge_theroundup-eco-mattress-2026_vector.svg",
+      "sha256": "89b4b7efde1f8ad28ee2a949da9a71056945adb0ad9663d035b65e3f72eb6290",
+      "category": "trust-badges",
+      "product_slug": "awards",
+      "intent": "badge",
+      "variant": "theroundup-eco-mattress-2026",
+      "resolution": "vector",
+      "format": "svg",
+      "source_origin": "brand_trust_badges",
+      "pipeline_status": {
+        "n8n_background_removed": false,
+        "zero_product_drift_verified": false,
+        "used_in_banner_engine": false,
+        "used_in_remotion": false
+      },
+      "tags": [
+        "trust-badges",
+        "awards",
+        "badge",
+        "theroundup-eco-mattress-2026",
+        "trust-badge",
+        "award"
+      ]
+    }
+  }
+}

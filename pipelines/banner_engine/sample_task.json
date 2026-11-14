@@ -1,7 +1,7 @@
 {
   "campaign_id": "puffy-cloud-sanctuary-2026",
-  "mattress_cutout_path": "assets/cutouts/mock_mattress.png",
-  "environment_bg_path": "assets/environments/mock_bedroom_nordic.png",
+  "mattress_cutout_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png",
+  "environment_bg_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png",
   "headline": "Sleep Like You're Floating on a Cloud",
   "subheadline": "Assembled in the USA with advanced cooling technology and targeted body support. Backed by a 365-night sleep trial and zero-fee lifetime warranty.",
   "badge_text": "Product of the Year 2025",
