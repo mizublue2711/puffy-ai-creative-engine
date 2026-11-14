@@ -37,10 +37,11 @@ export interface LoadedSession {
 }
 
 export const REQUIRED_GOOGLE_AUTH_TOKENS = [
+  'SID',
   '__Secure-1PSID',
   '__Secure-3PSID',
   'SAPISID',
-  'SID',
+  'SIDCC',
 ] as const;
 
 export const DEFAULT_COOKIE_PATHS = [
@@ -72,35 +73,50 @@ export function normalizeSameSite(
 }
 
 /**
- * Converts raw extension cookies into Playwright `BrowserContext.addCookies()` format.
+ * Converts raw extension cookies into Playwright `BrowserContext.addCookies()` format,
+ * deduplicating by domain, path, and name (keeping the latest occurrence).
  */
 export function normalizeCookies(rawCookies: RawExtensionCookie[]): Cookie[] {
-  return rawCookies
-    .filter((c) => Boolean(c && c.name && c.domain))
-    .map((c) => {
-      const expiresCandidate =
-        typeof c.expirationDate === 'number'
-          ? c.expirationDate
-          : typeof c.expires === 'number'
-            ? c.expires
-            : -1;
+  const deduped = new Map<string, Cookie>();
 
-      return {
-        name: c.name,
-        value: c.value ?? '',
-        domain: c.domain,
-        path: c.path || '/',
-        expires: Number.isFinite(expiresCandidate) ? expiresCandidate : -1,
-        httpOnly: Boolean(c.httpOnly),
-        secure: Boolean(c.secure),
-        sameSite: normalizeSameSite(c.sameSite),
-      };
+  for (const c of rawCookies) {
+    if (!c || !c.name || !c.domain) {
+      continue;
+    }
+
+    const expiresCandidate =
+      typeof c.expirationDate === 'number'
+        ? c.expirationDate
+        : typeof c.expires === 'number'
+          ? c.expires
+          : -1;
+
+    const normalizedPath = c.path || '/';
+    const key = `${c.domain}|${normalizedPath}|${c.name}`;
+    const isSecure = Boolean(c.secure);
+    let sameSite = normalizeSameSite(c.sameSite);
+    if (sameSite === 'None' && !isSecure) {
+      sameSite = 'Lax';
+    }
+
+    deduped.set(key, {
+      name: c.name,
+      value: c.value ?? '',
+      domain: c.domain,
+      path: normalizedPath,
+      expires: Number.isFinite(expiresCandidate) ? expiresCandidate : -1,
+      httpOnly: Boolean(c.httpOnly),
+      secure: isSecure,
+      sameSite,
     });
+  }
+
+  return Array.from(deduped.values());
 }
 
 /**
- * Parses either a JSON array of cookies, a Playwright storageState object,
- * or a base64-encoded JSON payload of either shape.
+ * Parses either a JSON array of cookies, concatenated JSON cookie arrays,
+ * a Playwright storageState object, or a base64-encoded JSON payload of either shape.
  */
 export function parseCookiePayload(rawContent: string): RawExtensionCookie[] {
   const trimmed = rawContent.trim();
@@ -117,6 +133,10 @@ export function parseCookiePayload(rawContent: string): RawExtensionCookie[] {
       );
     }
     jsonText = decoded;
+  }
+
+  if (/\]\s*\[/.test(jsonText)) {
+    jsonText = jsonText.replace(/\]\s*\[/g, ',');
   }
 
   const parsed = JSON.parse(jsonText) as RawExtensionCookie[] | StorageStateLike;
