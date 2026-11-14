@@ -12,8 +12,11 @@ auth_cookies.json
 # Build & Cache Artifacts
 webapp/dist/
 pipelines/remotion/out/
+pipelines/banner_engine/out/
+.agent/last_bundle_hash
 .vite/
 dist/
+*.tsbuildinfo
 
 # OS & Editor
 .DS_Store

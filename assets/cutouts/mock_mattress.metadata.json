@@ -1,0 +1,11 @@
+{
+  "cutout_id": "mock_mattress_v1",
+  "source_raw_path": "assets/raw_mattress/mock_mattress_source.png",
+  "cutout_path": "assets/cutouts/mock_mattress.png",
+  "sha256": "7ee6a025ff5a532ce92d430ad4663437254bbe0bad7d1c4eec9f28f27a9551e7",
+  "dimensions": {
+    "width": 1200,
+    "height": 720
+  },
+  "zero_product_drift_verified": true
+}

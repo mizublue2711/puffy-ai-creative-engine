@@ -1,0 +1,19 @@
+{
+  "campaign_id": "puffy-cloud-sanctuary-2026",
+  "mattress_cutout_path": "assets/cutouts/mock_mattress.png",
+  "environment_bg_path": "assets/environments/mock_bedroom_nordic.png",
+  "headline": "Sleep Like You're Floating on a Cloud",
+  "subheadline": "Assembled in the USA with advanced cooling technology and targeted body support. Backed by a 365-night sleep trial and zero-fee lifetime warranty.",
+  "badge_text": "Product of the Year 2025",
+  "cta": {
+    "label": "Shop Puffy Cloud",
+    "url": "https://puffy.com/products/puffy-mattress",
+    "bg_color": "#067A57",
+    "text_color": "#FFFFFF"
+  },
+  "viewports": [
+    { "width": 1440, "height": 900 },
+    { "width": 1080, "height": 1080 },
+    { "width": 1080, "height": 1920 }
+  ]
+}
