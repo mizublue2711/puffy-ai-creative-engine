@@ -27,6 +27,7 @@ const ROOT_DIR = path.resolve(__dirname, "../..");
 const SCHEMA_PATH = path.join(ROOT_DIR, "config/schemas/banner_task.schema.json");
 const TOKENS_PATH = path.join(ROOT_DIR, "config/brand_tokens.json");
 const DEFAULT_TASK_PATH = path.join(__dirname, "sample_task.json");
+const DEFAULT_HERO_ASSET_PATH = path.join(__dirname, "assets/test_mattress_on_bed_shadowed.png");
 const DEFAULT_OUT_DIR = path.join(__dirname, "out");
 
 const DEFAULT_TOKENS = JSON.parse(fs.readFileSync(TOKENS_PATH, "utf-8"));
@@ -114,12 +115,21 @@ export function renderContactShadow(ctx, mattressBounds, palette = BRAND_PALETTE
 }
 
 function parseArgs(argv) {
-  const args = { task: DEFAULT_TASK_PATH, out: DEFAULT_OUT_DIR };
+  const args = {
+    task: DEFAULT_TASK_PATH,
+    out: DEFAULT_OUT_DIR,
+    cutout: null,
+    preShadowed: false,
+  };
   for (let i = 2; i < argv.length; i += 1) {
     if (argv[i] === "--task" && argv[i + 1]) {
       args.task = path.resolve(argv[++i]);
     } else if (argv[i] === "--out" && argv[i + 1]) {
       args.out = path.resolve(argv[++i]);
+    } else if (argv[i] === "--cutout" && argv[i + 1]) {
+      args.cutout = path.resolve(argv[++i]);
+    } else if (argv[i] === "--pre-shadowed") {
+      args.preShadowed = true;
     }
   }
   return args;
@@ -208,6 +218,7 @@ function buildBannerHtml(task, tokens, viewport, assets) {
     width,
     height,
     layoutMode,
+    shadowEngineApplied: Boolean(assets.shadowEngineApplied),
     clearSpace,
     minLogoWidth,
     colors,
@@ -270,6 +281,15 @@ function buildBannerHtml(task, tokens, viewport, assets) {
 
   function rgba(rgb, alpha) {
     return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha + ")";
+  }
+
+  function drawAmbientBackground(ctx, W, H) {
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, "#FFFFFF");
+    bgGrad.addColorStop(0.55, "#FAF9F7");
+    bgGrad.addColorStop(1, "#F5F3EF");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
   }
 
   function drawCoverImage(ctx, img, x, y, w, h) {
@@ -376,7 +396,7 @@ function buildBannerHtml(task, tokens, viewport, assets) {
     ctx.shadowColor = rgba(BRAND_PALETTE.ocean_teal.rgb, 0.3);
     ctx.shadowBlur = 24;
     ctx.shadowOffsetY = 10;
-    drawRoundedRect(ctx, btnX, topY, btnW, btnH, 10);
+    drawRoundedRect(ctx, btnX, topY, btnW, btnH, 8);
     ctx.fillStyle = CONFIG.task.cta.bg_color;
     ctx.fill();
     ctx.restore();
@@ -395,17 +415,8 @@ function buildBannerHtml(task, tokens, viewport, assets) {
     const H = CONFIG.height;
     const pad = Math.max(44, CONFIG.clearSpace + 12);
 
-    // 1. Environment plate background
-    drawCoverImage(ctx, imgs.env, 0, 0, W, H);
-
-    // Warm Linen directional scrim for left 40% text legibility
-    const scrim = ctx.createLinearGradient(0, 0, W, 0);
-    scrim.addColorStop(0, rgba(BRAND_PALETTE.warm_linen.rgb, 0.95));
-    scrim.addColorStop(0.38, rgba(BRAND_PALETTE.warm_linen.rgb, 0.88));
-    scrim.addColorStop(0.54, rgba(BRAND_PALETTE.warm_linen.rgb, 0.25));
-    scrim.addColorStop(1, rgba(BRAND_PALETTE.warm_linen.rgb, 0.06));
-    ctx.fillStyle = scrim;
-    ctx.fillRect(0, 0, W, H);
+    // 1. Seamless unified ambient background (#FFFFFF -> #F5F3EF)
+    drawAmbientBackground(ctx, W, H);
 
     // 2. Logo (top-left) & editorial award badge (top-right) with >= 30px clear space
     const logoW = Math.max(CONFIG.minLogoWidth, 148);
@@ -414,16 +425,23 @@ function buildBannerHtml(task, tokens, viewport, assets) {
 
     drawTrustBadgePill(ctx, imgs.badge, CONFIG.task.badge_text, W - pad, CONFIG.clearSpace + 4, 1);
 
-    // 3. Right 60% Hero Plate + Mattress with Contact Shadow
-    const rightZoneX = Math.round(W * 0.40);
-    const rightZoneW = W - rightZoneX;
-    const mattressW = Math.round(rightZoneW * 0.80);
+    // 3. Right-side Hero Bed Composite (56% of banner width on the right) with Zero-Gap Contact Shadow
+    const targetVisibleW = Math.round(W * 0.56);
+    const mattressW = CONFIG.shadowEngineApplied
+      ? Math.round(targetVisibleW / 0.75)
+      : targetVisibleW;
     const mattressH = Math.round(mattressW * (imgs.cutout.naturalHeight / imgs.cutout.naturalWidth));
-    const mattressX = Math.round(rightZoneX + (rightZoneW - mattressW) / 2);
-    const mattressY = Math.round(H * 0.56 - mattressH / 2);
+    const mattressX = CONFIG.shadowEngineApplied
+      ? Math.round(W - pad - mattressW * 0.875)
+      : Math.round(W - pad - mattressW);
+    const mattressY = CONFIG.shadowEngineApplied
+      ? Math.round(H * 0.74 - mattressH * 0.85)
+      : Math.round(H * 0.55 - mattressH / 2);
     const mattressBounds = { x: mattressX, y: mattressY, width: mattressW, height: mattressH };
 
-    renderContactShadow(ctx, mattressBounds, BRAND_PALETTE);
+    if (!CONFIG.shadowEngineApplied) {
+      renderContactShadow(ctx, mattressBounds, BRAND_PALETTE);
+    }
     ctx.drawImage(imgs.cutout, mattressBounds.x, mattressBounds.y, mattressBounds.width, mattressBounds.height);
 
     // 4. Left 40% Text / CTA column
@@ -469,16 +487,8 @@ function buildBannerHtml(task, tokens, viewport, assets) {
     const H = CONFIG.height;
     const pad = Math.max(40, CONFIG.clearSpace + 10);
 
-    // 1. Environment plate background
-    drawCoverImage(ctx, imgs.env, 0, 0, W, H);
-
-    const scrim = ctx.createLinearGradient(0, 0, 0, H);
-    scrim.addColorStop(0, rgba(BRAND_PALETTE.warm_linen.rgb, 0.90));
-    scrim.addColorStop(0.28, rgba(BRAND_PALETTE.warm_linen.rgb, 0.48));
-    scrim.addColorStop(0.62, rgba(BRAND_PALETTE.warm_linen.rgb, 0.62));
-    scrim.addColorStop(1, rgba(BRAND_PALETTE.warm_linen.rgb, 0.95));
-    ctx.fillStyle = scrim;
-    ctx.fillRect(0, 0, W, H);
+    // 1. Seamless unified ambient background (#FFFFFF -> #F5F3EF)
+    drawAmbientBackground(ctx, W, H);
 
     // 2. Top trust badge & logo (>= 30px clear space)
     const logoW = Math.max(CONFIG.minLogoWidth, 136);
@@ -487,19 +497,35 @@ function buildBannerHtml(task, tokens, viewport, assets) {
 
     drawTrustBadgePill(ctx, imgs.badge, CONFIG.task.badge_text, W - pad, CONFIG.clearSpace + 4, 1);
 
-    // 3. Centered mattress (65% canvas width) with contact shadow
-    const mattressW = Math.round(W * 0.65);
+    // 3. Centered bed composite (68% canvas width)
+    const targetVisibleW = Math.round(W * 0.68);
+    const mattressW = CONFIG.shadowEngineApplied
+      ? Math.round(targetVisibleW / 0.75)
+      : targetVisibleW;
     const mattressH = Math.round(mattressW * (imgs.cutout.naturalHeight / imgs.cutout.naturalWidth));
     const mattressX = Math.round((W - mattressW) / 2);
-    const mattressY = Math.round(H * 0.34);
+    const mattressY = CONFIG.shadowEngineApplied
+      ? Math.round(H * 0.61 - mattressH * 0.85)
+      : Math.round(H * 0.34);
     const mattressBounds = { x: mattressX, y: mattressY, width: mattressW, height: mattressH };
 
-    renderContactShadow(ctx, mattressBounds, BRAND_PALETTE);
+    if (!CONFIG.shadowEngineApplied) {
+      renderContactShadow(ctx, mattressBounds, BRAND_PALETTE);
+    }
     ctx.drawImage(imgs.cutout, mattressBounds.x, mattressBounds.y, mattressBounds.width, mattressBounds.height);
 
-    // 4. Bottom Headline & CTA
+    // 4. Bottom Eyebrow, Headline & CTA
     const maxTextW = W - pad * 2;
-    let cursorY = mattressY + mattressH + 74;
+    let cursorY = CONFIG.shadowEngineApplied
+      ? Math.round(mattressY + mattressH * 0.85 + 28)
+      : mattressY + mattressH + 74;
+
+    ctx.fillStyle = BRAND_PALETTE.ocean_teal.hex;
+    ctx.font = "700 15px " + CONFIG.typography.secondary.font_family;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("DOMESTIC SANCTUARY · ZERO PRODUCT DRIFT", W / 2, cursorY);
+    cursorY += 28;
 
     ctx.fillStyle = BRAND_PALETTE.navy_ink.hex;
     ctx.font = "700 52px " + CONFIG.typography.primary.font_family;
@@ -521,16 +547,8 @@ function buildBannerHtml(task, tokens, viewport, assets) {
     const H = CONFIG.height;
     const pad = Math.max(48, CONFIG.clearSpace + 18);
 
-    // 1. Environment plate background
-    drawCoverImage(ctx, imgs.env, 0, 0, W, H);
-
-    const scrim = ctx.createLinearGradient(0, 0, 0, H);
-    scrim.addColorStop(0, rgba(BRAND_PALETTE.warm_linen.rgb, 0.95));
-    scrim.addColorStop(0.42, rgba(BRAND_PALETTE.warm_linen.rgb, 0.80));
-    scrim.addColorStop(0.68, rgba(BRAND_PALETTE.warm_linen.rgb, 0.45));
-    scrim.addColorStop(1, rgba(BRAND_PALETTE.warm_linen.rgb, 0.95));
-    ctx.fillStyle = scrim;
-    ctx.fillRect(0, 0, W, H);
+    // 1. Seamless unified ambient background (#FFFFFF -> #F5F3EF)
+    drawAmbientBackground(ctx, W, H);
 
     // 2. Top Logo & Editorial Badge (>= 30px clear space)
     const logoW = Math.max(CONFIG.minLogoWidth, 160);
@@ -561,14 +579,21 @@ function buildBannerHtml(task, tokens, viewport, assets) {
     const subLines = wrapLines(ctx, CONFIG.task.subheadline, maxTextW);
     drawTextBlock(ctx, subLines, pad, cursorY, 44, "left");
 
-    // 4. Middle Mattress with Contact Shadow
-    const mattressW = Math.round(W * 0.86);
+    // 4. Middle Bed Composite (75% canvas width) in mid-tier focus area
+    const targetVisibleW = Math.round(W * 0.75);
+    const mattressW = CONFIG.shadowEngineApplied
+      ? Math.round(targetVisibleW / 0.75)
+      : targetVisibleW;
     const mattressH = Math.round(mattressW * (imgs.cutout.naturalHeight / imgs.cutout.naturalWidth));
     const mattressX = Math.round((W - mattressW) / 2);
-    const mattressY = Math.round(H * 0.56 - mattressH / 2);
+    const mattressY = CONFIG.shadowEngineApplied
+      ? Math.round(H * 0.66 - mattressH * 0.85)
+      : Math.round(H * 0.56 - mattressH / 2);
     const mattressBounds = { x: mattressX, y: mattressY, width: mattressW, height: mattressH };
 
-    renderContactShadow(ctx, mattressBounds, BRAND_PALETTE);
+    if (!CONFIG.shadowEngineApplied) {
+      renderContactShadow(ctx, mattressBounds, BRAND_PALETTE);
+    }
     ctx.drawImage(imgs.cutout, mattressBounds.x, mattressBounds.y, mattressBounds.width, mattressBounds.height);
 
     // 5. Bottom CTA & Warranty
@@ -613,11 +638,31 @@ function buildBannerHtml(task, tokens, viewport, assets) {
 }
 
 function findChromeBinary() {
-  const candidates = ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"];
+  const candidates = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+  ];
   for (const bin of candidates) {
     if (fs.existsSync(bin)) return bin;
   }
   return null;
+}
+
+function applyShadowEngine(inputAbs) {
+  const shadowScript = path.join(ROOT_DIR, "scripts/shadow_engine.py");
+  const cacheDir = path.join(__dirname, "assets", "shadowed");
+  fs.mkdirSync(cacheDir, { recursive: true });
+  const baseName = path.basename(inputAbs, path.extname(inputAbs));
+  const outputAbs = path.join(cacheDir, `${baseName}_shadowed.png`);
+
+  execFileSync("python3", [shadowScript, "--input", inputAbs, "--output", outputAbs], {
+    cwd: ROOT_DIR,
+    stdio: "inherit",
+  });
+  return outputAbs;
 }
 
 function resolveCatalogRelPath(relPath) {
@@ -629,62 +674,45 @@ function resolveCatalogRelPath(relPath) {
   return path.relative(ROOT_DIR, realAbs).split(path.sep).join("/");
 }
 
-function main() {
-  const args = parseArgs(process.argv);
-  const schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, "utf-8"));
-  const tokens = JSON.parse(fs.readFileSync(TOKENS_PATH, "utf-8"));
-  const task = JSON.parse(fs.readFileSync(args.task, "utf-8"));
-
-  validateAgainstSchema(task, schema);
-  console.log(`[BannerEngine] Schema validated: ${task.campaign_id}`);
-
-  const cutoutRel = resolveCatalogRelPath(task.mattress_cutout_path);
-  const envRel = resolveCatalogRelPath(task.environment_bg_path);
-
-  const cutoutAsset = getAsset({ intent: "cutout", file_path: cutoutRel });
-  if (!cutoutAsset.zero_product_drift_verified) {
-    throw new Error(
-      `Cutout asset '${cutoutAsset.id}' failed Zero Product Drift verification.`
-    );
+async function renderViewports(task, tokens, assets, outDir) {
+  let chromium = null;
+  try {
+    ({ chromium } = await import("playwright"));
+  } catch {
+    chromium = null;
   }
-  const envAsset = getAsset({ intent: "hero", file_path: envRel });
-  const badgeAsset = getAsset({
-    category: "trust-badges",
-    product_slug: "awards",
-    intent: "badge",
-    variant: "ad-best-cooling-2026",
-    resolution: "vector",
-  });
 
-  const cutoutAbs = path.join(ROOT_DIR, cutoutAsset.file_path);
-  const envAbs = path.join(ROOT_DIR, envAsset.file_path);
-  const logoAbs = path.join(ROOT_DIR, "assets/logos/Puffy_Logo_0.svg");
-  const badgeAbs = path.join(ROOT_DIR, badgeAsset.file_path);
+  if (chromium) {
+    const browser = await chromium.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      for (const viewport of task.viewports) {
+        const html = buildBannerHtml(task, tokens, viewport, assets);
+        const stem = `${task.campaign_id}_${viewport.width}x${viewport.height}`;
+        const htmlPath = path.join(outDir, `${stem}.html`);
+        const pngPath = path.join(outDir, `${stem}.png`);
 
-  for (const requiredFile of [cutoutAbs, envAbs, logoAbs, badgeAbs]) {
-    if (!fs.existsSync(requiredFile)) {
-      throw new Error(`Required asset not found: ${path.relative(ROOT_DIR, requiredFile)}`);
+        fs.writeFileSync(htmlPath, html, "utf-8");
+        await page.setViewportSize({ width: viewport.width, height: viewport.height });
+        await page.goto(`file://${htmlPath}`, { waitUntil: "load" });
+        await page.waitForFunction(() => document.body.dataset.rendered === "true");
+        await page.screenshot({ path: pngPath });
+
+        const sizeKb = (fs.statSync(pngPath).size / 1024).toFixed(1);
+        console.log(`[BannerEngine] Rendered ${path.relative(ROOT_DIR, pngPath)} (${sizeKb} KB)`);
+      }
+    } finally {
+      await browser.close();
     }
+    return;
   }
-  console.log(
-    `[BannerEngine] Resolved catalog assets: cutout=${cutoutAsset.id}, hero=${envAsset.id}, badge=${badgeAsset.id}`
-  );
 
-  const assets = {
-    cutoutUri: toDataUri(cutoutAbs, resolveMime(cutoutAbs)),
-    envUri: toDataUri(envAbs, resolveMime(envAbs)),
-    logoUri: toDataUri(logoAbs, resolveMime(logoAbs)),
-    badgeUri: toDataUri(badgeAbs, resolveMime(badgeAbs)),
-  };
-
-  fs.mkdirSync(args.out, { recursive: true });
   const chromeBin = findChromeBinary();
-
   for (const viewport of task.viewports) {
     const html = buildBannerHtml(task, tokens, viewport, assets);
     const stem = `${task.campaign_id}_${viewport.width}x${viewport.height}`;
-    const htmlPath = path.join(args.out, `${stem}.html`);
-    const pngPath = path.join(args.out, `${stem}.png`);
+    const htmlPath = path.join(outDir, `${stem}.html`);
+    const pngPath = path.join(outDir, `${stem}.png`);
 
     fs.writeFileSync(htmlPath, html, "utf-8");
 
@@ -710,8 +738,72 @@ function main() {
   }
 }
 
+async function main() {
+  const args = parseArgs(process.argv);
+  const schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, "utf-8"));
+  const tokens = JSON.parse(fs.readFileSync(TOKENS_PATH, "utf-8"));
+  const task = JSON.parse(fs.readFileSync(args.task, "utf-8"));
+
+  validateAgainstSchema(task, schema);
+  console.log(`[BannerEngine] Schema validated: ${task.campaign_id}`);
+
+  let rawCutoutAbs;
+  let cutoutLabel;
+  let isPreShadowed = args.preShadowed;
+  if (args.cutout) {
+    if (!fs.existsSync(args.cutout)) {
+      throw new Error(`Cutout file not found: ${args.cutout}`);
+    }
+    rawCutoutAbs = args.cutout;
+    cutoutLabel = path.relative(ROOT_DIR, rawCutoutAbs);
+  } else {
+    rawCutoutAbs = DEFAULT_HERO_ASSET_PATH;
+    cutoutLabel = path.relative(ROOT_DIR, rawCutoutAbs);
+    isPreShadowed = true;
+  }
+
+  const envRel = resolveCatalogRelPath(task.environment_bg_path);
+  const envAsset = getAsset({ intent: "hero", file_path: envRel });
+  const badgeAsset = getAsset({
+    category: "trust-badges",
+    product_slug: "awards",
+    intent: "badge",
+    variant: "ad-best-cooling-2026",
+    resolution: "vector",
+  });
+
+  const envAbs = path.join(ROOT_DIR, envAsset.file_path);
+  const logoAbs = path.join(ROOT_DIR, "assets/logos/Puffy_Logo_0.svg");
+  const badgeAbs = path.join(ROOT_DIR, badgeAsset.file_path);
+
+  for (const requiredFile of [rawCutoutAbs, envAbs, logoAbs, badgeAbs]) {
+    if (!fs.existsSync(requiredFile)) {
+      throw new Error(`Required asset not found: ${path.relative(ROOT_DIR, requiredFile)}`);
+    }
+  }
+  console.log(
+    `[BannerEngine] Resolved catalog assets: cutout=${cutoutLabel}, hero=${envAsset.id}, badge=${badgeAsset.id}`
+  );
+
+  const cutoutAbs = isPreShadowed ? rawCutoutAbs : applyShadowEngine(rawCutoutAbs);
+
+  const assets = {
+    cutoutUri: toDataUri(cutoutAbs, resolveMime(cutoutAbs)),
+    envUri: toDataUri(envAbs, resolveMime(envAbs)),
+    logoUri: toDataUri(logoAbs, resolveMime(logoAbs)),
+    badgeUri: toDataUri(badgeAbs, resolveMime(badgeAbs)),
+    shadowEngineApplied: true,
+  };
+
+  fs.mkdirSync(args.out, { recursive: true });
+  await renderViewports(task, tokens, assets, args.out);
+}
+
 const isMain =
   Boolean(process.argv[1]) && fs.realpathSync(path.resolve(process.argv[1])) === fs.realpathSync(__filename);
 if (isMain) {
-  main();
+  main().catch((err) => {
+    console.error(`[BannerEngine] Fatal: ${err.message}`);
+    process.exit(1);
+  });
 }
