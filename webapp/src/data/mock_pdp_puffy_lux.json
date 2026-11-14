@@ -1,0 +1,174 @@
+{
+  "product_id": "puffy-lux-hybrid",
+  "name": "Puffy Lux Hybrid Mattress",
+  "tagline": "America's Most Comfortable Mattress",
+  "description": "Engineered with six breathable textile and foam-coil layers for cloud-like pressure relief, targeted spinal alignment, and cool, uninterrupted rest.",
+  "rating": {
+    "score": 4.9,
+    "max_score": 5,
+    "review_count_label": "12,000+ Reviews"
+  },
+  "announcement": {
+    "promo_badge": "LIMITED TIME OFFER",
+    "message": "Save up to $850 on Puffy Lux Hybrid",
+    "countdown_seconds": 14385,
+    "free_gift_label": "Free $600 Sleep Bundle Included",
+    "free_gift_value": 600
+  },
+  "gallery": [
+    {
+      "id": "cutout-studio",
+      "label": "Studio Cutout",
+      "view_type": "cutout",
+      "asset_key": "mock_mattress",
+      "alt": "Puffy Lux Hybrid Mattress unaltered studio cutout",
+      "caption": "Zero Product Drift · Exact 12-inch Hybrid Profile"
+    },
+    {
+      "id": "lifestyle-nordic",
+      "label": "Nordic Sanctuary",
+      "view_type": "lifestyle",
+      "asset_key": "mock_bedroom_nordic",
+      "alt": "Puffy Lux Hybrid Mattress in a serene Nordic bedroom",
+      "caption": "Domestic Sanctuary · Breathable Quilted Finish"
+    }
+  ],
+  "variants": [
+    {
+      "id": "twin",
+      "size": "Twin",
+      "dimensions": "38\" × 75\" × 12\"",
+      "sale_price": 899,
+      "original_price": 1499,
+      "is_default": false
+    },
+    {
+      "id": "full",
+      "size": "Full",
+      "dimensions": "54\" × 75\" × 12\"",
+      "sale_price": 1099,
+      "original_price": 1749,
+      "is_default": false
+    },
+    {
+      "id": "queen",
+      "size": "Queen",
+      "dimensions": "60\" × 80\" × 12\"",
+      "sale_price": 1299,
+      "original_price": 2049,
+      "is_default": true
+    },
+    {
+      "id": "king",
+      "size": "King",
+      "dimensions": "76\" × 80\" × 12\"",
+      "sale_price": 1499,
+      "original_price": 2349,
+      "is_default": false
+    }
+  ],
+  "value_propositions": [
+    {
+      "id": "sleep-trial",
+      "title": "365-Night Sleep Trial",
+      "subtitle": "Risk-free at-home rest guarantee"
+    },
+    {
+      "id": "lifetime-warranty",
+      "title": "Lifetime Warranty",
+      "subtitle": "Zero-fee full replacement coverage"
+    },
+    {
+      "id": "assembled-usa",
+      "title": "Assembled in USA",
+      "subtitle": "CertiPUR-US® certified craftsmanship"
+    },
+    {
+      "id": "sleep-bundle",
+      "title": "Free $600 Sleep Bundle included",
+      "subtitle": "2 Pillows, Mattress Protector & Sheet Set"
+    }
+  ],
+  "trust_badges": [
+    {
+      "id": "cnn-firm",
+      "label": "Best Hybrid Support 2025",
+      "source": "CNN Underscored",
+      "asset_key": "cnn_best_firm_2025"
+    },
+    {
+      "id": "ad-cooling",
+      "label": "Best Cooling Mattress 2026",
+      "source": "Architectural Digest",
+      "asset_key": "ad_best_cooling_2026"
+    },
+    {
+      "id": "consumer-luxury",
+      "label": "Top Luxury Hybrid 2027",
+      "source": "Consumer Mattress",
+      "asset_key": "consumer_mattress_luxury_2027"
+    },
+    {
+      "id": "trial-365",
+      "label": "365-Night Sleep Trial",
+      "source": "Puffy Promise",
+      "asset_key": "theroundup_eco_mattress_2026"
+    },
+    {
+      "id": "warranty-lifetime",
+      "label": "Lifetime Warranty",
+      "source": "Zero-Fee Guarantee",
+      "asset_key": "ad_best_hybrid_2025"
+    }
+  ],
+  "layers": [
+    {
+      "layer_number": 1,
+      "name": "Cooling Cloud™ Quilted Cover",
+      "thickness": "1.5\"",
+      "summary": "Ultra-plush stain-resistant knit cover woven with cooling fibers for instant breathability.",
+      "benefit": "Wicks heat away on contact"
+    },
+    {
+      "layer_number": 2,
+      "name": "Dual Cloud Foam",
+      "thickness": "1.5\"",
+      "summary": "Gel-infused plush memory foam layer that contours gently around shoulders and hips.",
+      "benefit": "Zero-gravity plush cradling"
+    },
+    {
+      "layer_number": 3,
+      "name": "Climate Cabin Control Foam",
+      "thickness": "2.0\"",
+      "summary": "Temperature-regulating open-cell foam engineered to maintain neutral sleep microclimates year-round.",
+      "benefit": "Active thermal regulation"
+    },
+    {
+      "layer_number": 4,
+      "name": "Cloud Comfort Pressure Relief",
+      "thickness": "2.0\"",
+      "summary": "High-resilience transition foam that distributes body weight evenly and eliminates pressure points.",
+      "benefit": "Balanced side & back relief"
+    },
+    {
+      "layer_number": 5,
+      "name": "Contour-Adapt Pocket Coils",
+      "thickness": "4.0\"",
+      "summary": "Individually wrapped tempered steel coils with reinforced perimeter edge support and motion isolation.",
+      "benefit": "Targeted spinal alignment"
+    },
+    {
+      "layer_number": 6,
+      "name": "High-Density Firm Core Support",
+      "thickness": "1.0\"",
+      "summary": "Durable foundational base foam that anchors the coil system and prevents sagging over decades.",
+      "benefit": "Long-lasting structural integrity"
+    }
+  ],
+  "cta": {
+    "primary_label": "Add to Cart",
+    "checkout_label": "Shop Puffy Lux Hybrid",
+    "bg_color": "#067A57",
+    "text_color": "#FFFFFF"
+  }
+}
