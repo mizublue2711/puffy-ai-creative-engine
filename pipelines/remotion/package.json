@@ -1,0 +1,22 @@
+{
+  "name": "puffy-remotion-pipeline",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "build": "tsc --noEmit",
+    "render:hero": "remotion render src/index.ts PuffyHeroVideo out/puffy-hero-16x9.mp4 --props=./sample_props.json"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.260",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.260"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.7.2"
+  }
+}
