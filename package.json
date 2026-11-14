@@ -1,0 +1,23 @@
+{
+  "name": "puffy-ai-creative-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Autonomous creative pipeline, brand design tokens, and Google Pomelli asset ingestion engine for Puffy®",
+  "scripts": {
+    "scrape:pomelli": "tsx scripts/scrape_pomelli.ts",
+    "sync:github": "tsx scripts/sync_github.ts",
+    "ingest:pomelli": "tsx scripts/scrape_pomelli.ts && tsx scripts/sync_github.ts",
+    "typecheck": "tsc --noEmit",
+    "audit": "bash scripts/deployment-audit.sh"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "playwright": "^1.49.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
