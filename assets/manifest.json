@@ -1,170 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "brand": "Puffy\u00ae",
+  "brand": "Puffy®",
   "source": "Google Pomelli",
-  "updated_at": "2026-11-14T08:42:04.412Z",
-  "total_assets": 10,
+  "updated_at": "2026-11-14T13:48:54.070876Z",
+  "total_assets": 157,
   "assets": [
-    {
-      "sku": "PUFFY-CLD-MAT-001",
-      "name": "Puffy Cloud Mattress",
-      "category": "mattresses",
-      "local_path": "assets/catalog/mattresses/puffy-cloud/hero_seed-studio_1200x900.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-cloud-mattress/hero_1200x900.png",
-      "downloaded_at": "2026-11-14T08:42:04.408Z",
-      "checksum": "a86303bcf129756973006572a9ce1490ae32b543d14654c5644d6327e508dec9",
-      "aspect_ratio": "4:3",
-      "resolution": "1200x900",
-      "product_tier": "signature",
-      "dominant_hex_colors": [
-        "#2B2F44",
-        "#067A57"
-      ],
-      "tags": [
-        "signature",
-        "all-foam",
-        "cloud-foam",
-        "cooling",
-        "hero"
-      ]
-    },
-    {
-      "sku": "PUFFY-CLD-MAT-001",
-      "name": "Puffy Cloud Mattress",
-      "category": "mattresses",
-      "local_path": "assets/catalog/mattresses/puffy-cloud/detail_cross-section-seed_1024x1024.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-cloud-mattress/cross-section_1024x1024.png",
-      "downloaded_at": "2026-11-14T08:42:04.408Z",
-      "checksum": "0fd166a14fc4d594718ff0cda405853b3812ccceccb51fbd6a46d7895b56e266",
-      "aspect_ratio": "1:1",
-      "resolution": "1024x1024",
-      "product_tier": "signature",
-      "dominant_hex_colors": [
-        "#E5E3DF",
-        "#067A57"
-      ],
-      "tags": [
-        "signature",
-        "all-foam",
-        "cloud-foam",
-        "cooling",
-        "cross-section"
-      ]
-    },
-    {
-      "sku": "PUFFY-LUX-HYB-001",
-      "name": "Puffy Lux Hybrid",
-      "category": "mattresses",
-      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-lux-hybrid/hero_1200x900.png",
-      "downloaded_at": "2026-11-14T08:42:04.409Z",
-      "checksum": "86a28d479b8b315abc88cd8297f72c8e0172638d535f8c5ed03bcf9efdb343ff",
-      "aspect_ratio": "4:3",
-      "resolution": "1200x900",
-      "product_tier": "luxury",
-      "dominant_hex_colors": [
-        "#2B2F44",
-        "#E5E3DF"
-      ],
-      "tags": [
-        "luxury",
-        "hybrid",
-        "cloud-foam",
-        "contour-shadow",
-        "hero"
-      ]
-    },
-    {
-      "sku": "PUFFY-LUX-HYB-001",
-      "name": "Puffy Lux Hybrid",
-      "category": "mattresses",
-      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-lux-hybrid/detail_1024x1024.png",
-      "downloaded_at": "2026-11-14T08:42:04.410Z",
-      "checksum": "41e8694f10ebdcef9e0052d511ede8281f63fc2ac702878c8598d7a6f7aaf80d",
-      "aspect_ratio": "1:1",
-      "resolution": "1024x1024",
-      "product_tier": "luxury",
-      "dominant_hex_colors": [
-        "#FFFFFF",
-        "#2B2F44"
-      ],
-      "tags": [
-        "luxury",
-        "hybrid",
-        "cloud-foam",
-        "contour-shadow",
-        "detail"
-      ]
-    },
-    {
-      "sku": "PUFFY-ROY-HYB-001",
-      "name": "Puffy Royal Hybrid",
-      "category": "mattresses",
-      "local_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-royal-hybrid/hero_1200x900.png",
-      "downloaded_at": "2026-11-14T08:42:04.410Z",
-      "checksum": "4c9aa7b89e52da3a910f36818b84c4ef22e1feb990821996a27f7ab2a2cc99ae",
-      "aspect_ratio": "4:3",
-      "resolution": "1200x900",
-      "product_tier": "ultra-luxury",
-      "dominant_hex_colors": [
-        "#2B2F44",
-        "#067A57"
-      ],
-      "tags": [
-        "ultra-luxury",
-        "hybrid",
-        "zoned-support",
-        "cooling",
-        "hero"
-      ]
-    },
-    {
-      "sku": "PUFFY-MON-HYB-001",
-      "name": "Puffy Monarch Hybrid",
-      "category": "mattresses",
-      "local_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-monarch-hybrid/hero_1200x900.png",
-      "downloaded_at": "2026-11-14T08:42:04.411Z",
-      "checksum": "c27f586fbe722fe02df892d7b86d1b361b3217480eca9547ffb682ed47c58256",
-      "aspect_ratio": "4:3",
-      "resolution": "1200x900",
-      "product_tier": "ultra-luxury",
-      "dominant_hex_colors": [
-        "#333333",
-        "#067A57"
-      ],
-      "tags": [
-        "ultra-luxury",
-        "hybrid",
-        "alpaca-wool",
-        "contour-shadow",
-        "hero"
-      ]
-    },
-    {
-      "sku": "PUFFY-ACC-PIL-001",
-      "name": "Puffy Signature Pillow",
-      "category": "pillows",
-      "local_path": "assets/catalog/pillows/puffy-signature-pillow/hero_seed-studio_1024x1024.png",
-      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/pillow/puffy-signature-pillow/hero_1024x1024.png",
-      "downloaded_at": "2026-11-14T08:42:04.411Z",
-      "checksum": "235a7e0289b98ebba4c3dc91dc6135d9b9e806a7957074056c739ceb5049bc91",
-      "aspect_ratio": "1:1",
-      "resolution": "1024x1024",
-      "product_tier": "accessory",
-      "dominant_hex_colors": [
-        "#E5E3DF",
-        "#2B2F44"
-      ],
-      "tags": [
-        "accessory",
-        "pillow",
-        "memory-foam",
-        "hero"
-      ]
-    },
     {
       "sku": "PUFFY-FND-BAS-001",
       "name": "Puffy Adjustable Base",
@@ -185,7 +25,808 @@
         "adjustable-base",
         "ergonomic",
         "hero"
-      ]
+      ],
+      "width": 1200,
+      "height": 900,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_angle45_1728x1100.png",
+      "checksum": "46a115fe8765d24b3cd596f55a65bc6fad325960a60e6502c1b2f50d5d9188fc",
+      "width": 1728,
+      "height": 1100,
+      "resolution": "1728x1100",
+      "aspect_ratio": "432:275",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "checksum": "949e3c64f744ffb4eaf61d49971a40e31b9ba77efdad4be8ff918d92709b8894",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-cannell-bed-frame/cutout_thumb-angle45_200x127.png",
+      "checksum": "4d5901a5506f518bb69bd6461170aa2c99959091b7969504161f4b3a45d00828",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45-v2_1920x999.png",
+      "checksum": "0615dbf93f507bf2e24e8d8db1f01c993634ba88f238fc46fce3906d5f4af475",
+      "width": 1920,
+      "height": 999,
+      "resolution": "1920x999",
+      "aspect_ratio": "640:333",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_129x77.png",
+      "checksum": "b191cf1383d226943b47b71f15dc31cda2af51bdda0a6f27addcc39b56a0c544",
+      "width": 129,
+      "height": 77,
+      "resolution": "129x77",
+      "aspect_ratio": "129:77",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_1920x999.png",
+      "checksum": "73b9993b6c6fa6fa7a43c90a96695f1f83319b4b0dba28378f52792e8606aae6",
+      "width": 1920,
+      "height": 999,
+      "resolution": "1920x999",
+      "aspect_ratio": "640:333",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_angle45_863x512.png",
+      "checksum": "a61457229fe109cd19f13e2749b26bafa9bb5e500434b2e6d49b529b1637827d",
+      "width": 863,
+      "height": 512,
+      "resolution": "863x512",
+      "aspect_ratio": "863:512",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x104.png",
+      "checksum": "7790b7dc70abba376877d1c0f0ce1da58db800dfa2b3b7b7cbaa43737b9ed202",
+      "width": 200,
+      "height": 104,
+      "resolution": "200x104",
+      "aspect_ratio": "25:13",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v2_200x119.png",
+      "checksum": "07e3a206595f345447c499da3801c656ccf5d965ee00fd1a64abb61f2f6015c0",
+      "width": 200,
+      "height": 119,
+      "resolution": "200x119",
+      "aspect_ratio": "200:119",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45-v3_200x119.png",
+      "checksum": "dc025d52fe9217499a03a0fed3228e78a0778defb8844ed2350b0aafc69d56e6",
+      "width": 200,
+      "height": 119,
+      "resolution": "200x119",
+      "aspect_ratio": "200:119",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x104.png",
+      "checksum": "abca51c1ce480e091192b6996ba916513d1ab3f2bd58a405896346cc8934f867",
+      "width": 200,
+      "height": 104,
+      "resolution": "200x104",
+      "aspect_ratio": "25:13",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-capri-bed-frame/cutout_thumb-angle45_200x119.png",
+      "checksum": "cba2ebf110e3a5844c61201a96348dcd309d9e25a2a8f1aa781f86f9d58e6d20",
+      "width": 200,
+      "height": 119,
+      "resolution": "200x119",
+      "aspect_ratio": "200:119",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_angle45_1728x1100.png",
+      "checksum": "4376f6fa116a046e1e29b359982874ca3b38f8121ee4701bea6fc22ca84a2c60",
+      "width": 1728,
+      "height": 1100,
+      "resolution": "1728x1100",
+      "aspect_ratio": "432:275",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x123.png",
+      "checksum": "69523a22ccaeebf281086b769953420d3c8d467538aaa7b507fe2aa028093456",
+      "width": 200,
+      "height": 123,
+      "resolution": "200x123",
+      "aspect_ratio": "200:123",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-carmel-bed-frame/cutout_thumb-angle45_200x127.png",
+      "checksum": "b097b1cc5867072deacd456ac920302c693e8cd11015cf39ff0c9b65a5a2fa09",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-detail_200x127.png",
+      "checksum": "13a688fcbcb168e06d345bcd4254dd6dfa19feb2e532ad8ce405ed955e5d13d7",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/detail_thumb-hero_200x127.png",
+      "checksum": "732c85a6a9eefa51bca8c169dbd9f3ea01931aa5bd47ca2f9f89076878f56e49",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-cloud-smart-bed-set/hero_lifestyle_864x549.png",
+      "checksum": "501a2ed9caafb3ac650a0ac1683debb4a49fe31f77345b56be0b2e321759db3e",
+      "width": 864,
+      "height": 549,
+      "resolution": "864x549",
+      "aspect_ratio": "96:61",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_angle45_1920x1238.png",
+      "checksum": "11aeeeaa26690cb778cd0ef0bd1faf82d6dc2028e4b47f71cd002041beba0c06",
+      "width": 1920,
+      "height": 1238,
+      "resolution": "1920x1238",
+      "aspect_ratio": "960:619",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "multi_leg",
+      "leg_count": 2
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/cutout_thumb-angle45_200x129.png",
+      "checksum": "fc3f4d13a21613645c36f9009ea713f902a47dfffe8ca8e3c4ee5666f273099d",
+      "width": 200,
+      "height": 129,
+      "resolution": "200x129",
+      "aspect_ratio": "200:129",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail-v2_200x150.png",
+      "checksum": "06b9ca08131906305bab7ed37bca3f8b80741f3ccb6ddf2c2dee7f1222351181",
+      "width": 200,
+      "height": 150,
+      "resolution": "200x150",
+      "aspect_ratio": "4:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-dusk-bed-frame/detail_thumb-detail_200x150.png",
+      "checksum": "ec695731755d64f771838bd5946455281f5060b38aabe7da38ec77792ebbc2ff",
+      "width": 200,
+      "height": 150,
+      "resolution": "200x150",
+      "aspect_ratio": "4:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_angle45_1728x1100.png",
+      "checksum": "4dd4704d4240d1ed70047db681a011f7c363f9a8d642075d72173b23de805ab5",
+      "width": 1728,
+      "height": 1100,
+      "resolution": "1728x1100",
+      "aspect_ratio": "432:275",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "checksum": "c662ceb6abc93eac4c219c64125b9510bc295132712889bb1f5b8345015e4287",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-kyoto-bed-frame/cutout_thumb-angle45_200x127.png",
+      "checksum": "41f3cec69789c4c1f0631b54d8b87e1430e6116ff22898c9ebd046cd92249182",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-legacy-smart-bed-set/hero_lifestyle_864x549.png",
+      "checksum": "6184c547d927aad9c32153ac964593e816894f77322801287dad76a802aba192",
+      "width": 864,
+      "height": 549,
+      "resolution": "864x549",
+      "aspect_ratio": "96:61",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-detail_200x127.png",
+      "checksum": "5b561f65062d12af193e0864559d0bae82ffe95fb56ea6dbf8ff0835d96410be",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/detail_thumb-hero_200x127.png",
+      "checksum": "4005eba07631e345f0272007c07655237f62c6ddd8906f75fea712363082f466",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-lux-smart-bed-set/hero_lifestyle_864x549.png",
+      "checksum": "3cefbfea8137d08ca5f0c0afc3fcc5adf9b05831d73e31ec559a201747ba2e8b",
+      "width": 864,
+      "height": 549,
+      "resolution": "864x549",
+      "aspect_ratio": "96:61",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_angle45_808x507.png",
+      "checksum": "4a53d138318f54f2e7735682e804fccc62d6d19d934f5a6c5fe93487c47c2235",
+      "width": 808,
+      "height": 507,
+      "resolution": "808x507",
+      "aspect_ratio": "808:507",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-midnight-foundation/cutout_thumb-angle45_200x125.png",
+      "checksum": "0f2f1cb5cb36a27a93d057c778f5fe9ecfbb3773c17fff3ffca0b7aa90589b47",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio-v2_200x120.png",
+      "checksum": "9ece730d6244301fd829b9acfffffc726c3d8d8e786ecb90e1dad4e98c67e305",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-midnight-foundation/detail_thumb-studio_200x120.png",
+      "checksum": "424393b66e66b0d030fb79651098a796e28ee0164f423647b26f884dda615162",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_808x507.png",
+      "checksum": "dd5ecaa19ca764b8eee35b0e57bb4a9a252bfa986677c66b1544b14943ce82a4",
+      "width": 808,
+      "height": 507,
+      "resolution": "808x507",
+      "aspect_ratio": "808:507",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_angle45_812x512.png",
+      "checksum": "3d16588d80a8b99d437f259385247eaace95f7edceea6eecc663b3718e97090a",
+      "width": 812,
+      "height": 512,
+      "resolution": "812x512",
+      "aspect_ratio": "203:128",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x125.png",
+      "checksum": "f26b7a84af34bf29634c2e56fb1903febed8d3335b2f91a50151e5241fea7304",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/cutout_thumb-angle45_200x126.png",
+      "checksum": "f8195832e781346f8da457b487b9ad33060ce62f1f5c1962a476c7567b1a5279",
+      "width": 200,
+      "height": 126,
+      "resolution": "200x126",
+      "aspect_ratio": "100:63",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x116.png",
+      "checksum": "407fb241e331120ac8a3e259821a364ba7cd6413f03a9cbe1b2f88d9ec8a61d3",
+      "width": 200,
+      "height": 116,
+      "resolution": "200x116",
+      "aspect_ratio": "50:29",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-milan-bed-frame/detail_thumb-detail_200x150.png",
+      "checksum": "6f28b71173755184bc1f41cda30d582db7ff7767c06fd51475098f1e0ac5d124",
+      "width": 200,
+      "height": 150,
+      "resolution": "200x150",
+      "aspect_ratio": "4:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-detail_200x127.png",
+      "checksum": "1e7328df2d7cabbebdcb306120a18dc80f1562a45ba2f8cf34ed9d36376bc811",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/detail_thumb-hero_200x127.png",
+      "checksum": "9e3b67776ab504196a393c60080f342cc7e29d1ed243a38f556a23e38da23921",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-monarch-smart-bed-set/hero_lifestyle_864x549.png",
+      "checksum": "59bf458bf026e5058579d12a75ce8c445871a6cde2534a19f383d74ca8e0e17a",
+      "width": 864,
+      "height": 549,
+      "resolution": "864x549",
+      "aspect_ratio": "96:61",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_angle45_1728x1100.png",
+      "checksum": "b1763d9a5a4db4bae9fa0e4f91d5d7f8541e07ffbf9801c6b5e32ec86391c293",
+      "width": 1728,
+      "height": 1100,
+      "resolution": "1728x1100",
+      "aspect_ratio": "432:275",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "multi_leg",
+      "leg_count": 2
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "checksum": "7a006d6a71dc71b3300935fdc161e603bdc6d8298554ef8d6679fc36f685b3ef",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-monza-bed-frame/cutout_thumb-angle45_200x127.png",
+      "checksum": "cccf10a1a7637e2ff9b36c7430dafe4e309c749be1e157c3d7df39ba6691ef15",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-detail_200x127.png",
+      "checksum": "aacdb6c6d4d5d40087fefcdd2ab7f2b3aec02fae4d294c37ca8f1883a7f049e5",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/detail_thumb-hero_200x127.png",
+      "checksum": "ebc6be3a2be266f722a67ec4899a2625dff2ee00e739b420b06ff137bef32881",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-royal-smart-bed-set/hero_lifestyle_864x549.png",
+      "checksum": "080db1d6e546ca33341f2bc78dc3a511374e260fefb35fa473734ac7e71dc4c2",
+      "width": 864,
+      "height": 549,
+      "resolution": "864x549",
+      "aspect_ratio": "96:61",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_angle45_1728x1100.png",
+      "checksum": "a7bf49e1bf3131ebb3a339d1d31d1c7e9282652150b1a046e01af77f0d2ffedd",
+      "width": 1728,
+      "height": 1100,
+      "resolution": "1728x1100",
+      "aspect_ratio": "432:275",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "checksum": "e91fc8684f86e30d1842a8a24574e5b30189be2b24835892037988761d0ddefb",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-sedona-bed-frame/cutout_thumb-angle45_200x127.png",
+      "checksum": "498ead9fec53c5c41fb92014b1c4c672f170401fd51a2607e4c7f9a3517679d4",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_angle45_640x380.png",
+      "checksum": "050ad998c308ce5004c7867f079c9cd2a8196db3be6f2082a961517c87c19fa3",
+      "width": 640,
+      "height": 380,
+      "resolution": "640x380",
+      "aspect_ratio": "32:19",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45-v2_200x119.png",
+      "checksum": "cd102a48c3a0e67cc519f2bfdb87c0aed3efef6becfdeeabe32e05befa746bab",
+      "width": 200,
+      "height": 119,
+      "resolution": "200x119",
+      "aspect_ratio": "200:119",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-selene-swivel-chair/cutout_thumb-angle45_200x119.png",
+      "checksum": "5bfb438fd82709d87a1267e76e4536ba4d1982d7a09800c82590d331790ab5b8",
+      "width": 200,
+      "height": 119,
+      "resolution": "200x119",
+      "aspect_ratio": "200:119",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45-v2_828x512.png",
+      "checksum": "753459e3ffc921e15764000091e1e2426a762f009c5c282810803984c48cbd2a",
+      "width": 828,
+      "height": 512,
+      "resolution": "828x512",
+      "aspect_ratio": "207:128",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_1920x1188.png",
+      "checksum": "436297c2b79752f0c2a6334922e3212a7500fbbdecfd4b0b3de5973945a458d3",
+      "width": 1920,
+      "height": 1188,
+      "resolution": "1920x1188",
+      "aspect_ratio": "160:99",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "multi_leg",
+      "leg_count": 3
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_angle45_828x512.png",
+      "checksum": "b2af9abbb056e273f8e6e3d1c7a6ca9624ca3a1776e65482381466be8d739e75",
+      "width": 828,
+      "height": 512,
+      "resolution": "828x512",
+      "aspect_ratio": "207:128",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v2_200x124.png",
+      "checksum": "f628152126d69749552b8c674594850112d271a997d79881efca9aa97fa96f0f",
+      "width": 200,
+      "height": 124,
+      "resolution": "200x124",
+      "aspect_ratio": "50:31",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v3_200x124.png",
+      "checksum": "9a2ee736a46d433f2d6c143d28a7fe3c845855809b0761e72cc902b418e1f072",
+      "width": 200,
+      "height": 124,
+      "resolution": "200x124",
+      "aspect_ratio": "50:31",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45-v4_200x124.png",
+      "checksum": "a5617fca1673eeced006d970bbf6114b31f201cf325c5d583f3133cf04072fa2",
+      "width": 200,
+      "height": 124,
+      "resolution": "200x124",
+      "aspect_ratio": "50:31",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/cutout_thumb-angle45_200x124.png",
+      "checksum": "95bd6ade4ebc2f78d9212121676a136c930d3f60e92901d3c542841bc0549dd1",
+      "width": 200,
+      "height": 124,
+      "resolution": "200x124",
+      "aspect_ratio": "50:31",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-serenity-adjustable-base/detail_thumb-studio_200x120.png",
+      "checksum": "624ce1772b2d4483f5240f7ebd6c91bc410bf11b0c18843cf48737df4fc26306",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_angle45_560x350.png",
+      "checksum": "a5895d50a1a7bb7fef4c498828274646599d71ca334f2bdaf6bd0b2df54b018c",
+      "width": 560,
+      "height": 350,
+      "resolution": "560x350",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v2_200x125.png",
+      "checksum": "d7c4bb491aab6817de90d00ea6b095d2f91530dd5e4f576adb9e34795578c4fa",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45-v3_200x125.png",
+      "checksum": "56193df3ebefadafcd35cb0a34b65ffe5427f0e713c2ec6e3595c57941b9b058",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-soho-sectional-sofa/cutout_thumb-angle45_200x125.png",
+      "checksum": "8a4055f8ae8445c66d2459be19da8fbf8568dd9d07009cc71d62aadbc0ab3aaf",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_angle45_1728x1100.png",
+      "checksum": "4bc2d9e642885869cf2e848809751a555d7d952f4c0bff80944e498db883dcd4",
+      "width": 1728,
+      "height": 1100,
+      "resolution": "1728x1100",
+      "aspect_ratio": "432:275",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45-v2_200x127.png",
+      "checksum": "2e2057383cfc9c49888965d966f29a3005617dc69cea483364afefdf9039ca52",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-solace-bed-frame/cutout_thumb-angle45_200x127.png",
+      "checksum": "3b948a2f89d96d679add563bacca89b2fd84546a8e0bcc118f92f5033a33cbf0",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_angle45_1920x1238.png",
+      "checksum": "e27e44c640732e94fe8244fca8128e50f13cc592be7c6162dc8db5e1eae85fc4",
+      "width": 1920,
+      "height": 1238,
+      "resolution": "1920x1238",
+      "aspect_ratio": "960:619",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x117.png",
+      "checksum": "631d9e4d4005379683babe864bf1481db48d094083e235733fb8b7dc5fff614e",
+      "width": 200,
+      "height": 117,
+      "resolution": "200x117",
+      "aspect_ratio": "200:117",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x125.png",
+      "checksum": "05c40db6d27ce9671d02e0e465025e13c94bf2d7e650619ecab3cce338cd1b36",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/cutout_thumb-angle45_200x129.png",
+      "checksum": "fcebbac063607ba4318ae78cec33525e148fd041cdb332b9f53ab52d31a776b5",
+      "width": 200,
+      "height": 129,
+      "resolution": "200x129",
+      "aspect_ratio": "200:129",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bed-frames/puffy-zen-bed-frame/detail_thumb-detail_200x150.png",
+      "checksum": "e831e5b36513136a1b1e6d87e9b2df853d4c3571638ecb4aed1f78b3214a5e82",
+      "width": 200,
+      "height": 150,
+      "resolution": "200x150",
+      "aspect_ratio": "4:3",
+      "status": "quarantined",
+      "reason": "low_res"
     },
     {
       "sku": "PUFFY-BED-SHT-001",
@@ -208,7 +849,265 @@
         "cooling",
         "textile",
         "lifestyle"
-      ]
+      ],
+      "width": 1024,
+      "height": 1024,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_angle45_640x385.png",
+      "checksum": "102ec891f22e0e13c6e9d95145aebddc629361c98a383e102fc1df4fe458d3f2",
+      "width": 640,
+      "height": 385,
+      "resolution": "640x385",
+      "aspect_ratio": "128:77",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45-v2_200x120.png",
+      "checksum": "9a0105d3d349f29f714ea54ec22081e589574c990c83329aac987049c9167341",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x120.png",
+      "checksum": "3570eb88abb1eb90659cb8003a8e0e7c867c1f7a77f81ac97c340429e9f44b71",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-blanket/cutout_thumb-angle45_200x125.png",
+      "checksum": "0f81325a728444dd3b8e412776547144bb678a199780021a18a5b6f8f022c352",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_angle45_1920x1155.png",
+      "checksum": "01f562e3141839729c150f9e887eeca9328d1c27606c03ece59e80ea5be3d5fd",
+      "width": 1920,
+      "height": 1155,
+      "resolution": "1920x1155",
+      "aspect_ratio": "128:77",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x120.png",
+      "checksum": "52ed3240e7504bd8afee68bb3105d8726f038d0c7707933b6d1f5c5080950e40",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-comforter/cutout_thumb-angle45_200x125.png",
+      "checksum": "3043a85e5af109b0f73f71978c170b6602a793b45e08e7c0f792da9bfbb1d54d",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-comforter/detail_thumb-detail_200x120.png",
+      "checksum": "c6f475ef321e676de1d8a43041928d4c42e9c660b445c6d1c705ae1a731b7bf2",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_angle45_808x507.png",
+      "checksum": "2a73204d53ee567d21702f92de923d3525999ff42f0645be94052fd2726d99b9",
+      "width": 808,
+      "height": 507,
+      "resolution": "808x507",
+      "aspect_ratio": "808:507",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/cutout_thumb-angle45_200x125.png",
+      "checksum": "2cc1a6dd23c015e78bd0a2c5c0e123f017b140dbf9f8e38983a164a3c7c18298",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail-v2_200x120.png",
+      "checksum": "47221426b935dfd74bede1da02b7b8800193132e794f42902613b321172a4ba9",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-pad/detail_thumb-detail_200x120.png",
+      "checksum": "3cdf781b7c5a01239c118deb2427a0e06677a98efe977cc0bdd6aff9525d77f3",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_angle45_1680x1050.png",
+      "checksum": "2bc54c8d186e69de7741544a074dc4b30a315ddc5f7d95ca9f3d693e5e0965bf",
+      "width": 1680,
+      "height": 1050,
+      "resolution": "1680x1050",
+      "aspect_ratio": "8:5",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "multi_leg",
+      "leg_count": 2
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x120.png",
+      "checksum": "be31753454462c70672d0e334f5e44c53ac1aca990cd6a64cbe7b72801a1b327",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/cutout_thumb-angle45_200x125.png",
+      "checksum": "ea5f4f94343741e37a04a79862597cfe5a8d605142f55a33db8576404458320a",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-mattress-topper/detail_thumb-detail_200x120.png",
+      "checksum": "2d9a4cb5c0ce8a522df6018b90a9f5f91954e11be4be4a3c218885f33f4d4844",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail-v2_200x120.png",
+      "checksum": "d30377e3cadbba82960637957f78e81c3f3ab6be54659fe58322670e5b031d38",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-detail_200x120.png",
+      "checksum": "5853f7bf593a7b7cee5d78ced4a6cc5393f5fe8ea873ba6d4c02fa2299c1e8fd",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-rug/detail_thumb-hero_200x120.png",
+      "checksum": "48c380f76485645de87c58a22c255717a7e5886bcfdc0c5e461716944d5ad439",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-rug/hero_lifestyle_1920x1152.png",
+      "checksum": "9a4a57c97660efc91b2c4ef430fc68893fc143b28b7c6a50ae0945f128f5ced6",
+      "width": 1920,
+      "height": 1152,
+      "resolution": "1920x1152",
+      "aspect_ratio": "5:3",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_angle45_808x502.png",
+      "checksum": "5c01215e3c628234556339b5e16d37ad9f7ff47a51755f725673ce2274d07cb2",
+      "width": 808,
+      "height": 502,
+      "resolution": "808x502",
+      "aspect_ratio": "404:251",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x124.png",
+      "checksum": "5d0dce18062285195c2aebda9c26bb76019149852509306ec8964a246d434c09",
+      "width": 200,
+      "height": 124,
+      "resolution": "200x124",
+      "aspect_ratio": "50:31",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/cutout_thumb-angle45_200x125.png",
+      "checksum": "d80ec026b0b019eee016b4928bcca6c59c75489050ddbc8a36dd28d49b0d2381",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-deluxe-weighted-blanket/detail_thumb-studio_200x120.png",
+      "checksum": "040cc0859223aff49f93003321c65e5e0e310b39d32a44b61000493541a59a3c",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
     },
     {
       "sku": "PUFFY-ACC-PRT-001",
@@ -231,7 +1130,719 @@
         "waterproof",
         "breathable",
         "hero"
-      ]
+      ],
+      "width": 1024,
+      "height": 1024,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_angle45_808x507.png",
+      "checksum": "ad6def1ece608953afd66544b340b2a43ea2857258c75c0a8685133e31ae168e",
+      "width": 808,
+      "height": 507,
+      "resolution": "808x507",
+      "aspect_ratio": "808:507",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45-v2_200x125.png",
+      "checksum": "41e7852762a2df36b752a0e901c3d81eab352aa328556d456bf54fcd68286354",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x120.png",
+      "checksum": "860240176c8d191f05c04f68c0963b5ecf6841a9813104db1917f51d4407584d",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-mattress-protector/cutout_thumb-angle45_200x125.png",
+      "checksum": "a01d1d6bc2e4e8dacc687ddf54722a205256542d69c8cb0363f406dd70777e9d",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-detail_200x120.png",
+      "checksum": "e34fa0112f7bdd194afb28c814354b51a5ba65ce466fcd54d365027f50a8e2fd",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-hero_200x120.png",
+      "checksum": "251c02128ee2373da66c280686d14fff2f23166862a3cf1595e33e20138de41d",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sheets-set/detail_thumb-studio_200x120.png",
+      "checksum": "8e1c0f1a4b2112a2d02155b022889a9aa927ee5d76ea686789d3dd0fccefac51",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sheets-set/hero_lifestyle_1920x1152.png",
+      "checksum": "ce74f361e18e3b9952cae36969577bf35c922c8c4709ee911604358f7fc7a540",
+      "width": 1920,
+      "height": 1152,
+      "resolution": "1920x1152",
+      "aspect_ratio": "5:3",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_angle45_808x504.png",
+      "checksum": "bc479ce4bfb8181b591bf975a59aea113e637eed2b532eac4e050c56ef8fa7c5",
+      "width": 808,
+      "height": 504,
+      "resolution": "808x504",
+      "aspect_ratio": "101:63",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x125.png",
+      "checksum": "4597d55857b9a95823bc8d6bfcfdaf51eea61668374c9f8706ae712ba74da035",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sleep-mask/cutout_thumb-angle45_200x150.png",
+      "checksum": "639a677f57045dd7fbd3452a929cf6fcbaf3509efc8700a1a55c620d123fb0ba",
+      "width": 200,
+      "height": 150,
+      "resolution": "200x150",
+      "aspect_ratio": "4:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/bedding/puffy-signature-sleep-mask/detail_thumb-detail_200x150.png",
+      "checksum": "e7e3f454f03d5d4e1465e45619040a60979817c3ad9e6eb5ef136bb0341c2897",
+      "width": 200,
+      "height": 150,
+      "resolution": "200x150",
+      "aspect_ratio": "4:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "sku": "PUFFY-CLD-MAT-001",
+      "name": "Puffy Cloud Mattress",
+      "category": "mattresses",
+      "local_path": "assets/catalog/mattresses/puffy-cloud/detail_cross-section-seed_1024x1024.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-cloud-mattress/cross-section_1024x1024.png",
+      "downloaded_at": "2026-11-14T08:42:04.408Z",
+      "checksum": "0fd166a14fc4d594718ff0cda405853b3812ccceccb51fbd6a46d7895b56e266",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "product_tier": "signature",
+      "dominant_hex_colors": [
+        "#E5E3DF",
+        "#067A57"
+      ],
+      "tags": [
+        "signature",
+        "all-foam",
+        "cloud-foam",
+        "cooling",
+        "cross-section"
+      ],
+      "width": 1024,
+      "height": 1024,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail-v2_200x127.png",
+      "checksum": "43135f02872e5636e0d879ba7bc9fe0f7f32bcbfbeec7fbcc45f09cfa81692b3",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-detail_200x127.png",
+      "checksum": "d6a228d19af6f4046ac91608bb25f6eab4d74f1b4cd8f06177fe34dadf8037ca",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-cloud/detail_thumb-hero_200x127.png",
+      "checksum": "878d2ac585a967f1e76804eff06ef94735b30467e58813d8925e80f155047961",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-cloud/hero_lifestyle_1296x824.png",
+      "checksum": "b04d532d445944dcc1bf570aeb8e59fbccb8d339e5ab0e2cb44f994a3c70fbfd",
+      "width": 1296,
+      "height": 824,
+      "resolution": "1296x824",
+      "aspect_ratio": "162:103",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "sku": "PUFFY-CLD-MAT-001",
+      "name": "Puffy Cloud Mattress",
+      "category": "mattresses",
+      "local_path": "assets/catalog/mattresses/puffy-cloud/hero_seed-studio_1200x900.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-cloud-mattress/hero_1200x900.png",
+      "downloaded_at": "2026-11-14T08:42:04.408Z",
+      "checksum": "a86303bcf129756973006572a9ce1490ae32b543d14654c5644d6327e508dec9",
+      "aspect_ratio": "4:3",
+      "resolution": "1200x900",
+      "product_tier": "signature",
+      "dominant_hex_colors": [
+        "#2B2F44",
+        "#067A57"
+      ],
+      "tags": [
+        "signature",
+        "all-foam",
+        "cloud-foam",
+        "cooling",
+        "hero"
+      ],
+      "width": 1200,
+      "height": 900,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail-v2_200x127.png",
+      "checksum": "fad8e2eec80c0bf1752cd908e362e642dd9909c71c6adb50e63cb0db67e01c63",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-detail_200x127.png",
+      "checksum": "2691a711c0c3a10515cf18bc6d4a4889086e5570c7dc6c2326a92886fe07d77a",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-legacy/detail_thumb-hero_200x127.png",
+      "checksum": "a7295e00edc5871916277d286ea0001151d67e7ea4ce0cd630d36a620e8755d4",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-legacy/hero_lifestyle_1296x824.png",
+      "checksum": "9e061fe0b032a81fa3ea880c2447228587bfe55bc72c924ff98e6e4808ebea97",
+      "width": 1296,
+      "height": 824,
+      "resolution": "1296x824",
+      "aspect_ratio": "162:103",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png",
+      "checksum": "b3e73498436f06d7871ae488721481109a648edf39d141ecbfc7fa545d4c8d3d",
+      "width": 1200,
+      "height": 720,
+      "resolution": "1200x720",
+      "aspect_ratio": "5:3",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/cutout_studio_720x246.png",
+      "checksum": "c21b55b7fab94d1e6cd187c4b1325a33e3e367e0f3c1ab272a6471a741a9c5a9",
+      "width": 720,
+      "height": 246,
+      "resolution": "720x246",
+      "aspect_ratio": "120:41",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "sku": "PUFFY-LUX-HYB-001",
+      "name": "Puffy Lux Hybrid",
+      "category": "mattresses",
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_seed-detail_1024x1024.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-lux-hybrid/detail_1024x1024.png",
+      "downloaded_at": "2026-11-14T08:42:04.410Z",
+      "checksum": "41e8694f10ebdcef9e0052d511ede8281f63fc2ac702878c8598d7a6f7aaf80d",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "product_tier": "luxury",
+      "dominant_hex_colors": [
+        "#FFFFFF",
+        "#2B2F44"
+      ],
+      "tags": [
+        "luxury",
+        "hybrid",
+        "cloud-foam",
+        "contour-shadow",
+        "detail"
+      ],
+      "width": 1024,
+      "height": 1024,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail-v2_200x127.png",
+      "checksum": "5e336af325f085beff8d5f5d658da5fe2a3f5839a9fdc515d8dfa2b6c493e149",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-detail_200x127.png",
+      "checksum": "d44a84e60928206b39d02cd76e1109708e3dc012b724dfc07ca64e1dea1755f1",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/detail_thumb-hero_200x127.png",
+      "checksum": "4352ee603665e0f4513bb3a44bc27081152ba1f49017da2338c2c4154bb6cbea",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_lifestyle_1296x824.png",
+      "checksum": "a970709e37c3c2747ccadb0845d264600d7951a47bc5a078906923ec755e2365",
+      "width": 1296,
+      "height": 824,
+      "resolution": "1296x824",
+      "aspect_ratio": "162:103",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png",
+      "checksum": "e5f0891e32c8e0b77618c171f620e972d477dd35f98c6ed462410f9c73eea5b9",
+      "width": 1920,
+      "height": 1080,
+      "resolution": "1920x1080",
+      "aspect_ratio": "16:9",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "sku": "PUFFY-LUX-HYB-001",
+      "name": "Puffy Lux Hybrid",
+      "category": "mattresses",
+      "local_path": "assets/catalog/mattresses/puffy-lux-hybrid/hero_seed-studio_1200x900.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-lux-hybrid/hero_1200x900.png",
+      "downloaded_at": "2026-11-14T08:42:04.409Z",
+      "checksum": "86a28d479b8b315abc88cd8297f72c8e0172638d535f8c5ed03bcf9efdb343ff",
+      "aspect_ratio": "4:3",
+      "resolution": "1200x900",
+      "product_tier": "luxury",
+      "dominant_hex_colors": [
+        "#2B2F44",
+        "#E5E3DF"
+      ],
+      "tags": [
+        "luxury",
+        "hybrid",
+        "cloud-foam",
+        "contour-shadow",
+        "hero"
+      ],
+      "width": 1200,
+      "height": 900,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail-v2_200x127.png",
+      "checksum": "c51879fa33f03ee3f330b6f52b3dcc39a3fe57f7a02c141b8774af4539f19c43",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-detail_200x127.png",
+      "checksum": "3b5731d3e7ce03a4244343742fbce6218270d1b12a8b532aee1b1bfd24dd42da",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-monarch-hybrid/detail_thumb-hero_200x127.png",
+      "checksum": "01887287241374c13507bf1f08f15772b3e26a884b184ee26a938d2d9b626cb5",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_lifestyle_1296x824.png",
+      "checksum": "fef2610133d62112c4cec2cdf539cfe4d13b698a9d345120d904ef493869a94a",
+      "width": 1296,
+      "height": 824,
+      "resolution": "1296x824",
+      "aspect_ratio": "162:103",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "sku": "PUFFY-MON-HYB-001",
+      "name": "Puffy Monarch Hybrid",
+      "category": "mattresses",
+      "local_path": "assets/catalog/mattresses/puffy-monarch-hybrid/hero_seed-studio_1200x900.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-monarch-hybrid/hero_1200x900.png",
+      "downloaded_at": "2026-11-14T08:42:04.411Z",
+      "checksum": "c27f586fbe722fe02df892d7b86d1b361b3217480eca9547ffb682ed47c58256",
+      "aspect_ratio": "4:3",
+      "resolution": "1200x900",
+      "product_tier": "ultra-luxury",
+      "dominant_hex_colors": [
+        "#333333",
+        "#067A57"
+      ],
+      "tags": [
+        "ultra-luxury",
+        "hybrid",
+        "alpaca-wool",
+        "contour-shadow",
+        "hero"
+      ],
+      "width": 1200,
+      "height": 900,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail-v2_200x127.png",
+      "checksum": "877e4a37b752da7c47e3cdc7f7dd57e15a2b32dab6351ad60c9a9afc5a20d357",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-detail_200x127.png",
+      "checksum": "88b40e2a69ba4ee0dcd756e326e8de7555f1d3f43b57f182a8bf844891c1532f",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-royal-hybrid/detail_thumb-hero_200x127.png",
+      "checksum": "ddeeb1a62ee553e3136bc5e36af22f45aa10b089272b292c51a83d6fb7fd8318",
+      "width": 200,
+      "height": 127,
+      "resolution": "200x127",
+      "aspect_ratio": "200:127",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_lifestyle_1296x824.png",
+      "checksum": "18f33f448f82de35a6359dff9d40c926f0df95753e2f00599ae7cfce13972e10",
+      "width": 1296,
+      "height": 824,
+      "resolution": "1296x824",
+      "aspect_ratio": "162:103",
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "sku": "PUFFY-ROY-HYB-001",
+      "name": "Puffy Royal Hybrid",
+      "category": "mattresses",
+      "local_path": "assets/catalog/mattresses/puffy-royal-hybrid/hero_seed-studio_1200x900.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/mattress/puffy-royal-hybrid/hero_1200x900.png",
+      "downloaded_at": "2026-11-14T08:42:04.410Z",
+      "checksum": "4c9aa7b89e52da3a910f36818b84c4ef22e1feb990821996a27f7ab2a2cc99ae",
+      "aspect_ratio": "4:3",
+      "resolution": "1200x900",
+      "product_tier": "ultra-luxury",
+      "dominant_hex_colors": [
+        "#2B2F44",
+        "#067A57"
+      ],
+      "tags": [
+        "ultra-luxury",
+        "hybrid",
+        "zoned-support",
+        "cooling",
+        "hero"
+      ],
+      "width": 1200,
+      "height": 900,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_angle45_640x385.png",
+      "checksum": "821511f3cadd22a1e42082f90dd1b6f7fa55817ccc516ce555563c19ca2e5ab3",
+      "width": 640,
+      "height": 385,
+      "resolution": "640x385",
+      "aspect_ratio": "128:77",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x120.png",
+      "checksum": "0d83e41563a198fc7762d2bf6310c937e8969b9fc0d7e2ce47f7dda6a8de9b51",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/pillows/puffy-signature-pillow/cutout_thumb-angle45_200x125.png",
+      "checksum": "ab6ab0cec20c0caffe5e2a255a4bc3c199828db2b3e9576091bb4559c91b90ef",
+      "width": 200,
+      "height": 125,
+      "resolution": "200x125",
+      "aspect_ratio": "8:5",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/catalog/pillows/puffy-signature-pillow/detail_thumb-detail_200x120.png",
+      "checksum": "bc534d80f04bec1c361aad316b1c0f801763398226ebe8f63de64b4410512458",
+      "width": 200,
+      "height": 120,
+      "resolution": "200x120",
+      "aspect_ratio": "5:3",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "sku": "PUFFY-ACC-PIL-001",
+      "name": "Puffy Signature Pillow",
+      "category": "pillows",
+      "local_path": "assets/catalog/pillows/puffy-signature-pillow/hero_seed-studio_1024x1024.png",
+      "source_url": "https://stitch.googleapis.com/puffy-brand-catalog/pillow/puffy-signature-pillow/hero_1024x1024.png",
+      "downloaded_at": "2026-11-14T08:42:04.411Z",
+      "checksum": "235a7e0289b98ebba4c3dc91dc6135d9b9e806a7957074056c739ceb5049bc91",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "product_tier": "accessory",
+      "dominant_hex_colors": [
+        "#E5E3DF",
+        "#2B2F44"
+      ],
+      "tags": [
+        "accessory",
+        "pillow",
+        "memory-foam",
+        "hero"
+      ],
+      "width": 1024,
+      "height": 1024,
+      "status": "valid",
+      "intent": "lifestyle_scene",
+      "pipeline": "scrim_overlay"
+    },
+    {
+      "local_path": "assets/raw_badges/badge_1.png",
+      "checksum": "b09d4ed420fa128e4e359a8c3fc0f88780fd1c2b1ae04ceecc43901a59bdc6ee",
+      "width": 412,
+      "height": 327,
+      "resolution": "412x327",
+      "aspect_ratio": "412:327",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2025-1.png",
+      "checksum": "53b51cbe4ad75cfda73c84944103c4a9ce8f2238daeebf5f1e876d0c2aeebb93",
+      "width": 640,
+      "height": 640,
+      "resolution": "640x640",
+      "aspect_ratio": "1:1",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2025.png",
+      "checksum": "5d0eab6a80a90890a84b0df77f7bed0248984f3c94347d95f5d87dc318bdd64c",
+      "width": 480,
+      "height": 480,
+      "resolution": "480x480",
+      "aspect_ratio": "1:1",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2026-1.png",
+      "checksum": "f3702f0b75790432af1b26ed38f45f83a9e1822a71a7a98e6700409b9231fb75",
+      "width": 416,
+      "height": 480,
+      "resolution": "416x480",
+      "aspect_ratio": "13:15",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2026-2.png",
+      "checksum": "2916684be742cb2d8cb6448178c0f9d9982f2b45c3f7d255dee06429995e41e1",
+      "width": 556,
+      "height": 640,
+      "resolution": "556x640",
+      "aspect_ratio": "139:160",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2026.png",
+      "checksum": "9538eba55aeb75fb6ac416d88bdbb13f872d22fe484405a1c7a05344950f9363",
+      "width": 550,
+      "height": 629,
+      "resolution": "550x629",
+      "aspect_ratio": "550:629",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2027-1.png",
+      "checksum": "00d8d956944db1cb1158a7e9f4d0bdb4f8b86b356ec72e94bb0bbf897421b9e8",
+      "width": 337,
+      "height": 320,
+      "resolution": "337x320",
+      "aspect_ratio": "337:320",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2027-2.png",
+      "checksum": "a9a16abb44aa737675a6a49038919fb41960b779267dd5df024740d1b0d3cb2c",
+      "width": 320,
+      "height": 320,
+      "resolution": "320x320",
+      "aspect_ratio": "1:1",
+      "status": "quarantined",
+      "reason": "low_res"
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2027-3.png",
+      "checksum": "92bfa1148f44bfa67453f539155ff444f1404ae333252b66168ccdcf89530a59",
+      "width": 960,
+      "height": 960,
+      "resolution": "960x960",
+      "aspect_ratio": "1:1",
+      "status": "valid",
+      "intent": "cutout",
+      "pipeline": "shadow_engine",
+      "grounding_profile": "flat_slab",
+      "leg_count": 1
+    },
+    {
+      "local_path": "assets/raw_badges/best_mattres_2027.png",
+      "checksum": "f142d9186d6bb0916e3a740ab5d3147f2b7643fb399e935dee0104a426a28bcd",
+      "width": 337,
+      "height": 320,
+      "resolution": "337x320",
+      "aspect_ratio": "337:320",
+      "status": "quarantined",
+      "reason": "low_res"
     }
   ]
 }
