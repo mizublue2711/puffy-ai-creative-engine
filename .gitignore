@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Secrets & Session State (NEVER commit cookies or tokens)
+.secrets/
+auth_cookies.json
+.env
+.env.local
+.env.*.local
+
+# Build & Cache Artifacts
+webapp/dist/
+pipelines/remotion/out/
+.vite/
+dist/
+
+# OS & Editor
+.DS_Store
+*.swp
