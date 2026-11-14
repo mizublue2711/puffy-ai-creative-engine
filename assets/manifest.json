@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "brand": "Puffy®",
   "source": "Google Pomelli",
-  "updated_at": "2026-11-14T13:48:54.070876Z",
-  "total_assets": 157,
+  "updated_at": "2026-11-14T15:01:23.285Z",
+  "total_assets": 196,
   "assets": [
     {
       "sku": "PUFFY-FND-BAS-001",
@@ -1843,6 +1843,708 @@
       "aspect_ratio": "337:320",
       "status": "quarantined",
       "reason": "low_res"
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_107_9XWRKFK",
+      "name": "Imgi 107 9Xwrkfkwlvu2Jsqaow7Kgq",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_107_9xwRkfKWLvu2jsqaoW7kgQ.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_107_9xwRkfKWLvu2jsqaoW7kgQ.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "50686e52921f9dac050f6f9ff9e0ecdc0c32b5420da0e161e7c2f8e315b5c14b",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 345.88,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_108_9XWRKFK",
+      "name": "Imgi 108 9Xwrkfkwlvu2Jsqaow7Kgq",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_108_9xwRkfKWLvu2jsqaoW7kgQ.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_108_9xwRkfKWLvu2jsqaoW7kgQ.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "4f285b453f34a7383afd2074badebd9275f0954c2f1fbe39cf2521a3785b08fb",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 81.76,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_117_8L_P1CR",
+      "name": "Imgi 117 8L P1Crgrht2Kvq Apxkug",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_117_8L_p1CRgrHt2Kvq-apxkug.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_117_8L_p1CRgrHt2Kvq-apxkug.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "65523835a0e1b88012cba79e8ede224a2a6351260c4c068cc8eb55ca8b870bb1",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 581.23,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_118_8L_P1CR",
+      "name": "Imgi 118 8L P1Crgrht2Kvq Apxkug",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_118_8L_p1CRgrHt2Kvq-apxkug.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_118_8L_p1CRgrHt2Kvq-apxkug.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "1d68d51e1002588aa6f1a7d82f7e11d7abba288006b803e7cd5bf829ffbdbf40",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 91.29,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_119_9Z2TC-V",
+      "name": "Imgi 119 9Z2Tc Vdfqv9Cildvlgknj",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_119_9Z2Tc-vdFQV9CiLDvLGkNj.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_119_9Z2Tc-vdFQV9CiLDvLGkNj.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "2bc6f37cdfce896f0c841d6e7c1f6dd11defec989a2f8b234cb7ef90d922678e",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 91.44,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_120_AS-OFCK",
+      "name": "Imgi 120 As Ofckax5Q8Hwkgofo4Jr",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_120_as-OFckax5Q8HWKGOfO4JR.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_120_as-OFckax5Q8HWKGOfO4JR.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "0145d48e4a4f8864dc6c364f21ce360cb66ecfe848c4c76f9221219641dde758",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 91.37,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_121_BBW7CEC",
+      "name": "Imgi 121 Bbw7Cec8Wnnaag7Yeio Hj",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_121_bbw7cEC8wNnaaG7yeIo_Hj.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_121_bbw7cEC8wNnaaG7yeIo_Hj.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "5a0926e75e80633b7c07759e75bd77a794d95ca3942fca9d15321ad372513db4",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 613.21,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_122_BBW7CEC",
+      "name": "Imgi 122 Bbw7Cec8Wnnaag7Yeio Hj",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_122_bbw7cEC8wNnaaG7yeIo_Hj.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_122_bbw7cEC8wNnaaG7yeIo_Hj.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "0c31cf9209409d2f770ca116e7a8764c646497e6f609bbff8b966f21156b80d3",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 98.89,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_123_AELRICK",
+      "name": "Imgi 123 Aelrickpvtw2Dvckv7H4Sj",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_123_aeLricKPVtw2DVckv7h4sj.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_123_aeLricKPVtw2DVckv7h4sj.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "5493e1604031d1160e3a278aa4a06dd33d5ebcce93d295b94ee35d9970c89f7d",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 98.59,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_124_84LTM11",
+      "name": "Imgi 124 84Ltm11Lvvoe7Atsc1Cks2",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_124_84ltM11LVvOe7ATSC1Cks2.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_124_84ltM11LVvOe7ATSC1Cks2.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "e842321e725732f6bfa302341eff1e039c34881d25a637b4a495b34c81ce4298",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 100.79,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_161_AHWTGBX",
+      "name": "Imgi 161 Ahwtgbxwwts2Pik1Fg7Kqa",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_161_aHWtGbxwWTS2PIk1fG7kqa.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_161_aHWtGbxwWTS2PIk1fG7kqa.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "10ba82204287162a7ab2d31450f2bc932b6520e39ab767c4785925c02e52df39",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 644.18,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_162_AHWTGBX",
+      "name": "Imgi 162 Ahwtgbxwwts2Pik1Fg7Kqa",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_162_aHWtGbxwWTS2PIk1fG7kqa.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_162_aHWtGbxwWTS2PIk1fG7kqa.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "2d22a207a40ff0916b8091d64e6b477023d2b606a57a7d04eb0ae9ca22716a11",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 93.33,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_163_ARX8FDL",
+      "name": "Imgi 163 Arx8Fdl7Czh3Qlym1So4Ox",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_163_arx8FDl7CZh3QLyM1So4ox.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_163_arx8FDl7CZh3QLyM1So4ox.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "713e14147a473a51987e45e33e31229658fb2d06470d85f4a2efbfef07f7b1eb",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 93.48,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_164_9OPT2MW",
+      "name": "Imgi 164 9Opt2Mw5Su3A3D9Fabm4Qh",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_164_9oPT2MW5SU3a3D9faBm4QH.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_164_9oPT2MW5SU3a3D9faBm4QH.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "e3c20de2806b2077f22a2ffdb5163537f889751315ab15b6310ea0537b3f3cb1",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 97.2,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_169_BIJXFX9",
+      "name": "Imgi 169 Bijxfx9 T8Ifsqxkkmc Jw",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_169_bijxfx9-T8ifsqXKKMc_jW.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_169_bijxfx9-T8ifsqXKKMc_jW.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "53d21c152df612971d0997f317ff7b839c490ac810e3af7da2fb95656c2b56b9",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 570.67,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_170_BIJXFX9",
+      "name": "Imgi 170 Bijxfx9 T8Ifsqxkkmc Jw",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_170_bijxfx9-T8ifsqXKKMc_jW.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_170_bijxfx9-T8ifsqXKKMc_jW.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "21249e72f36155fb08a3276f62620a94a563f1d8279131101382f7e8e3a972c4",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 100.6,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_171_8X0UN0I",
+      "name": "Imgi 171 8X0Un0Ifd322Rq9Hsvl 1L",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_171_8X0un0Ifd322rQ9hSvl_1l.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_171_8X0un0Ifd322rQ9hSvl_1l.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "462018243e786a854c66fcfcd1e332f1ac94415127f153ed675fc23f116a923e",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 102.81,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_172_AAMLGIA",
+      "name": "Imgi 172 Aamlgiawofddual1Kahknj",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_172_aaMlgIAwOfDduaL1kAhkNJ.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_172_aaMlgIAwOfDduaL1kAhkNJ.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "12cdfd44c73176d799fec12c3d73b37b06e5d4b6e4bdede2e38585b17538b170",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 102.86,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_29_8XK5WJGQ",
+      "name": "Imgi 29 8Xk5Wjgqlqy8Hl32Ath C ",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_29_8Xk5wJgQLqY8hL32aTH_c_.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_29_8Xk5wJgQLqY8hL32aTH_c_.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "760e55affae26caf07197c883b9c32aa7f402620324f82b4770df5bbb5e3ab33",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 95.26,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_30_ABN6NNBQ",
+      "name": "Imgi 30 Abn6Nnbq6Xu3Kgvduaqok4",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_30_aBN6NNbQ6Xu3kGvduaQOk4.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_30_aBN6NNbQ6Xu3kGvduaQOk4.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "eb95a0c5ab2d761f2f964fb15f0eb0e12659250262c984dba3ae9b11d32ef906",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 97.18,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_31_9MU65XJN",
+      "name": "Imgi 31 9Mu65Xjnuvq7Mw5Dqfp Pd",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_31_9mu65xjnuVQ7MW5dqfP_pD.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_31_9mu65xjnuVQ7MW5dqfP_pD.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "e8895f24de7639081967074fb3ddf12715fd7d100c981b2cebbaef638b9a43c3",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 566.81,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_32_9MU65XJN",
+      "name": "Imgi 32 9Mu65Xjnuvq7Mw5Dqfp Pd",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_32_9mu65xjnuVQ7MW5dqfP_pD.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_32_9mu65xjnuVQ7MW5dqfP_pD.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "5c5437d07850ce737c46177cfeed0281d92b23af27321d888e7f3f2e07bb67db",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 94.05,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_33_AITLYCXH",
+      "name": "Imgi 33 Aitlycxhlf6Comajudtko7",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_33_aITLyCXhlf6coMAJUDTko7.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_33_aITLyCXhlf6coMAJUDTko7.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "46e184cc19d5aa0198ab752fd717e0e5483602dc68431329375a92a50af1b3f8",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 94.58,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_60_ARMQF4HZ",
+      "name": "Imgi 60 Armqf4Hzzhuaqovjmz4O A",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_60_aRMQf4hZZHuaQOVJmz4O_a.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_60_aRMQf4hZZHuaQOVJmz4O_a.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "65523835a0e1b88012cba79e8ede224a2a6351260c4c068cc8eb55ca8b870bb1",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 589.25,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_61_ARMQF4HZ",
+      "name": "Imgi 61 Armqf4Hzzhuaqovjmz4O A",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_61_aRMQf4hZZHuaQOVJmz4O_a.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_61_aRMQf4hZZHuaQOVJmz4O_a.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "1d68d51e1002588aa6f1a7d82f7e11d7abba288006b803e7cd5bf829ffbdbf40",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 91.25,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_62_B1LRCD3V",
+      "name": "Imgi 62 B1Lrcd3Vaim2Dqmwzlrkx8",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_62_b1LrCd3VaIM2dqmWZLRkx8.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_62_b1LrCd3VaIM2dqmWZLRkx8.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "2bc6f37cdfce896f0c841d6e7c1f6dd11defec989a2f8b234cb7ef90d922678e",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 91.23,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_63_BKGTH5XT",
+      "name": "Imgi 63 Bkgth5Xtnnpbjyhys2949O",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_63_bKGTh5XTnNpbJyhYs2949O.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_63_bKGTh5XTnNpbJyhYs2949O.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "0145d48e4a4f8864dc6c364f21ce360cb66ecfe848c4c76f9221219641dde758",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 91.35,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_64_BPIEYU5E",
+      "name": "Imgi 64 Bpieyu5Emyffgjtacsokhp",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_64_bPIEyU5eMyFfgJtACsOkHP.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_64_bPIEyU5eMyFfgJtACsOkHP.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "1f164c65847765cd38f04a20fae90200bb7278e55b62c3a680112ddfd4d6fca2",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 556.48,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_65_BPIEYU5E",
+      "name": "Imgi 65 Bpieyu5Emyffgjtacsokhp",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_65_bPIEyU5eMyFfgJtACsOkHP.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_65_bPIEyU5eMyFfgJtACsOkHP.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "ec2d9bf7a861c2c895263e76fc2518120435ca5e000b61c676b8b0fef8381b15",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 92.53,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_66_A6JXZQPZ",
+      "name": "Imgi 66 A6Jxzqpzzaebfuev0Qwolw",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_66_a6jXzQPzZaEbfuev0QWOLw.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_66_a6jXzQPzZaEbfuev0QWOLw.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "d534c9e7903e829ede2997219be102b46352001a8be8f19980b440a938767bfd",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 94.73,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_67_8V9MA5XJ",
+      "name": "Imgi 67 8V9Ma5Xjpyi6Onovqgh Zo",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_67_8V9MA5xjpYI6oNovqGH_zo.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_67_8V9MA5xjpYI6oNovqGH_zo.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "dcfe19fb0b30bc6e49f294df7707680c1f406a390839c826d4f7556b1092aa3d",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 94.52,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_70_AEKYYTR2",
+      "name": "Imgi 70 Aekyytr2Ag0E Uo0Z7Vkk7",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_70_aekyyTR2aG0e-uo0Z7vkk7.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_70_aekyyTR2aG0e-uo0Z7vkk7.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "cd20e46c83258bc8dee3c89f1d3455c2b9c60d451d353157b97d29838fd0efef",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 278.33,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_79_BHLCZTRP",
+      "name": "Imgi 79 Bhlcztrpib0Eua65X9Xkl1",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_79_bHLCZTRPIB0euA65x9xkl1.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_79_bHLCZTRPIB0euA65x9xkl1.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "aec70fca91259119ada1e500dbd449475bc53080b8fcda820c4c5d858f5d8704",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 68.91,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_84_AMAEKTZT",
+      "name": "Imgi 84 Amaektztxwx7Mf Zl2U Ch",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_84_amAEKTzTXwx7MF_ZL2U_ch.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_84_amAEKTzTXwx7MF_ZL2U_ch.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "96960f9c68df14570f49ef0ea7154bb17672a7d13276c04452e753cfc6073a72",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 247.16,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_85_AMAEKTZT",
+      "name": "Imgi 85 Amaektztxwx7Mf Zl2U Ch",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_85_amAEKTzTXwx7MF_ZL2U_ch.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_85_amAEKTzTXwx7MF_ZL2U_ch.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "36c1f2f739bec4a0e550b8378dc1e24e7163cd2a8dd48016920c7bb70d335792",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 79.85,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_86_BNIT6CAA",
+      "name": "Imgi 86 Bnit6Caaiqm5Upncxe74C ",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_86_bNIt6cAAIqM5UpnCXe74C_.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_86_bNIt6cAAIqM5UpnCXe74C_.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "aec70fca91259119ada1e500dbd449475bc53080b8fcda820c4c5d858f5d8704",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 69.3,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_87_9FNVQQP_",
+      "name": "Imgi 87 9Fnvqqp Gfycm7Aqxal4R9",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_87_9fnvqQp_gfycM7aqXAL4R9.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_87_9fnvqQp_gfycM7aqXAL4R9.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "3c9d7b05aae7cea8570c0840c64e4be2ebc5fafcf9bb0d33d39a6bc4ed14763a",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 82.05,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_92_A8N1PHSM",
+      "name": "Imgi 92 A8N1Phsmlh096Jcbzei Ei",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_92_a8n1phsMLH096jcBzei_Ei.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_92_a8n1phsMLH096jcBzei_Ei.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "928938116707eb9b3f5e2d92a19ae499910a60da46e0c4def6228496e5c55771",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 320.99,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
+    },
+    {
+      "sku": "PUFFY-PROC-IMGI_93_A8N1PHSM",
+      "name": "Imgi 93 A8N1Phsmlh096Jcbzei Ei",
+      "category": "processed",
+      "local_path": "assets/catalog/processed/unmapped/imgi_93_a8n1phsMLH096jcBzei_Ei.png",
+      "source_input": "assets/raw_mattress/unmapped/imgi_93_a8n1phsMLH096jcBzei_Ei.png",
+      "downloaded_at": "2026-11-14T15:01:23.285Z",
+      "checksum": "f446360a2f9c3dd880321ed59fe19572c0428a1228256c77e09f081755053429",
+      "aspect_ratio": "1:1",
+      "resolution": "1024x1024",
+      "processing_ms": 81.64,
+      "tags": [
+        "zero-drift",
+        "contour-shadow",
+        "grid-75",
+        "processed"
+      ]
     }
   ]
 }
