@@ -1,0 +1,81 @@
+{
+  "brand": "Puffy®",
+  "version": "1.0.0",
+  "colors": {
+    "primary": {
+      "navy_ink": {
+        "name": "Navy Ink",
+        "hex": "#2B2F44",
+        "rgb": { "r": 43, "g": 47, "b": 68 },
+        "cmyk": { "c": 37, "m": 31, "y": 0, "k": 73 },
+        "hsl": { "h": 230, "s": 23, "l": 22 }
+      },
+      "pure_white": {
+        "name": "Pure White",
+        "hex": "#FFFFFF",
+        "rgb": { "r": 255, "g": 255, "b": 255 },
+        "cmyk": { "c": 0, "m": 0, "y": 0, "k": 0 },
+        "hsl": { "h": 0, "s": 0, "l": 100 }
+      },
+      "warm_linen": {
+        "name": "Warm Linen",
+        "hex": "#E5E3DF",
+        "rgb": { "r": 229, "g": 227, "b": 223 },
+        "cmyk": { "c": 0, "m": 1, "y": 3, "k": 10 },
+        "hsl": { "h": 40, "s": 10, "l": 89 }
+      },
+      "ocean_teal": {
+        "name": "Ocean Teal",
+        "hex": "#067A57",
+        "rgb": { "r": 6, "g": 122, "b": 87 },
+        "cmyk": { "c": 95, "m": 0, "y": 29, "k": 52 },
+        "hsl": { "h": 162, "s": 91, "l": 25 }
+      },
+      "onyx_black": {
+        "name": "Onyx Black",
+        "hex": "#333333",
+        "rgb": { "r": 51, "g": 51, "b": 51 },
+        "cmyk": { "c": 0, "m": 0, "y": 0, "k": 80 },
+        "hsl": { "h": 0, "s": 0, "l": 20 }
+      }
+    }
+  },
+  "typography": {
+    "primary": {
+      "role": "Headlines / Hero",
+      "font_family": "\"PT Serif\", serif",
+      "family_name": "PT Serif",
+      "fallback": "serif"
+    },
+    "secondary": {
+      "role": "Body / Specs / Badges",
+      "font_family": "\"Mukta\", sans-serif",
+      "family_name": "Mukta",
+      "fallback": "sans-serif"
+    }
+  },
+  "logo_geometry": {
+    "minimum_clear_space_px": 30,
+    "clear_space_rule": "30px minimum clear space on each side",
+    "minimum_size": {
+      "width_inches": 0.83,
+      "width_px": 80
+    }
+  },
+  "value_propositions": {
+    "sleep_trial": "365-night sleep trial",
+    "warranty": "Zero-fee lifetime warranty",
+    "craftsmanship": [
+      "Assembled in the USA",
+      "Advanced cooling technology",
+      "Targeted body support"
+    ],
+    "aesthetic_tone_of_voice": [
+      "Nordic Minimalism",
+      "Pillowy Volume",
+      "Reassuring",
+      "Domestic Sanctuary",
+      "Textile Layers"
+    ]
+  }
+}

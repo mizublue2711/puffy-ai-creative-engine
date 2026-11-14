@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://puffy.com/schemas/cutout_metadata.schema.json",
+  "title": "Puffy Mattress Cutout Metadata",
+  "description": "Metadata and integrity verification record for segmented mattress cutouts enforcing the Zero Product Drift rule.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cutout_id",
+    "source_raw_path",
+    "cutout_path",
+    "sha256",
+    "dimensions",
+    "zero_product_drift_verified"
+  ],
+  "properties": {
+    "cutout_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for the segmented mattress cutout."
+    },
+    "source_raw_path": {
+      "type": "string",
+      "pattern": "^assets/raw_mattress/.+$",
+      "description": "Relative path to the original unsegmented product input."
+    },
+    "cutout_path": {
+      "type": "string",
+      "pattern": "^assets/cutouts/.+\\.png$",
+      "description": "Relative path to the transparent PNG cutout."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$",
+      "description": "SHA-256 checksum of the transparent PNG cutout."
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "zero_product_drift_verified": {
+      "type": "boolean",
+      "const": true,
+      "description": "Confirms physical geometry, quilting pattern, and woven Puffy badge are 100% unaltered."
+    }
+  }
+}

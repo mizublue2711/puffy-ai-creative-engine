@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://puffy.com/schemas/remotion_props.schema.json",
+  "title": "Puffy Remotion Video Props",
+  "description": "Input properties schema for the Remotion programmatic video composition pipeline.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "durationInFrames",
+    "aspectRatio",
+    "kenBurnsZoomIntensity",
+    "mattressLayerTransition",
+    "brandBadgeAsset"
+  ],
+  "properties": {
+    "durationInFrames": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 300,
+      "description": "Total composition duration in frames (default: 300 frames / 10s @ 30fps)."
+    },
+    "aspectRatio": {
+      "type": "string",
+      "enum": [
+        "16:9",
+        "9:16"
+      ],
+      "description": "Target video output aspect ratio."
+    },
+    "kenBurnsZoomIntensity": {
+      "type": "number",
+      "minimum": 1.05,
+      "maximum": 1.2,
+      "description": "Ken Burns background zoom scale factor (constrained to 1.05 - 1.2)."
+    },
+    "mattressLayerTransition": {
+      "type": "string",
+      "enum": [
+        "pillowy-float-in",
+        "fade-scale"
+      ],
+      "description": "Animation transition preset for the unaltered mattress cutout layer."
+    },
+    "brandBadgeAsset": {
+      "type": "string",
+      "pattern": "^assets/logos/.+$",
+      "minLength": 1,
+      "description": "Relative path to the brand badge/logo asset in assets/logos/."
+    }
+  }
+}

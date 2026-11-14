@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://puffy.com/schemas/banner_task.schema.json",
+  "title": "Puffy Banner & PDP Module Task",
+  "description": "Payload schema used to render programmatic banners and PDP modules in strict compliance with the Puffy Brand Book.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "campaign_id",
+    "mattress_cutout_path",
+    "environment_bg_path",
+    "headline",
+    "subheadline",
+    "badge_text",
+    "cta",
+    "viewports"
+  ],
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for the creative campaign."
+    },
+    "mattress_cutout_path": {
+      "type": "string",
+      "pattern": "^assets/cutouts/.+\\.png$",
+      "description": "Relative path to a verified transparent PNG cutout in assets/cutouts/ (Zero Product Drift)."
+    },
+    "environment_bg_path": {
+      "type": "string",
+      "pattern": "^assets/environments/.+\\.(png|jpg|jpeg|webp)$",
+      "description": "Relative path to a generative AI bedroom plate in assets/environments/."
+    },
+    "headline": {
+      "type": "string",
+      "minLength": 1,
+      "x-font-family": "\"PT Serif\", serif",
+      "description": "Primary hero headline text. Font is strictly constrained to PT Serif."
+    },
+    "subheadline": {
+      "type": "string",
+      "minLength": 1,
+      "x-font-family": "\"Mukta\", sans-serif",
+      "description": "Secondary supporting copy. Font is strictly constrained to Mukta."
+    },
+    "badge_text": {
+      "type": "string",
+      "minLength": 1,
+      "x-font-family": "\"Mukta\", sans-serif",
+      "examples": [
+        "Product of the Year 2025",
+        "365-Night Trial"
+      ],
+      "description": "Badge callout copy (e.g., \"Product of the Year 2025\" or \"365-Night Trial\")."
+    },
+    "cta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "url",
+        "bg_color",
+        "text_color"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Call-to-action button text."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1,
+          "description": "Destination URL for the CTA."
+        },
+        "bg_color": {
+          "type": "string",
+          "const": "#067A57",
+          "description": "CTA background color constrained to Puffy Ocean Teal (#067A57)."
+        },
+        "text_color": {
+          "type": "string",
+          "const": "#FFFFFF",
+          "description": "CTA text color constrained to Puffy Pure White (#FFFFFF)."
+        }
+      }
+    },
+    "viewports": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Target render viewport dimensions.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "width",
+          "height"
+        ],
+        "properties": {
+          "width": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Viewport width in pixels."
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Viewport height in pixels."
+          }
+        }
+      },
+      "examples": [
+        [
+          { "width": 1200, "height": 628 },
+          { "width": 1080, "height": 1080 },
+          { "width": 1080, "height": 1920 }
+        ]
+      ]
+    }
+  }
+}
