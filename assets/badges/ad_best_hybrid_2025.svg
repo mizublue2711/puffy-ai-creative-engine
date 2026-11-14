@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-labelledby="ad-hybrid-2025">
+  <title id="ad-hybrid-2025">Architectural Digest - Best Hybrid Mattress 2025</title>
+  <g id="heraldic_shield">
+    <path d="M 42 16 L 358 16 L 358 222 C 358 308 274 358 200 386 C 126 358 42 308 42 222 Z" fill="#E5E3DF" stroke="#111111" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M 54 28 L 346 28 L 346 218 C 346 297 268 344 200 370 C 132 344 54 297 54 218 Z" fill="none" stroke="#B3A067" stroke-width="2.5" stroke-linejoin="round"/>
+  </g>
+  <g id="ad_monogram">
+    <text x="200" y="132" text-anchor="middle" font-family="'PT Serif', Georgia, serif" font-size="112" font-weight="700" letter-spacing="-8" fill="#111111">AD</text>
+    <text x="200" y="152" text-anchor="middle" font-family="'PT Serif', Georgia, serif" font-size="13.5" font-weight="700" letter-spacing="1.2" fill="#111111">ARCHITECTURAL DIGEST</text>
+  </g>
+  <g id="laurel_branches" fill="#B3A067">
+    <!-- Left slender laurel branch -->
+    <path d="M 110 132 Q 72 220 116 298 Q 145 335 208 345" fill="none" stroke="#B3A067" stroke-width="1.8"/>
+    <ellipse cx="95" cy="152" rx="9" ry="4" transform="rotate(-45 95 152)"/>
+    <ellipse cx="83" cy="176" rx="9" ry="4" transform="rotate(-35 83 176)"/>
+    <ellipse cx="77" cy="204" rx="9" ry="4" transform="rotate(-18 77 204)"/>
+    <ellipse cx="78" cy="232" rx="9" ry="4" transform="rotate(5 78 232)"/>
+    <ellipse cx="86" cy="260" rx="9" ry="4" transform="rotate(24 86 260)"/>
+    <ellipse cx="102" cy="286" rx="9" ry="4" transform="rotate(38 102 286)"/>
+    <ellipse cx="126" cy="310" rx="9" ry="4" transform="rotate(42 126 310)"/>
+    <ellipse cx="156" cy="328" rx="9" ry="4" transform="rotate(25 156 328)"/>
+    <!-- Right slender laurel branch -->
+    <path d="M 290 132 Q 328 220 284 298 Q 255 335 192 345" fill="none" stroke="#B3A067" stroke-width="1.8"/>
+    <ellipse cx="305" cy="152" rx="9" ry="4" transform="rotate(45 305 152)"/>
+    <ellipse cx="317" cy="176" rx="9" ry="4" transform="rotate(35 317 176)"/>
+    <ellipse cx="323" cy="204" rx="9" ry="4" transform="rotate(18 323 204)"/>
+    <ellipse cx="322" cy="232" rx="9" ry="4" transform="rotate(-5 322 232)"/>
+    <ellipse cx="314" cy="260" rx="9" ry="4" transform="rotate(-24 314 260)"/>
+    <ellipse cx="298" cy="286" rx="9" ry="4" transform="rotate(-38 298 286)"/>
+    <ellipse cx="274" cy="310" rx="9" ry="4" transform="rotate(-42 274 310)"/>
+    <ellipse cx="244" cy="328" rx="9" ry="4" transform="rotate(-25 244 328)"/>
+  </g>
+  <g id="award_text" font-family="'PT Serif', Georgia, serif" font-weight="600" fill="#111111" text-anchor="middle">
+    <text x="200" y="216" font-size="24" letter-spacing="0.8">BEST HYBRID</text>
+    <text x="200" y="250" font-size="24" letter-spacing="0.8">MATTRESS</text>
+    <text x="200" y="286" font-size="26" font-weight="700">2025</text>
+  </g>
+</svg>

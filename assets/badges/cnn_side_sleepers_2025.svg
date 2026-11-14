@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-labelledby="cnn-side-2025">
+  <title id="cnn-side-2025">CNN Underscored - Best Mattresses for Side Sleepers 2025</title>
+  <defs>
+    <clipPath id="card-clip-side">
+      <rect x="16" y="48" width="368" height="304" rx="18"/>
+    </clipPath>
+  </defs>
+  <g id="card_frame">
+    <rect x="8" y="40" width="384" height="320" rx="24" fill="#FFFFFF" stroke="#C00000" stroke-width="3.5"/>
+    <rect x="16" y="48" width="368" height="304" rx="18" fill="#FFFFFF" stroke="#C00000" stroke-width="3"/>
+    <g clip-path="url(#card-clip-side)">
+      <rect x="16" y="48" width="368" height="74" fill="#C00000"/>
+    </g>
+    <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 164 76 A 14 14 0 1 0 164 100 L 172 100 L 172 72 L 190 100 L 190 72 L 198 72 L 216 100 L 216 72" stroke-width="8"/>
+      <path d="M 164 76 A 14 14 0 1 0 164 100 L 172 100 L 172 72 L 190 100 L 190 72 L 198 72 L 216 100 L 216 72" stroke="#C00000" stroke-width="2.5"/>
+    </g>
+  </g>
+  <g id="laurel_checkmark">
+    <g fill="#A6ADB4">
+      <ellipse cx="66" cy="186" rx="9" ry="4" transform="rotate(-55 66 186)"/>
+      <ellipse cx="53" cy="202" rx="9" ry="4" transform="rotate(-35 53 202)"/>
+      <ellipse cx="45" cy="222" rx="9" ry="4" transform="rotate(-15 45 222)"/>
+      <ellipse cx="44" cy="242" rx="9" ry="4" transform="rotate(8 44 242)"/>
+      <ellipse cx="51" cy="262" rx="9" ry="4" transform="rotate(28 51 262)"/>
+      <ellipse cx="64" cy="278" rx="9" ry="4" transform="rotate(42 64 278)"/>
+      <ellipse cx="81" cy="288" rx="9" ry="4" transform="rotate(20 81 288)"/>
+    </g>
+    <g fill="#A6ADB4">
+      <ellipse cx="116" cy="186" rx="9" ry="4" transform="rotate(55 116 186)"/>
+      <ellipse cx="129" cy="202" rx="9" ry="4" transform="rotate(35 129 202)"/>
+      <ellipse cx="137" cy="222" rx="9" ry="4" transform="rotate(15 137 222)"/>
+      <ellipse cx="138" cy="242" rx="9" ry="4" transform="rotate(-8 138 242)"/>
+      <ellipse cx="131" cy="262" rx="9" ry="4" transform="rotate(-28 131 262)"/>
+      <ellipse cx="118" cy="278" rx="9" ry="4" transform="rotate(-42 118 278)"/>
+      <ellipse cx="101" cy="288" rx="9" ry="4" transform="rotate(-20 101 288)"/>
+    </g>
+    <path d="M 83 294 Q 91 290 99 294 M 91 292 L 91 298" stroke="#8C949C" stroke-width="2" fill="none"/>
+    <path d="M 70 236 L 85 252 L 116 214 L 108 206 L 85 235 L 77 227 Z" fill="#BCC2C8" stroke="#7A828A" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+  <g id="award_text" font-family="'Mukta', Arial, Helvetica, sans-serif" font-weight="800" fill="#263238" text-anchor="start">
+    <text x="156" y="182" font-size="27">BEST</text>
+    <text x="156" y="216" font-size="27">MATTRESSES</text>
+    <text x="156" y="250" font-size="27">FOR SIDE</text>
+    <text x="156" y="284" font-size="27">SLEEPERS</text>
+    <text x="156" y="318" font-size="27" font-weight="600" fill="#455A64">2025</text>
+  </g>
+</svg>
