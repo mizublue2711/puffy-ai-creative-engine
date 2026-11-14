@@ -1,11 +1,11 @@
 import React from "react";
 import { AbsoluteFill, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import brandTokens from "../../../config/brand_tokens.json";
-import mockMattress from "../../../assets/cutouts/mock_mattress.png";
-import mockBedroom from "../../../assets/environments/mock_bedroom_nordic.png";
+import mockMattress from "../../../assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png";
+import mockBedroom from "../../../assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png";
 import puffyLogo0 from "../../../assets/logos/Puffy_Logo_0.svg";
 import puffyLogo3 from "../../../assets/logos/Puffy_Logo_3.svg";
-import awardBadge from "../../../assets/badges/ad_best_cooling_2026.svg";
+import awardBadge from "../../../assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg";
 
 export type PuffyRemotionProps = {
   durationInFrames: number;
@@ -18,6 +18,11 @@ export type PuffyRemotionProps = {
 const LOGO_MAP: Record<string, string> = {
   "assets/logos/Puffy_Logo_0.svg": puffyLogo0,
   "assets/logos/Puffy_Logo_3.svg": puffyLogo3,
+};
+
+const BADGE_MAP: Record<string, string> = {
+  "assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg": awardBadge,
+  "assets/badges/ad_best_cooling_2026.svg": awardBadge,
 };
 
 export const PuffyHeroComposition: React.FC<PuffyRemotionProps> = ({
@@ -66,6 +71,7 @@ export const PuffyHeroComposition: React.FC<PuffyRemotionProps> = ({
   });
 
   const logoSrc = LOGO_MAP[brandBadgeAsset] ?? puffyLogo0;
+  const badgeSrc = BADGE_MAP[brandBadgeAsset] ?? awardBadge;
   const clearSpace = brandTokens.logo_geometry.minimum_clear_space_px;
 
   return (
@@ -142,7 +148,7 @@ export const PuffyHeroComposition: React.FC<PuffyRemotionProps> = ({
               border: "1px solid rgba(43, 47, 68, 0.14)",
             }}
           >
-            <Img src={awardBadge} style={{ width: 38, height: 38 }} />
+            <Img src={badgeSrc} style={{ width: 38, height: 38 }} />
             <span style={{ fontWeight: 700, fontSize: isVertical ? 22 : 17 }}>
               Best Cooling Mattress 2026
             </span>

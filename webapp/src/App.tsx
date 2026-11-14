@@ -1,12 +1,12 @@
 import { useState } from "react";
 import brandTokens from "@config/brand_tokens.json";
-import mockMattress from "@assets/cutouts/mock_mattress.png";
-import mockBedroom from "@assets/environments/mock_bedroom_nordic.png";
+import mockMattress from "@assets/catalog/mattresses/puffy-lux-hybrid/cutout_angle45_1200x720.png";
+import mockBedroom from "@assets/catalog/mattresses/puffy-lux-hybrid/hero_nordic-bedroom_1920x1080.png";
 import puffyLogo from "@assets/logos/Puffy_Logo_0.svg";
-import badgeCooling from "@assets/badges/ad_best_cooling_2026.svg";
-import badgeHybrid from "@assets/badges/ad_best_hybrid_2025.svg";
-import badgeFirm from "@assets/badges/cnn_best_firm_2025.svg";
-import badgeEco from "@assets/badges/theroundup_eco_mattress_2026.svg";
+import badgeCooling from "@assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg";
+import badgeHybrid from "@assets/catalog/trust-badges/awards/badge_ad-best-hybrid-2025_vector.svg";
+import badgeFirm from "@assets/catalog/trust-badges/awards/badge_cnn-best-firm-2025_vector.svg";
+import badgeEco from "@assets/catalog/trust-badges/awards/badge_theroundup-eco-mattress-2026_vector.svg";
 
 type ViewportMode = "desktop" | "mobile";
 

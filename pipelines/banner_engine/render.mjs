@@ -17,6 +17,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { getAsset } from "../common/asset_resolver.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -316,6 +317,15 @@ function findChromeBinary() {
   return null;
 }
 
+function resolveCatalogRelPath(relPath) {
+  const abs = path.join(ROOT_DIR, relPath);
+  if (!fs.existsSync(abs)) {
+    throw new Error(`Required asset not found: ${relPath}`);
+  }
+  const realAbs = fs.realpathSync(abs);
+  return path.relative(ROOT_DIR, realAbs).split(path.sep).join("/");
+}
+
 function main() {
   const args = parseArgs(process.argv);
   const schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, "utf-8"));
@@ -325,16 +335,37 @@ function main() {
   validateAgainstSchema(task, schema);
   console.log(`[BannerEngine] Schema validated: ${task.campaign_id}`);
 
-  const cutoutAbs = path.join(ROOT_DIR, task.mattress_cutout_path);
-  const envAbs = path.join(ROOT_DIR, task.environment_bg_path);
+  const cutoutRel = resolveCatalogRelPath(task.mattress_cutout_path);
+  const envRel = resolveCatalogRelPath(task.environment_bg_path);
+
+  const cutoutAsset = getAsset({ intent: "cutout", file_path: cutoutRel });
+  if (!cutoutAsset.zero_product_drift_verified) {
+    throw new Error(
+      `Cutout asset '${cutoutAsset.id}' failed Zero Product Drift verification.`
+    );
+  }
+  const envAsset = getAsset({ intent: "hero", file_path: envRel });
+  const badgeAsset = getAsset({
+    category: "trust-badges",
+    product_slug: "awards",
+    intent: "badge",
+    variant: "ad-best-cooling-2026",
+    resolution: "vector",
+  });
+
+  const cutoutAbs = path.join(ROOT_DIR, cutoutAsset.file_path);
+  const envAbs = path.join(ROOT_DIR, envAsset.file_path);
   const logoAbs = path.join(ROOT_DIR, "assets/logos/Puffy_Logo_0.svg");
-  const badgeAbs = path.join(ROOT_DIR, "assets/badges/ad_best_cooling_2026.svg");
+  const badgeAbs = path.join(ROOT_DIR, badgeAsset.file_path);
 
   for (const requiredFile of [cutoutAbs, envAbs, logoAbs, badgeAbs]) {
     if (!fs.existsSync(requiredFile)) {
       throw new Error(`Required asset not found: ${path.relative(ROOT_DIR, requiredFile)}`);
     }
   }
+  console.log(
+    `[BannerEngine] Resolved catalog assets: cutout=${cutoutAsset.id}, hero=${envAsset.id}, badge=${badgeAsset.id}`
+  );
 
   const assets = {
     cutoutUri: toDataUri(cutoutAbs, resolveMime(cutoutAbs)),

@@ -43,9 +43,9 @@
     },
     "brandBadgeAsset": {
       "type": "string",
-      "pattern": "^assets/logos/.+$",
+      "pattern": "^assets/(catalog/.+|logos/.+|badges/.+)$",
       "minLength": 1,
-      "description": "Relative path to the brand badge/logo asset in assets/logos/."
+      "description": "Relative path to the brand badge/logo asset in assets/catalog/, assets/logos/, or assets/badges/."
     }
   }
 }

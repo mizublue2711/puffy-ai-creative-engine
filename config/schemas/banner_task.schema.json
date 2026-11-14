@@ -23,13 +23,13 @@
     },
     "mattress_cutout_path": {
       "type": "string",
-      "pattern": "^assets/cutouts/.+\\.png$",
-      "description": "Relative path to a verified transparent PNG cutout in assets/cutouts/ (Zero Product Drift)."
+      "pattern": "^assets/(catalog/[a-z0-9\\-]+/[a-z0-9\\-]+/cutout_[a-z0-9\\-]+_[a-z0-9\\-]+|cutouts/.+)\\.png$",
+      "description": "Relative path to a verified transparent PNG cutout in assets/catalog/ (or legacy assets/cutouts/ symlink) (Zero Product Drift)."
     },
     "environment_bg_path": {
       "type": "string",
-      "pattern": "^assets/environments/.+\\.(png|jpg|jpeg|webp)$",
-      "description": "Relative path to a generative AI bedroom plate in assets/environments/."
+      "pattern": "^assets/(catalog/[a-z0-9\\-]+/[a-z0-9\\-]+/hero_[a-z0-9\\-]+_[a-z0-9\\-]+|environments/.+)\\.(png|jpg|jpeg|webp)$",
+      "description": "Relative path to a generative AI bedroom plate in assets/catalog/ (or legacy assets/environments/ symlink)."
     },
     "headline": {
       "type": "string",
