@@ -1,48 +1,29 @@
 import { useState } from "react";
 import brandTokens from "@config/brand_tokens.json";
-import mockMattress from "@assets/cutouts/mock_mattress.png";
-import mockBedroom from "@assets/environments/mock_bedroom_nordic.png";
+import pdpJson from "./data/mock_pdp_puffy_lux.json";
 import puffyLogo from "@assets/logos/Puffy_Logo_0.svg";
-import badgeCooling from "@assets/badges/ad_best_cooling_2026.svg";
-import badgeHybrid from "@assets/badges/ad_best_hybrid_2025.svg";
-import badgeFirm from "@assets/badges/cnn_best_firm_2025.svg";
-import badgeEco from "@assets/badges/theroundup_eco_mattress_2026.svg";
+import badgeCnnFirm from "@assets/badges/cnn_best_firm_2025.svg";
+import badgeAdCooling from "@assets/badges/ad_best_cooling_2026.svg";
+import badgeConsumerLuxury from "@assets/badges/consumer_mattress_luxury_2027.svg";
+import badgeEcoTrial from "@assets/badges/theroundup_eco_mattress_2026.svg";
+import badgeAdHybrid from "@assets/badges/ad_best_hybrid_2025.svg";
+import { AnnouncementBar } from "./components/AnnouncementBar";
+import { HeroGallery } from "./components/HeroGallery";
+import { ProductConfigurator } from "./components/ProductConfigurator";
+import { TrustProofRibbon } from "./components/TrustProofRibbon";
+import { MattressLayersAccordion } from "./components/MattressLayersAccordion";
+import { StickyMobileCTA } from "./components/StickyMobileCTA";
+import type { PdpData, PdpVariant, ViewportMode } from "./types/pdp";
 
-type ViewportMode = "desktop" | "mobile";
+const pdpData = pdpJson as PdpData;
 
-interface TrustBadgeOption {
-  id: string;
-  label: string;
-  sublabel: string;
-  src: string;
-}
-
-const TRUST_BADGES: TrustBadgeOption[] = [
-  {
-    id: "ad_best_cooling_2026",
-    label: "Best Cooling Mattress 2026",
-    sublabel: "Architectural Digest",
-    src: badgeCooling,
-  },
-  {
-    id: "ad_best_hybrid_2025",
-    label: "Best Hybrid Mattress 2025",
-    sublabel: "Architectural Digest",
-    src: badgeHybrid,
-  },
-  {
-    id: "cnn_best_firm_2025",
-    label: "Best Firm Support 2025",
-    sublabel: "CNN Underscored",
-    src: badgeFirm,
-  },
-  {
-    id: "theroundup_eco_mattress_2026",
-    label: "Top Eco Mattress 2026",
-    sublabel: "TheRoundup",
-    src: badgeEco,
-  },
-];
+const BADGE_ASSET_MAP: Record<string, string> = {
+  cnn_best_firm_2025: badgeCnnFirm,
+  ad_best_cooling_2026: badgeAdCooling,
+  consumer_mattress_luxury_2027: badgeConsumerLuxury,
+  theroundup_eco_mattress_2026: badgeEcoTrial,
+  ad_best_hybrid_2025: badgeAdHybrid,
+};
 
 const VIEWPORT_WIDTHS: Record<ViewportMode, number> = {
   desktop: 1440,
@@ -51,14 +32,40 @@ const VIEWPORT_WIDTHS: Record<ViewportMode, number> = {
 
 export function App() {
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
-  const [selectedBadgeId, setSelectedBadgeId] = useState<string>(TRUST_BADGES[0].id);
+  const defaultVariant =
+    pdpData.variants.find((v) => v.is_default) ?? pdpData.variants[0];
+  const [selectedVariant, setSelectedVariant] =
+    useState<PdpVariant>(defaultVariant);
+  const [selectedBadgeId, setSelectedBadgeId] = useState<string>(
+    pdpData.trust_badges[0]?.id ?? "cnn-firm"
+  );
+  const [addedToCart, setAddedToCart] = useState<boolean>(false);
 
-  const activeBadge =
-    TRUST_BADGES.find((item) => item.id === selectedBadgeId) ?? TRUST_BADGES[0];
+  const activeBadgeData =
+    pdpData.trust_badges.find((b) => b.id === selectedBadgeId) ??
+    pdpData.trust_badges[0];
+
+  const activeBadgeOverlay = activeBadgeData
+    ? {
+        label: activeBadgeData.label,
+        source: activeBadgeData.source,
+        src: BADGE_ASSET_MAP[activeBadgeData.asset_key] ?? badgeAdCooling,
+      }
+    : undefined;
 
   const isMobile = viewport === "mobile";
   const frameWidth = VIEWPORT_WIDTHS[viewport];
-  const { colors, value_propositions: valueProps, logo_geometry: logoGeo } = brandTokens;
+  const { logo_geometry: logoGeo, value_propositions: brandValueProps } =
+    brandTokens;
+
+  const handleSelectVariant = (variant: PdpVariant) => {
+    setSelectedVariant(variant);
+    setAddedToCart(false);
+  };
+
+  const handleAddToCart = () => {
+    setAddedToCart(true);
+  };
 
   return (
     <div className="sandbox-shell">
@@ -67,11 +74,17 @@ export function App() {
           <h1 className="toolbar-title">
             {brandTokens.brand} Creative Engine — Interactive Sandbox
           </h1>
-          <span className="drift-pill">Zero Product Drift · Mock Cutout Active</span>
+          <span className="drift-pill">
+            Zero Product Drift · Mock Cutout Active
+          </span>
         </div>
 
         <div className="toolbar-group">
-          <div className="viewport-switcher" role="group" aria-label="Viewport Switcher">
+          <div
+            className="viewport-switcher"
+            role="group"
+            aria-label="Viewport Switcher"
+          >
             <button
               type="button"
               className={`viewport-btn ${viewport === "desktop" ? "active" : ""}`}
@@ -94,7 +107,7 @@ export function App() {
             value={selectedBadgeId}
             onChange={(e) => setSelectedBadgeId(e.target.value)}
           >
-            {TRUST_BADGES.map((badge) => (
+            {pdpData.trust_badges.map((badge) => (
               <option key={badge.id} value={badge.id}>
                 {badge.label}
               </option>
@@ -105,11 +118,16 @@ export function App() {
 
       <main className="stage-outer">
         <div
-          className="viewport-frame"
+          className={`viewport-frame ${isMobile ? "mobile" : "desktop"}`}
           style={{ width: `${frameWidth}px` }}
           data-viewport={viewport}
         >
-          <div className="pdp-header">
+          <AnnouncementBar
+            announcement={pdpData.announcement}
+            viewport={viewport}
+          />
+
+          <header className={`pdp-header ${isMobile ? "mobile" : "desktop"}`}>
             <div
               className="logo-clearspace"
               title={logoGeo.clear_space_rule}
@@ -117,71 +135,55 @@ export function App() {
             >
               <img
                 src={puffyLogo}
-                alt="Puffy"
+                alt={brandTokens.brand}
                 className="pdp-logo"
                 style={{ minWidth: `${logoGeo.minimum_size.width_px}px` }}
               />
             </div>
-            <div className="pdp-nav-meta">
-              {valueProps.sleep_trial} · {valueProps.warranty}
-            </div>
+
+            {!isMobile && (
+              <div className="pdp-nav-meta">
+                <span>{brandValueProps.sleep_trial}</span>
+                <span aria-hidden="true">·</span>
+                <span>{brandValueProps.warranty}</span>
+              </div>
+            )}
+          </header>
+
+          <div className={`pdp-hero-layout ${isMobile ? "mobile" : "desktop"}`}>
+            <HeroGallery
+              gallery={pdpData.gallery}
+              viewport={viewport}
+              activeBadge={activeBadgeOverlay}
+            />
+
+            <ProductConfigurator
+              data={pdpData}
+              selectedVariant={selectedVariant}
+              onSelectVariant={handleSelectVariant}
+              onAddToCart={handleAddToCart}
+              addedToCart={addedToCart}
+              viewport={viewport}
+            />
           </div>
 
-          <section
-            className={`hero-section ${isMobile ? "mobile" : "desktop"}`}
-            style={{ backgroundImage: `url(${mockBedroom})` }}
-          >
-            <div className="hero-scrim" />
-            <div className="hero-grid">
-              <div>
-                <div className="eyebrow">
-                  {valueProps.aesthetic_tone_of_voice[0]} ·{" "}
-                  {valueProps.aesthetic_tone_of_voice[3]}
-                </div>
-                <h2 className="hero-headline">
-                  Sleep Like You&rsquo;re Floating on a Cloud
-                </h2>
-                <p className="hero-body">
-                  {valueProps.craftsmanship.join(" · ")}. Crafted for pillowy volume
-                  and effortless spinal alignment every night.
-                </p>
-                <div className="cta-cluster">
-                  <a
-                    href="#shop-puffy"
-                    className="puffy-cta"
-                    style={{
-                      backgroundColor: colors.primary.ocean_teal.hex,
-                      color: colors.primary.pure_white.hex,
-                    }}
-                  >
-                    Shop Puffy Cloud
-                  </a>
-                </div>
-              </div>
+          <TrustProofRibbon
+            badges={pdpData.trust_badges}
+            viewport={viewport}
+          />
 
-              <div className="product-stage">
-                <img
-                  src={mockMattress}
-                  alt="Puffy Mattress Cutout"
-                  className="mattress-cutout"
-                />
-                <div className="trust-overlay">
-                  <img src={activeBadge.src} alt={activeBadge.label} />
-                  <div className="trust-overlay-text">
-                    <strong>{activeBadge.label}</strong>
-                    <span>{activeBadge.sublabel}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <MattressLayersAccordion
+            layers={pdpData.layers}
+            viewport={viewport}
+          />
 
-          <section className={`value-strip ${isMobile ? "mobile" : "desktop"}`}>
-            <div className="value-card">{valueProps.sleep_trial}</div>
-            <div className="value-card">{valueProps.warranty}</div>
-            <div className="value-card">{valueProps.craftsmanship[0]}</div>
-            <div className="value-card">{valueProps.craftsmanship[1]}</div>
-          </section>
+          <StickyMobileCTA
+            viewport={viewport}
+            selectedVariant={selectedVariant}
+            checkoutLabel={pdpData.cta.checkout_label}
+            addedToCart={addedToCart}
+            onCheckout={handleAddToCart}
+          />
         </div>
       </main>
     </div>
