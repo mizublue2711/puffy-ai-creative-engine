@@ -645,22 +645,12 @@ export class FloatingWoolPad {
     upperTrayPipingMesh.scale.set(1.01, 1.01, 1.01);
     this.encasementTrayGroup.add(upperTrayPipingMesh);
 
-    // 3. Centered "Puffy ROYAL / MONARCH" Brand Badge (`mat_brand_badge`) on the front wall (x = 0)
-    const badgeBezelGeo = new THREE.BoxGeometry(0.44, 0.148, 0.01);
-    const badgeBezelMat = new THREE.MeshStandardMaterial({
-      color: '#15161A',
-      roughness: 0.72,
-      metalness: 0.04,
-    });
-    const badgeMesh = new THREE.Mesh(badgeBezelGeo, [
-      badgeBezelMat,
-      badgeBezelMat,
-      badgeBezelMat,
-      badgeBezelMat,
-      matBrandBadge,
-      badgeBezelMat,
-    ]);
-    badgeMesh.position.set(0, charcoalY, length / 2 + 0.005);
+    // 3. Centered "Puffy ROYAL / MONARCH" Embroidered Patch (`mat_brand_badge`) flush on front wall (0.001m offset)
+    const badgeGeo = new THREE.PlaneGeometry(0.12, 0.06);
+    preparePBRGeometry(badgeGeo);
+    const badgeMesh = new THREE.Mesh(badgeGeo, matBrandBadge);
+    badgeMesh.name = 'puffy-embroidered-badge';
+    badgeMesh.position.set(0, charcoalY, length / 2 + 0.001);
     this.encasementTrayGroup.add(badgeMesh);
 
     // 4. Symmetrical Vertical Fabric Loop Handles flush against the front wall (x = ±width * 0.28)
@@ -698,8 +688,7 @@ export class FloatingWoolPad {
     this.encasementTrayGroup.add(hybridTagMesh);
 
     this.disposables.push(
-      badgeBezelGeo,
-      badgeBezelMat,
+      badgeGeo,
       handleTex,
       handleGeo,
       handleFaceMat,

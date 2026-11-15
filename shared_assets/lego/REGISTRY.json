@@ -1,0 +1,145 @@
+{
+  "schema_version": "CAVP-v1.0",
+  "vault_root": "shared_assets/lego/components",
+  "components": {
+    "badge_royal_embroidered_v1": {
+      "id": "badge_royal_embroidered_v1",
+      "version": "1.0.0",
+      "source_svg": "assets/lego/badges/puffy_royal_badge_master.svg",
+      "source_svg_viewbox": [
+        0,
+        0,
+        1600,
+        800
+      ],
+      "native_aspect_ratio": "2:1",
+      "physical_dimensions_meters": {
+        "width": 0.12,
+        "height": 0.06,
+        "surface_offset": 0.001
+      },
+      "craft_sources": {
+        "materialcraft_mcmat": "assets/lego/badges/puffy_badge.mcmat",
+        "materialcraft_mcraft": "assets/lego/badges/puffy_badge.mcraft",
+        "texturecraft_tcraft": "assets/lego/badges/puffy_badge.tcraft"
+      },
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
+        "material": "THREE.MeshPhysicalMaterial",
+        "normal_scale": [
+          1.2,
+          1.2
+        ],
+        "sheen": 1.0,
+        "sheen_roughness": 0.4,
+        "sheen_color": "#ffffff",
+        "polygon_offset": true,
+        "polygon_offset_factor": -1.0
+      },
+      "banner_2d_handoff": {
+        "compositor": "scripts/badge_banner_compositor.py",
+        "input_file": "shared_assets/lego/components/badge_royal_embroidered_v1/06_beauty_render_4k.png",
+        "resampling": "PIL.Image.Resampling.LANCZOS"
+      },
+      "artifacts": {
+        "01_baseColor.png": {
+          "path": "shared_assets/lego/components/badge_royal_embroidered_v1/01_baseColor.png",
+          "webapp_mirror": "webapp/public/textures/badge/01_baseColor.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "albedo",
+          "description": "Delit albedo (#16191E fabric, #F8FAFC Puffy, #D4AF37 ROYAL, #D8DEE9 silver-white merrow) + rounded patch alpha",
+          "bytes": 143987,
+          "sha256": "dcfa04ff6e518c3059ffef2ce4c4497a2cafe187a12cf9e0fffda91e22e1438d"
+        },
+        "02_normal.png": {
+          "path": "shared_assets/lego/components/badge_royal_embroidered_v1/02_normal.png",
+          "webapp_mirror": "webapp/public/textures/badge/02_normal.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "normal_opengl",
+          "description": "OpenGL tangent-space normal map (+Y green up) with 2mm domed puff bevels & satin thread ridges",
+          "bytes": 4803818,
+          "sha256": "6d9353155d6038a7eea89169d1340296ab172fd2c89f1e74bf4bd37ba00e03d7"
+        },
+        "03_roughness.png": {
+          "path": "shared_assets/lego/components/badge_royal_embroidered_v1/03_roughness.png",
+          "webapp_mirror": "webapp/public/textures/badge/03_roughness.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "roughness",
+          "description": "Micro-roughness (0.85 matte twill base, 0.35-0.40 glossy satin embroidery threads)",
+          "bytes": 106460,
+          "sha256": "191e9a35e9cffe5d28b9d55f3f13a2fdbf8132048c8c0709afb692d57d5ac287"
+        },
+        "04_height.png": {
+          "path": "shared_assets/lego/components/badge_royal_embroidered_v1/04_height.png",
+          "webapp_mirror": "webapp/public/textures/badge/04_height.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "height",
+          "description": "2mm domed puff & merrow stitch displacement/bump heightfield",
+          "bytes": 483378,
+          "sha256": "b3b2dd421313e08fdbf06bc956c6d6aaed27ee2cdf430e197159b42b6a698907"
+        },
+        "05_ambientOcclusion.png": {
+          "path": "shared_assets/lego/components/badge_royal_embroidered_v1/05_ambientOcclusion.png",
+          "webapp_mirror": "webapp/public/textures/badge/05_ambientOcclusion.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "ambient_occlusion",
+          "description": "Natural contact shadows in letter-base stitching grooves",
+          "bytes": 1180136,
+          "sha256": "65827d2c0a2cda84a88206e23390a0586ab82d8409adcdec8ba1d7612afe6527"
+        },
+        "06_beauty_render_4k.png": {
+          "path": "shared_assets/lego/components/badge_royal_embroidered_v1/06_beauty_render_4k.png",
+          "webapp_mirror": "webapp/public/textures/badge/06_beauty_render_4k.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            4096,
+            2048
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "beauty_render_4k",
+          "description": "Orthographic front-view 4K studio render with baked PBR lighting and 100% transparent alpha background",
+          "bytes": 7297669,
+          "sha256": "7555c34faa085c7cf741188bbb84f43b0acb03c7fd51d963d0bc16b40e3dc402"
+        }
+      }
+    }
+  }
+}
