@@ -13,7 +13,7 @@ export interface LoadedAssets {
     lowerBorder: THREE.MeshPhysicalMaterial;
     topCover: THREE.MeshPhysicalMaterial;
     pipingCord: THREE.MeshPhysicalMaterial;
-    brandBadge: THREE.MeshStandardMaterial;
+    brandBadge: THREE.MeshPhysicalMaterial;
     slotMap: Map<string, THREE.MeshStandardMaterial>;
   };
   textures: {
@@ -27,7 +27,7 @@ export interface LoadedAssets {
     microDiamondsNormal: THREE.CanvasTexture;
     microDiamondsRoughness: THREE.CanvasTexture;
     microDiamondsAo: THREE.CanvasTexture;
-    badgeRoyal: THREE.CanvasTexture;
+    badgeRoyal: THREE.Texture;
     badgeMonarch: THREE.CanvasTexture;
   };
 }
@@ -131,6 +131,64 @@ export function preparePBRGeometry(geometry: THREE.BufferGeometry): void {
   if (geometry.index && geometry.attributes.position && geometry.attributes.normal && uv) {
     geometry.computeTangents();
   }
+}
+
+export function createEmbroideredBadgeMaterial(
+  texturePath = '/textures/badge',
+): {
+  material: THREE.MeshPhysicalMaterial;
+  textures: THREE.Texture[];
+} {
+  const textureLoader = new THREE.TextureLoader();
+
+  // 1. Load CAVP-v1.0 PBR maps with strict color space separation
+  const baseColorMap = textureLoader.load(`${texturePath}/01_baseColor.png`);
+  baseColorMap.colorSpace = THREE.SRGBColorSpace;
+
+  const normalMap = textureLoader.load(`${texturePath}/02_normal.png`);
+  normalMap.colorSpace = THREE.NoColorSpace;
+
+  const roughnessMap = textureLoader.load(`${texturePath}/03_roughness.png`);
+  roughnessMap.colorSpace = THREE.NoColorSpace;
+
+  const aoMap = textureLoader.load(`${texturePath}/05_ambientOcclusion.png`);
+  aoMap.colorSpace = THREE.NoColorSpace;
+
+  // 2. Physical embroidery shader (0.85 matte twill base, 0.35-0.40 satin thread sheen)
+  const material = new THREE.MeshPhysicalMaterial({
+    name: 'mat_brand_badge',
+    color: new THREE.Color('#FFFFFF'),
+    map: baseColorMap,
+    normalMap,
+    normalScale: new THREE.Vector2(1.2, 1.2),
+    roughnessMap,
+    roughness: 1.0,
+    metalness: 0.0,
+    aoMap,
+    aoMapIntensity: 1.0,
+    sheen: 1.0,
+    sheenRoughness: 0.4,
+    sheenColor: new THREE.Color(0xffffff),
+    polygonOffset: true,
+    polygonOffsetFactor: -1.0,
+    transparent: true,
+    alphaTest: 0.5,
+  });
+
+  return {
+    material,
+    textures: [baseColorMap, normalMap, roughnessMap, aoMap],
+  };
+}
+
+export function createEmbroideredBadge(texturePath = '/textures/badge'): THREE.Mesh {
+  const {material} = createEmbroideredBadgeMaterial(texturePath);
+  // 3. Thin 2:1 planar patch matching SVG viewBox (0.12m x 0.06m), avoiding thick BoxGeometry
+  const geometry = new THREE.PlaneGeometry(0.12, 0.06);
+  preparePBRGeometry(geometry);
+  const badgeMesh = new THREE.Mesh(geometry, material);
+  badgeMesh.name = 'puffy-embroidered-badge';
+  return badgeMesh;
 }
 
 /**
@@ -515,18 +573,12 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   materials.set('mat_accent_strip', matAccentStrip);
   disposables.push(matAccentStrip);
 
-  // 5. Center Embroidered Brand Badges (`badgeRoyal` vs `badgeMonarch`)
-  const badgeRoyal = createFlagshipBadgeTexture('ROYAL', maxAnisotropy);
+  // 5. Center Embroidered Brand Badges (`badgeRoyal` 2K PBR vs `badgeMonarch`)
+  const {material: matBrandBadge, textures: badgeTextures} = createEmbroideredBadgeMaterial('/textures/badge');
+  const badgeRoyal = badgeTextures[0];
   const badgeMonarch = createFlagshipBadgeTexture('MONARCH', maxAnisotropy);
-  const matBrandBadge = new THREE.MeshStandardMaterial({
-    name: 'mat_brand_badge',
-    map: badgeRoyal,
-    color: new THREE.Color('#FFFFFF'),
-    roughness: 0.55,
-    metalness: 0.05,
-  });
   materials.set('mat_brand_badge', matBrandBadge);
-  disposables.push(badgeRoyal, badgeMonarch, matBrandBadge);
+  disposables.push(...badgeTextures, badgeMonarch, matBrandBadge);
 
   // 6. Internal Layers 2 through 9: Lightweight MeshStandardMaterial with roughness: 0.9 for 60 FPS
   const woolHeightCanvas = document.createElement('canvas');
