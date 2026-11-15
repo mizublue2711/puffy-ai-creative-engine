@@ -8,8 +8,7 @@ import badgeConsumerLuxury from "@assets/catalog/trust-badges/awards/badge_consu
 import badgeEcoTrial from "@assets/catalog/trust-badges/awards/badge_theroundup-eco-mattress-2026_vector.svg";
 import badgeAdHybrid from "@assets/catalog/trust-badges/awards/badge_ad-best-hybrid-2025_vector.svg";
 import { AnnouncementBar } from "./components/AnnouncementBar";
-import { HeroGallery } from "./components/HeroGallery";
-import { ProductConfigurator } from "./components/ProductConfigurator";
+import { HeroSplitSection } from "./components/sections/HeroSplitSection";
 import { TrustProofRibbon } from "./components/TrustProofRibbon";
 import { MattressLayersAccordion } from "./components/MattressLayersAccordion";
 import { StickyMobileCTA } from "./components/StickyMobileCTA";
@@ -150,22 +149,15 @@ export function App() {
             )}
           </header>
 
-          <div className={`pdp-hero-layout ${isMobile ? "mobile" : "desktop"}`}>
-            <HeroGallery
-              gallery={pdpData.gallery}
-              viewport={viewport}
-              activeBadge={activeBadgeOverlay}
-            />
-
-            <ProductConfigurator
-              data={pdpData}
-              selectedVariant={selectedVariant}
-              onSelectVariant={handleSelectVariant}
-              onAddToCart={handleAddToCart}
-              addedToCart={addedToCart}
-              viewport={viewport}
-            />
-          </div>
+          <HeroSplitSection
+            data={pdpData}
+            selectedVariant={selectedVariant}
+            onSelectVariant={handleSelectVariant}
+            onAddToCart={handleAddToCart}
+            addedToCart={addedToCart}
+            viewport={viewport}
+            activeBadge={activeBadgeOverlay}
+          />
 
           <TrustProofRibbon
             badges={pdpData.trust_badges}
