@@ -1,0 +1,607 @@
+/* Scoped 3D Hero Canvas Styles — Zero Global Style Contamination */
+.hero-split-left-column {
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.puffy-floating-hero-3d {
+  --puffy3d-serif: var(--font-headline, "PT Serif", Georgia, Cambria, serif);
+  --puffy3d-sans: var(--font-body, "Mukta", -apple-system, BlinkMacSystemFont, sans-serif);
+  --puffy3d-ocean-teal: var(--puffy-ocean-teal, #067a57);
+  --puffy3d-ocean-teal-hover: #056447;
+  --puffy3d-navy-ink: var(--puffy-navy-ink, #2b2f44);
+  --puffy3d-warm-linen: var(--puffy-warm-linen, #e5e3df);
+  --puffy3d-warm-linen-soft: #f3f1ed;
+  --puffy3d-pure-white: var(--puffy-pure-white, #ffffff);
+  --puffy3d-onyx-black: var(--puffy-onyx-black, #333333);
+  --puffy3d-camel-earth: #b88e4f;
+  --puffy3d-gold-leather: #c5a880;
+  --puffy3d-border-hairline: rgba(43, 47, 68, 0.12);
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 640px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #dfdcd6 0%, #e5e3df 60%, #d8e0d2 100%);
+  border: 1px solid var(--puffy3d-border-hairline);
+  box-shadow: 0 18px 40px rgba(43, 47, 68, 0.1);
+  font-family: var(--puffy3d-sans);
+  touch-action: pan-y;
+}
+
+.puffy-floating-hero-3d.mobile {
+  min-height: 430px;
+  height: 430px;
+}
+
+.puffy-floating-hero-3d .w-full {
+  width: 100%;
+}
+
+.puffy-floating-hero-3d .h-full {
+  height: 100%;
+}
+
+.puffy-floating-hero-3d .tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Isolated WebGL Mount Container */
+.puffy-floating-hero-3d .webgl-mount-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.puffy-floating-hero-3d .webgl-mount-container:active {
+  cursor: grabbing;
+}
+
+.puffy-floating-hero-3d .webgl-mount-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+  touch-action: pan-y !important;
+}
+
+/* Top-Left Minimal Spec Header Overlay inside 3D Viewport */
+.puffy-floating-hero-3d .canvas-top-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: min(440px, calc(100% - 32px));
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--puffy3d-border-hairline);
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(43, 47, 68, 0.08);
+  pointer-events: auto;
+}
+
+.puffy-floating-hero-3d.mobile .canvas-top-badge {
+  top: 10px;
+  left: 10px;
+  max-width: calc(100% - 20px);
+  padding: 7px 10px;
+}
+
+.puffy-floating-hero-3d .canvas-top-badge-kicker {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--puffy3d-camel-earth);
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.puffy-floating-hero-3d .canvas-top-badge-title {
+  font-family: var(--puffy3d-serif);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--puffy3d-navy-ink);
+  line-height: 1.25;
+}
+
+.puffy-floating-hero-3d.mobile .canvas-top-badge-title {
+  font-size: 13px;
+}
+
+.puffy-floating-hero-3d .canvas-top-badge-sub {
+  font-size: 11.5px;
+  color: var(--puffy3d-onyx-black);
+  opacity: 0.84;
+  line-height: 1.3;
+}
+
+.puffy-floating-hero-3d.mobile .canvas-top-badge-sub {
+  font-size: 10.5px;
+}
+
+/* Flagship PBR Model Switcher Pills inside Top Badge */
+.puffy-floating-hero-3d .puffy-model-switcher-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.puffy-floating-hero-3d .puffy-model-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(43, 47, 68, 0.2);
+  background-color: var(--puffy3d-pure-white);
+  color: var(--puffy3d-navy-ink);
+  font-family: var(--puffy3d-sans);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .puffy-model-pill:hover {
+  border-color: var(--puffy3d-navy-ink);
+}
+
+.puffy-floating-hero-3d .puffy-model-pill[data-selected="true"] {
+  border-color: var(--puffy3d-ocean-teal);
+  background-color: rgba(6, 122, 87, 0.1);
+  color: var(--puffy3d-ocean-teal);
+}
+
+.puffy-floating-hero-3d .puffy-model-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+/* Trust Badge Overlay on Desktop */
+.puffy-floating-hero-3d .gallery-trust-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(43, 47, 68, 0.14);
+  border-radius: 12px;
+  padding: 7px 12px;
+  box-shadow: 0 10px 22px rgba(43, 47, 68, 0.12);
+}
+
+.puffy-floating-hero-3d.mobile .gallery-trust-overlay {
+  display: none;
+}
+
+/* Craft & Specs Lab ("Material Integrity & 10-Layer Quality Lab") Overlay */
+.puffy-floating-hero-3d .reference-cutout-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  background-color: rgba(246, 244, 239, 0.98);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 22px 90px;
+  opacity: 0;
+  pointer-events: none;
+  overflow-y: auto;
+  transition: opacity 0.2s ease;
+}
+
+.puffy-floating-hero-3d .reference-cutout-preview[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.puffy-floating-hero-3d.mobile .reference-cutout-preview {
+  padding: 14px 14px 100px;
+}
+
+.puffy-floating-hero-3d .craft-lab-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--puffy3d-border-hairline);
+  padding-bottom: 12px;
+}
+
+.puffy-floating-hero-3d .craft-lab-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.puffy-floating-hero-3d .craft-lab-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--puffy3d-camel-earth);
+  text-transform: uppercase;
+}
+
+.puffy-floating-hero-3d .craft-lab-title {
+  font-family: var(--puffy3d-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--puffy3d-navy-ink);
+  margin: 2px 0 0 0;
+}
+
+.puffy-floating-hero-3d .craft-lab-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.puffy-floating-hero-3d .craft-usa-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--puffy3d-navy-ink);
+  background-color: var(--puffy3d-pure-white);
+  border: 1px solid rgba(43, 47, 68, 0.16);
+  padding: 3px 9px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.puffy-floating-hero-3d .craft-lab-body-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+  margin: 12px 0;
+}
+
+.puffy-floating-hero-3d.mobile .craft-lab-body-grid {
+  grid-template-columns: 1fr;
+}
+
+.puffy-floating-hero-3d .craft-cutaway-stage {
+  background-color: var(--puffy3d-pure-white);
+  border: 1px solid var(--puffy3d-border-hairline);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.puffy-floating-hero-3d .craft-cutaway-img-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.puffy-floating-hero-3d .craft-cutaway-img-wrap img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.puffy-floating-hero-3d .craft-tooltip-card {
+  background-color: var(--puffy3d-navy-ink);
+  color: var(--puffy3d-pure-white);
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.puffy-floating-hero-3d .craft-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.puffy-floating-hero-3d .craft-tooltip-title {
+  color: var(--puffy3d-gold-leather);
+  font-family: var(--puffy3d-serif);
+  font-size: 13.5px;
+}
+
+.puffy-floating-hero-3d .craft-tooltip-badge {
+  background: rgba(197, 168, 128, 0.22);
+  color: #f5e6c8;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.puffy-floating-hero-3d .craft-tooltip-tagline {
+  font-weight: 700;
+  color: var(--puffy3d-pure-white);
+  font-size: 12.5px;
+  margin-bottom: 3px;
+}
+
+.puffy-floating-hero-3d .craft-tooltip-desc {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11.5px;
+}
+
+.puffy-floating-hero-3d .craft-layer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 255px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.puffy-floating-hero-3d .craft-layer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background-color: var(--puffy3d-pure-white);
+  border: 1px solid var(--puffy3d-border-hairline);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: var(--puffy3d-sans);
+  font-size: 12px;
+  color: var(--puffy3d-navy-ink);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-layer-btn[data-active="true"] {
+  border-color: var(--puffy3d-ocean-teal);
+  background-color: rgba(6, 122, 87, 0.08);
+  font-weight: 700;
+}
+
+.puffy-floating-hero-3d .craft-layer-btn-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.puffy-floating-hero-3d .craft-layer-btn-right {
+  font-size: 11px;
+  color: #5c5f70;
+  flex-shrink: 0;
+}
+
+.puffy-floating-hero-3d .craft-layer-swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+}
+
+.puffy-floating-hero-3d .craft-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.puffy-floating-hero-3d.mobile .craft-metrics-strip {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.puffy-floating-hero-3d .craft-metric-box {
+  background-color: var(--puffy3d-pure-white);
+  border: 1px solid var(--puffy3d-border-hairline);
+  border-radius: 10px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.puffy-floating-hero-3d .craft-metric-val {
+  font-family: var(--puffy3d-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--puffy3d-ocean-teal);
+}
+
+.puffy-floating-hero-3d .craft-metric-lbl {
+  font-size: 10.5px;
+  color: #5c5f70;
+  font-weight: 600;
+}
+
+/* 3D Cutaway 10-Layer Quick Slide-Out Selector HUD Strip */
+.puffy-floating-hero-3d .canvas-cutaway-10layer-hud {
+  position: absolute;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  background-color: rgba(43, 47, 68, 0.94);
+  color: var(--puffy3d-pure-white);
+  border: 1px solid rgba(197, 168, 128, 0.45);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: calc(100% - 24px);
+  overflow-x: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.puffy-floating-hero-3d.mobile .canvas-cutaway-10layer-hud {
+  bottom: 108px;
+}
+
+.puffy-floating-hero-3d .canvas-cutaway-10layer-hud[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.puffy-floating-hero-3d .canvas-cutaway-hud-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--puffy3d-gold-leather);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+.puffy-floating-hero-3d .canvas-cutaway-hud-pill {
+  font-family: var(--puffy3d-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .canvas-cutaway-hud-pill:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.puffy-floating-hero-3d .canvas-cutaway-hud-pill[data-active="true"] {
+  background-color: var(--puffy3d-ocean-teal);
+  border-color: #5eead4;
+  color: var(--puffy3d-pure-white);
+}
+
+/* Collapsible Bottom Control Dock */
+.puffy-floating-hero-3d .canvas-bottom-dock-wrapper {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  width: max-content;
+  max-width: calc(100% - 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.puffy-floating-hero-3d .canvas-bottom-dock-wrapper[data-collapsed="true"] .canvas-bottom-dock {
+  display: none;
+}
+
+.puffy-floating-hero-3d .dock-collapse-toggle {
+  font-family: var(--puffy3d-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--puffy3d-navy-ink);
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--puffy3d-border-hairline);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 3px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.puffy-floating-hero-3d .canvas-bottom-dock-wrapper[data-collapsed="true"] .dock-collapse-toggle {
+  border-bottom: 1px solid var(--puffy3d-border-hairline);
+  border-radius: 8px;
+}
+
+.puffy-floating-hero-3d .canvas-bottom-dock {
+  background-color: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--puffy3d-border-hairline);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 28px rgba(43, 47, 68, 0.12);
+}
+
+.puffy-floating-hero-3d.mobile .canvas-bottom-dock {
+  padding: 6px 8px;
+  gap: 5px;
+}
+
+.puffy-floating-hero-3d .dock-divider {
+  width: 1px;
+  height: 22px;
+  background-color: var(--puffy3d-border-hairline);
+}
+
+.puffy-floating-hero-3d.mobile .dock-divider {
+  display: none;
+}
+
+.puffy-floating-hero-3d .dock-btn {
+  font-family: var(--puffy3d-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--puffy3d-navy-ink);
+  background-color: var(--puffy3d-warm-linen-soft);
+  border: 1px solid transparent;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.puffy-floating-hero-3d.mobile .dock-btn {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+.puffy-floating-hero-3d .dock-btn:hover {
+  background-color: var(--puffy3d-warm-linen);
+}
+
+.puffy-floating-hero-3d .dock-btn[data-active="true"] {
+  background-color: var(--puffy3d-navy-ink);
+  color: var(--puffy3d-pure-white);
+}
+
+.puffy-floating-hero-3d .dock-btn-accent {
+  background-color: var(--puffy3d-ocean-teal);
+  color: var(--puffy3d-pure-white);
+}
+
+.puffy-floating-hero-3d .dock-btn-accent:hover {
+  background-color: var(--puffy3d-ocean-teal-hover);
+}
