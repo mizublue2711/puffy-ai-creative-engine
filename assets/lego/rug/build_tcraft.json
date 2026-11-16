@@ -1,0 +1,42 @@
+{
+  "open": "assets/lego/rug/rug.tcraft",
+  "steps": [
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/rug/raw/preview_baseColor.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "shared_assets/lego/components/rug/rug_natural_jute_loop_v1/02_normal.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/rug/raw/preview_roughness.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/rug/raw/height_16bit.png" }
+    },
+    {
+      "id": "layer.add.fill",
+      "params": { "name": "Natural_Jute_Loop_Rug", "metallic": 0.0, "roughness": 0.95 }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "baseColor", "image": "preview_baseColor.png" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "normal", "image": "02_normal.png", "normalFormat": "openGl" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "roughness", "image": "preview_roughness.png" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "height", "image": "height_16bit.png" }
+    }
+  ],
+  "save": "assets/lego/rug/rug.tcraft"
+}

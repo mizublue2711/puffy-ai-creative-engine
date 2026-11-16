@@ -132,11 +132,11 @@ export const BEDROOM_STYLE_PRESETS: Record<BedroomStyle, BedroomStylePreset> = {
       pattern: 'pine',
     },
     rug: {
-      bodyColor: '#EDE8DF',
-      trimColor: '#2B2F44',
-      roughness: 0.94,
-      sheenColor: '#FFF9F0',
-      pattern: 'boucle',
+      bodyColor: '#D5CEBF',
+      trimColor: '#8E8372',
+      roughness: 0.95,
+      sheenColor: '#EDE4D3',
+      pattern: 'jute',
     },
     throwBlanket: {
       color: '#202436',

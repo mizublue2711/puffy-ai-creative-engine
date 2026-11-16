@@ -220,7 +220,7 @@ export function createWindowCurtainWall(
 
   const curtainMesh = new THREE.Mesh(curtainGeo, sheerCurtainMaterial);
   curtainMesh.position.set(curtainX, curtainCenterY, centerZ);
-  curtainMesh.castShadow = true; // Soft diffused S-fold shadow bands onto oak floor & mattress
+  curtainMesh.castShadow = false; // Sheer voile transmits sunlight so bed frame & legs cast clean ground shadows
   curtainMesh.receiveShadow = true;
   group.add(curtainMesh);
   meshes.push(curtainMesh);

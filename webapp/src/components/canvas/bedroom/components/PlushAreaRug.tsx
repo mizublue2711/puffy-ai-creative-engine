@@ -17,51 +17,46 @@ export interface PlushAreaRugOptions {
   centerZ?: number;
 }
 
-function createBoucleNormalMap(): THREE.CanvasTexture {
-  const size = 256;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    const img = ctx.createImageData(size, size);
-    const data = img.data;
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        // Dense looped curly wool / bouclé clusters
-        const curlX = Math.sin(x * 0.55 + Math.cos(y * 0.42) * 1.8);
-        const curlY = Math.cos(y * 0.55 + Math.sin(x * 0.42) * 1.8);
-        const tuft = (((x * 73 + y * 139) % 29) / 29 - 0.5) * 0.55;
+export const naturalRugMaterial = new THREE.MeshStandardMaterial({
+  color: new THREE.Color('#D5CEBF'), // Warm Oat / Raw Jute tone
+  roughness: 0.95,
+  metalness: 0.0,
+});
 
-        const nx = THREE.MathUtils.clamp(0.5 + (curlX * 0.32 + tuft * 0.25), 0, 1);
-        const ny = THREE.MathUtils.clamp(0.5 + (curlY * 0.32 + tuft * 0.25), 0, 1);
-        const idx = (y * size + x) * 4;
-        data[idx] = Math.round(nx * 255);
-        data[idx + 1] = Math.round(ny * 255);
-        data[idx + 2] = 215;
-        data[idx + 3] = 255;
-      }
-    }
-    ctx.putImageData(img, 0, 0);
-  }
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.NoColorSpace;
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(18, 20);
-  tex.anisotropy = 4;
-  return tex;
+function loadJuteRugTextures(): {
+  map: THREE.Texture;
+  normalMap: THREE.Texture;
+  roughnessMap: THREE.Texture;
+  aoMap: THREE.Texture;
+} {
+  const loader = new THREE.TextureLoader();
+  const configureTile = (tex: THREE.Texture, isColor = false) => {
+    tex.colorSpace = isColor ? THREE.SRGBColorSpace : THREE.NoColorSpace;
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(6, 7);
+    tex.anisotropy = 4;
+    return tex;
+  };
+
+  const basePath = '/shared_assets/lego/components/rug/rug_natural_jute_loop_v1';
+  return {
+    map: configureTile(loader.load(`${basePath}/01_baseColor.webp`), true),
+    normalMap: configureTile(loader.load(`${basePath}/02_normal.png`)),
+    roughnessMap: configureTile(loader.load(`${basePath}/03_roughness.webp`)),
+    aoMap: configureTile(loader.load(`${basePath}/05_ambientOcclusion.webp`)),
+  };
 }
 
 /**
- * LEGO Component 2A: High-Pile Bouclé Wool Area Rug (with Royal Navy Welt Trim)
- * Physical 18mm beveled slab: width 2.80m, length 3.20m, thickness 0.018m.
- * Positioned at y = 0.009m (bottom flush on floor y = 0, top at y = 0.018m), z = 0.35m.
+ * LEGO Component 2A: Natural Jute & Chunky Wool Area Rug
+ * Physical 10mm beveled slab: width 3.20m, depth 3.60m, thickness 0.010m.
+ * Positioned at [0, 0.005, 0.35] (bottom flush on floor y = 0, top at y = 0.010m).
  */
 export function createPlushAreaRug(options: PlushAreaRugOptions = {}): StyleableBedroomAsset {
-  const width = options.width ?? 2.80;
-  const length = options.length ?? 3.20;
-  const thickness = options.thickness ?? 0.018;
+  const width = options.width ?? 3.20;
+  const length = options.length ?? 3.60;
+  const thickness = options.thickness ?? 0.010;
   const trimWidth = options.trimWidth ?? 0.08;
   const centerZ = options.centerZ ?? 0.35;
 
@@ -69,28 +64,23 @@ export function createPlushAreaRug(options: PlushAreaRugOptions = {}): Styleable
   group.name = 'PlushBoucleAreaRug';
   group.position.set(0, thickness / 2, centerZ);
 
-  const boucleNormalMap = createBoucleNormalMap();
+  const juteTextures = loadJuteRugTextures();
 
-  const woolBodyMat = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color('#EDE8DF'),
-    roughness: 0.94,
-    metalness: 0.0,
-    sheen: 1.0,
-    sheenRoughness: 0.65,
-    sheenColor: new THREE.Color('#FFF9F0'),
-    normalMap: boucleNormalMap,
-    normalScale: new THREE.Vector2(1.2, 1.2),
-  });
+  const woolBodyMat = naturalRugMaterial.clone();
+  woolBodyMat.map = juteTextures.map;
+  woolBodyMat.normalMap = juteTextures.normalMap;
+  woolBodyMat.normalScale = new THREE.Vector2(1.1, 1.1);
+  woolBodyMat.roughnessMap = juteTextures.roughnessMap;
+  woolBodyMat.aoMap = juteTextures.aoMap;
+  woolBodyMat.aoMapIntensity = 0.65;
 
-  const navyTrimMat = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color('#2B2F44'),
-    roughness: 0.90,
+  const navyTrimMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#8E8372'),
+    roughness: 0.95,
     metalness: 0.0,
-    sheen: 0.8,
-    sheenRoughness: 0.65,
-    sheenColor: new THREE.Color('#3D4A6E'),
-    normalMap: boucleNormalMap,
+    normalMap: juteTextures.normalMap,
     normalScale: new THREE.Vector2(0.85, 0.85),
+    roughnessMap: juteTextures.roughnessMap,
   });
 
   const meshes: THREE.Mesh[] = [];
@@ -135,17 +125,15 @@ export function createPlushAreaRug(options: PlushAreaRugOptions = {}): Styleable
   const applyStyle = (preset: BedroomStylePreset, duration = 0.5) => {
     const bc = new THREE.Color(preset.rug.bodyColor);
     const tc = new THREE.Color(preset.rug.trimColor);
-    const sc = new THREE.Color(preset.rug.sheenColor);
 
     gsap.to(woolBodyMat.color, { r: bc.r, g: bc.g, b: bc.b, duration, ease: 'power2.out' });
-    gsap.to(woolBodyMat.sheenColor, { r: sc.r, g: sc.g, b: sc.b, duration, ease: 'power2.out' });
     gsap.to(woolBodyMat, { roughness: preset.rug.roughness, duration, ease: 'power2.out' });
     gsap.to(navyTrimMat.color, { r: tc.r, g: tc.g, b: tc.b, duration, ease: 'power2.out' });
   };
 
   registerBedroomComponent({
     id: 'plush-wool-rug',
-    name: 'High-Pile Bouclé Wool Area Rug',
+    name: 'Natural Textured Jute Area Rug',
     category: 'decor',
     dimensions: { width, height: thickness, depth: length },
     defaultTransform: {
@@ -153,7 +141,7 @@ export function createPlushAreaRug(options: PlushAreaRugOptions = {}): Styleable
       rotation: [0, 0, 0],
       scale: [1, 1, 1],
     },
-    materialSlots: ['boucle-oatmeal-wool', 'puffy-navy-trim'],
+    materialSlots: ['natural-jute-weave', 'jute-border-trim'],
     disposableMeshes: meshes,
   });
 
