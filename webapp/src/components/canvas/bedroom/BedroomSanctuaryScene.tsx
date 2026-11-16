@@ -7,7 +7,6 @@ import {
   BEDROOM_STYLE_PRESETS,
   ENVIRONMENT_RUNNER_PALETTES,
   ENVIRONMENT_TO_STYLE,
-  MATTRESS_CATALOG_SPECS,
   disposeAllBedroomComponents,
   disposeComponent,
   type BedFrameVariantId,
@@ -200,13 +199,34 @@ export function createBedroomSanctuaryScene(
   });
   group.add(windowCurtain.group);
 
-  // Track active style, mattress height delta, and bed decor visibility for dynamic remounts
+  // Track active style, mattress crown height, and bed decor visibility for dynamic remounts
   let currentStyle: BedroomStyle = initialStyle;
   let currentHeightDelta = 0;
+  let currentPillowHeightDelta = 0;
   let bedDecorVisible = true;
 
   const mattressTopY = isFloatingPadAttached ? 0.68 : 0.582;
   const pillowSurfaceY = isFloatingPadAttached ? 0.66 : 0.582;
+
+  const measureVisibleTopY = (root: THREE.Object3D): number | null => {
+    root.updateWorldMatrix(true, true);
+    const box = new THREE.Box3();
+    const meshBox = new THREE.Box3();
+    let found = false;
+    root.traverse((obj) => {
+      if ((obj as THREE.Mesh).isMesh && obj.visible) {
+        const mesh = obj as THREE.Mesh;
+        if (mesh.name.toLowerCase().includes('hitproxy')) return;
+        mesh.geometry.computeBoundingBox();
+        if (mesh.geometry.boundingBox) {
+          meshBox.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+          box.union(meshBox);
+          found = true;
+        }
+      }
+    });
+    return found && Number.isFinite(box.max.y) ? box.max.y : null;
+  };
 
   // 7. Staggered Geometric Bedroom Pendant Light Cluster (Suspended from y = 3.90m down to 1.35m)
   let pendantCluster: ReturnType<typeof createModernPendantCluster> | null = null;
@@ -320,7 +340,7 @@ export function createBedroomSanctuaryScene(
 
     const root = new THREE.Group();
     root.name = count === 4 ? 'FourPillowAssembly' : 'TwoPillowAssembly';
-    root.position.y = currentHeightDelta;
+    root.position.y = currentPillowHeightDelta;
     root.visible = bedDecorVisible;
 
     if (count === 2) {
@@ -424,11 +444,45 @@ export function createBedroomSanctuaryScene(
   const syncMattressHeight = (heightDeltaMeters: number) => {
     const safeDelta = Number.isFinite(heightDeltaMeters) ? heightDeltaMeters : 0;
     currentHeightDelta = safeDelta;
+    currentPillowHeightDelta = safeDelta + (mattressTopY - pillowSurfaceY);
     if (pillowRootGroup) {
-      pillowRootGroup.position.y = safeDelta;
+      pillowRootGroup.position.y = currentPillowHeightDelta;
     }
     if (throwBlanket) {
-      throwBlanket.group.position.y = safeDelta;
+      throwBlanket.group.position.y = currentHeightDelta;
+    }
+  };
+
+  const getMountedMattressCrownY = (): number | null => {
+    if (options.floatingWoolPad) {
+      const topWorldY = measureVisibleTopY(options.floatingWoolPad.group);
+      if (topWorldY !== null) {
+        const parentWorldPos = new THREE.Vector3();
+        if (options.floatingWoolPad.group.parent) {
+          options.floatingWoolPad.group.parent.getWorldPosition(parentWorldPos);
+        }
+        const localTopY = topWorldY - parentWorldPos.y;
+        return 0.24 + localTopY;
+      }
+    } else if (standaloneMattressInstance) {
+      return measureVisibleTopY(standaloneMattressInstance.group);
+    } else if (options.mattressGroup) {
+      return measureVisibleTopY(options.mattressGroup);
+    }
+    return null;
+  };
+
+  const snapAccessoriesToMattress = () => {
+    const crownY = getMountedMattressCrownY();
+    if (crownY !== null) {
+      currentHeightDelta = crownY - mattressTopY;
+      currentPillowHeightDelta = crownY - pillowSurfaceY;
+      if (throwBlanket) {
+        throwBlanket.group.position.y = currentHeightDelta;
+      }
+      if (pillowRootGroup) {
+        pillowRootGroup.position.y = currentPillowHeightDelta;
+      }
     }
   };
 
@@ -451,7 +505,7 @@ export function createBedroomSanctuaryScene(
       options.floatingWoolPad.setFloatingEnabled(false, 0.238);
       options.floatingWoolPad.update(0, 0.016);
       registerPuffyMattressVariant(variant, mattressW, mattressL, [], 0.24);
-      syncMattressHeight(options.floatingWoolPad.getHeightDeltaFromRoyal() + 0.024);
+      snapAccessoriesToMattress();
     } else if (!options.mattressGroup) {
       unmountStandaloneMattress();
       standaloneMattressInstance = createPuffyMattress({
@@ -461,9 +515,10 @@ export function createBedroomSanctuaryScene(
         deckY: 0.24,
       });
       group.add(standaloneMattressInstance.group);
-      syncMattressHeight(MATTRESS_CATALOG_SPECS[variant].standaloneTopY - 0.582);
+      snapAccessoriesToMattress();
     } else {
       registerPuffyMattressVariant(variant, mattressW, mattressL, [], 0.24);
+      snapAccessoriesToMattress();
     }
   };
 
@@ -560,11 +615,12 @@ export function createBedroomSanctuaryScene(
         child.castShadow = true;
       }
     });
+    snapAccessoriesToMattress();
   };
 
   if (options.floatingWoolPad) {
     options.floatingWoolPad.setFloatingEnabled(false, 0.238);
-    syncMattressHeight(options.floatingWoolPad.getHeightDeltaFromRoyal() + 0.024);
+    snapAccessoriesToMattress();
   } else if (options.mattressGroup) {
     dockMattress(options.mattressGroup);
   }
@@ -724,7 +780,6 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     });
     woolPad.setFloatingEnabled(false, 0.238);
     sanctuary.dockMattress(mattressDockGroup);
-    sanctuary.syncMattressHeight(woolPad.getHeightDeltaFromRoyal() + 0.024);
     scene.add(sanctuary.group);
     scene.add(mattressDockGroup);
 

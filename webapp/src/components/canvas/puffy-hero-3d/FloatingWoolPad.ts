@@ -426,7 +426,7 @@ export class FloatingWoolPad {
       const {sidewallRoyal, sidewallLux, sidewallCloudFront, sidewallCloudWrap} =
         this.loadedAssets.materials;
       if (resolvedKey === 'cloud') {
-        this.sidewallMesh.material = [sidewallCloudWrap, sidewallCloudWrap];
+        this.sidewallMesh.material = [sidewallCloudFront, sidewallCloudWrap];
       } else if (resolvedKey === 'lux') {
         this.sidewallMesh.material = [sidewallLux, sidewallLux];
       } else {
