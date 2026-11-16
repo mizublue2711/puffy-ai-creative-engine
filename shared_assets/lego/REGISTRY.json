@@ -867,9 +867,37 @@
           "sha256": "d00ab818d93cb732b26539ce39266502c8469c4a951f934a75bfd486f58ee0a4"
         }
       }
+    },
+    "hero_cloudlet_guide_v1": {
+      "component_id": "components/hero/hero_cloudlet_guide_v1",
+      "name": "Puffy 3D Hero Guide Cloudlet",
+      "category": "hero_interactive",
+      "version": "1.0.0",
+      "physical_dimensions_meters": {
+        "width": 0.60,
+        "height": 0.38,
+        "depth": 0.24
+      },
+      "material_type": "PBR_MeshPhysical_Fabric",
+      "source_asset": "assets/logos/puffy_cloud_vector.svg",
+      "license": "internal-puffy-engine",
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/HeroCloudletGuide.ts",
+        "geometry": "THREE.ExtrudeGeometry",
+        "material": "THREE.MeshPhysicalMaterial",
+        "sheen": 1.0,
+        "sheen_roughness": 0.4,
+        "sheen_color": "#FFFFFF",
+        "transmission": 0.08,
+        "thickness": 0.2
+      }
     }
   },
   "ecosystem_modules": {
+    "HeroCloudletGuide": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/HeroCloudletGuide.ts",
+      "role": "3D Puffy Hero Guide Cloudlet molded from authentic SVG silhouette with peach-fuzz PBR shader & idle breathing motion"
+    },
     "puffyLayersData": {
       "path": "webapp/src/components/canvas/puffy-hero-3d/puffyLayersData.ts",
       "role": "Multi-model mattress metadata dictionary (Cloud 10\", Lux 12\", Royal 14\") & master 10-layer definitions"

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hero_cloudlet_guide_v1 — 3D Verification</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #ebf1f5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      #telemetry {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(24, 36, 59, 0.78);
+        color: #faf7f2;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        backdrop-filter: blur(8px);
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="telemetry">hero_cloudlet_guide_v1 | initializing...</div>
+    <script type="module" src="/src/test/hero_cloudlet_snapshot_client.ts"></script>
+  </body>
+</html>

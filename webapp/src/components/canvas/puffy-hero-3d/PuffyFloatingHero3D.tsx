@@ -20,6 +20,8 @@ import {
 } from "./types.ts";
 import {
   WoolMeadowSceneModule,
+  type IntroPhase1Stage,
+  type IntroState,
   type SanctuaryEnvironmentMode,
 } from "./WoolMeadowSceneModule.ts";
 import {
@@ -247,6 +249,16 @@ export function PuffyFloatingHero3D({
   const [isCraftLabVisible, setIsCraftLabVisible] = useState<boolean>(false);
   const [previewResetSignal, setPreviewResetSignal] = useState<number>(0);
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
+  const [introState, setIntroState] = useState<IntroState>(() =>
+    typeof window !== "undefined" && window.location.search.includes("audit=exploded")
+      ? "EXPLORING"
+      : "IDLE"
+  );
+  const [introPhase1Stage, setIntroPhase1Stage] = useState<IntroPhase1Stage>(() =>
+    typeof window !== "undefined" && window.location.search.includes("audit=exploded")
+      ? "ready"
+      : "void"
+  );
   const [activeEcoModelKey, setActiveEcoModelKey] = useState<PuffyModelKey>(
     () => resolvePuffyModelKey(selectedModel)
   );
@@ -348,6 +360,15 @@ export function PuffyFloatingHero3D({
     });
     sceneModule.onCameraPositionChange((pos) => {
       setCameraPosition(pos);
+    });
+    sceneModule.onIntroStateChange((nextState) => {
+      setIntroState(nextState);
+    });
+    sceneModule.onIntroPhase1StageChange((nextStage) => {
+      setIntroPhase1Stage(nextStage);
+    });
+    sceneModule.onIntroFlightComplete(() => {
+      setIntroState("EXPLORING");
     });
 
     sceneModule.init({
@@ -628,6 +649,14 @@ export function PuffyFloatingHero3D({
     sceneModuleRef.current?.setBedroomStyle(style);
   };
 
+  const handleEnterDream = () => {
+    sceneModuleRef.current?.startIntroFlight();
+  };
+
+  const handleSkipIntro = () => {
+    sceneModuleRef.current?.skipIntroFlight();
+  };
+
   // Top badge copy based on active mode
   let badgeKicker = "CURVED HORIZON · CLAYMATION MEADOW SANCTUARY";
   let badgeTitle = `${ecoModelConfig.name} — ${ecoModelConfig.profileHeightInches}" ${ecoModelConfig.layersCount}-Layer Profile`;
@@ -651,8 +680,48 @@ export function PuffyFloatingHero3D({
   return (
     <div
       className={`puffy-floating-hero-3d w-full h-full ${isMobile ? "mobile" : "desktop"}`}
+      data-intro-state={introState}
+      data-intro-phase1-stage={introPhase1Stage}
       style={{ touchAction: "pan-y" }}
     >
+      {/* Phase 1 (IDLE): Warm Linen Backdrop Overlay (#F6F4EE, z-index: 10, pointer-events: auto) */}
+      <div
+        className="intro-linen-backdrop"
+        data-visible={introState === "IDLE" ? "true" : "false"}
+        aria-hidden="true"
+      />
+
+      {/* Phase 1 (IDLE): Floating 3D Cloudlet over linen backdrop + Enter the Dream CTA */}
+      {introState === "IDLE" && (
+        <div
+          className="intro-idle-cta-wrap"
+          data-revealed={introPhase1Stage === "ready" ? "true" : "false"}
+        >
+          <button
+            type="button"
+            className="intro-enter-dream-cta"
+            onClick={handleEnterDream}
+            tabIndex={introPhase1Stage === "ready" ? 0 : -1}
+          >
+            <span className="intro-cta-vi">Chạm để bước vào giấc mơ</span>
+            <span className="intro-cta-sep" aria-hidden="true">·</span>
+            <span className="intro-cta-en">Enter the Dream</span>
+          </button>
+        </div>
+      )}
+
+      {/* Phase 2 (FLYING): Failsafe Skip Intro Pill Button */}
+      {introState === "FLYING" && (
+        <button
+          type="button"
+          className="intro-skip-pill"
+          onClick={handleSkipIntro}
+          aria-label="Skip Intro"
+        >
+          Bỏ qua / Skip
+        </button>
+      )}
+
       {/* 1. Minimal Top-Left Spec Badge + 3-Model Ecosystem Switcher + 4-Archetype Bedroom Switcher */}
       <div className="canvas-top-badge">
         <span className="canvas-top-badge-kicker">{badgeKicker}</span>
