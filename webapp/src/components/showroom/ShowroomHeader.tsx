@@ -1,4 +1,7 @@
 import "./ShowroomHeader.css";
+import { BrandLogo } from "../../brand/components/BrandLogo";
+import { BRAND_COLORS } from "../../brand/tokens/colors";
+import { BRAND_TYPOGRAPHY } from "../../brand/tokens/typography";
 
 export type ShowroomViewMode = "3d" | "2d";
 
@@ -14,9 +17,12 @@ export function ShowroomHeader({
   onOpenDocs,
 }: ShowroomHeaderProps) {
   return (
-    <header className="showroom-navbar">
+    <header
+      className="showroom-navbar"
+      style={{ backgroundColor: BRAND_COLORS.navyInk, fontFamily: BRAND_TYPOGRAPHY.fonts.functional, overflow: "hidden" }}
+    >
       <div className="showroom-brand">
-        <span className="showroom-brand-dot" aria-hidden="true" />
+        <BrandLogo width={80} variant="light" className="showroom-brand-logo" />
         <span className="showroom-brand-title">
           PUFFY SHOWROOM <span className="showroom-brand-sep">/</span> CREATIVE LAB
         </span>
