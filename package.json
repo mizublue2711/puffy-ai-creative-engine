@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Autonomous creative pipeline, brand design tokens, and Google Pomelli asset ingestion engine for Puffy®",
   "scripts": {
+    "build": "npm --prefix webapp run build",
     "scrape:pomelli": "tsx scripts/scrape_pomelli.ts",
     "sync:github": "tsx scripts/sync_github.ts",
     "ingest:pomelli": "tsx scripts/scrape_pomelli.ts && tsx scripts/sync_github.ts",
