@@ -4,6 +4,7 @@ import { LOGO_RULES } from '../tokens/rules';
 interface BrandLogoProps {
   width?: number;
   className?: string;
+  /** 'light' = white logo for dark backgrounds; 'dark' = black logo for light backgrounds */
   variant?: 'light' | 'dark';
 }
 
@@ -15,12 +16,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ width = 120, className = '
       style={{ display: 'inline-flex', padding: `${LOGO_RULES.clearSpacePx}px` }}
     >
       <img
-        src={LOGO_RULES.assetPath}
+        src={LOGO_RULES.assets[variant]}
         alt="Puffy Official Logo"
         style={{
           width: `${safeWidth}px`,
           height: 'auto',
-          filter: variant === 'light' ? 'brightness(0) invert(1)' : 'none',
         }}
         draggable={false}
       />
