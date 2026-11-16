@@ -304,6 +304,172 @@ export interface BedroomDockItemConfig {
 
 export const BEDROOM_REGISTRY: Record<string, BedroomComponentMetadata> = {};
 
+export type MattressVariantId = 'cloud' | 'royal' | 'flux';
+export type BedFrameVariantId = 'kyoto' | 'milan' | 'solace';
+export type CuratedSetId = 'zen-kyoto' | 'modern-milan' | 'warm-solace';
+export type BedroomEnvironmentId = 'zen-sanctuary' | 'mid-century' | 'modern-sanctuary';
+
+export const ENVIRONMENT_TO_STYLE: Record<BedroomEnvironmentId, BedroomStyle> = {
+  'zen-sanctuary': 'japandi',
+  'mid-century': 'mid-century',
+  'modern-sanctuary': 'nordic-coastal',
+};
+
+export const ENVIRONMENT_RUNNER_PALETTES = {
+  // 1. Zen Courtyard (Karesansui Sand & Moon Mirror View):
+  // Matches bleached kaolin sand, tatami/bamboo tones, and soft natural light.
+  'zen-sanctuary': {
+    color: '#B5AFA2', // Bleached bamboo / pale raw linen
+    tasselColor: '#D8D4CA', // Unbleached cotton fringe
+    sheenColor: '#C8C2B6',
+    roughness: 0.94,
+  },
+  // 2. Mid-Century Timber (Vertical Wood Slats & Warm Limewash):
+  // Harmonizes with muted walnut/honey teak and warm plaster tones.
+  'mid-century': {
+    color: '#AFA695', // Warm oat cashmere / soft flax
+    tasselColor: '#D5CFC3', // Natural ecru
+    sheenColor: '#C4BCAE',
+    roughness: 0.95,
+  },
+  // 3. Modern Minimalist (Monochrome Architectural Sanctuary):
+  // Blends with off-white walls, soft sheer curtains, and diffused daylight.
+  'modern-sanctuary': {
+    color: '#7C828D', // Muted smoke slate greige (calm, desaturated)
+    tasselColor: '#EAE6DF',
+    sheenColor: '#9CA3AF',
+    roughness: 0.92,
+  },
+} as const;
+
+export interface CuratedPairingSpec {
+  id: CuratedSetId;
+  label: string;
+  shortLabel: string;
+  mattress: MattressVariantId;
+  bedFrame: BedFrameVariantId;
+  mattressRegistryId: 'puffy-cloud-mattress' | 'puffy-royal-mattress' | 'puffy-flux-mattress';
+  frameRegistryId: 'puffy-kyoto-frame' | 'puffy-milan-frame' | 'puffy-solace-frame';
+}
+
+export const CURATED_BEDROOM_PAIRINGS: Record<CuratedSetId, CuratedPairingSpec> = {
+  'zen-kyoto': {
+    id: 'zen-kyoto',
+    label: 'Kyoto (Zen)',
+    shortLabel: 'Kyoto (Zen)',
+    mattress: 'cloud',
+    bedFrame: 'kyoto',
+    mattressRegistryId: 'puffy-cloud-mattress',
+    frameRegistryId: 'puffy-kyoto-frame',
+  },
+  'modern-milan': {
+    id: 'modern-milan',
+    label: 'Milan (Royal)',
+    shortLabel: 'Milan (Royal)',
+    mattress: 'royal',
+    bedFrame: 'milan',
+    mattressRegistryId: 'puffy-royal-mattress',
+    frameRegistryId: 'puffy-milan-frame',
+  },
+  'warm-solace': {
+    id: 'warm-solace',
+    label: 'Solace (Warm)',
+    shortLabel: 'Solace (Warm)',
+    mattress: 'flux',
+    bedFrame: 'solace',
+    mattressRegistryId: 'puffy-flux-mattress',
+    frameRegistryId: 'puffy-solace-frame',
+  },
+};
+
+export const PAIRING_METRICS = {
+  cloud: { frameHeight: 0.22, mattressThickness: 0.25, topSurfaceY: 0.470 },
+  royal: { frameHeight: 0.26, mattressThickness: 0.36, topSurfaceY: 0.620 },
+  flux: { frameHeight: 0.25, mattressThickness: 0.30, topSurfaceY: 0.550 },
+} as const;
+
+export const MATTRESS_CATALOG_SPECS: Record<
+  MattressVariantId,
+  {
+    registryId: 'puffy-cloud-mattress' | 'puffy-royal-mattress' | 'puffy-flux-mattress';
+    name: string;
+    profileHeightMeters: number;
+    standaloneTopY: number;
+    heroTopY: number;
+    queenDimensions: [number, number, number];
+    heroDimensions: [number, number, number];
+  }
+> = {
+  cloud: {
+    registryId: 'puffy-cloud-mattress',
+    name: 'Puffy Cloud (Organic White)',
+    profileHeightMeters: 0.25, // 10"
+    standaloneTopY: 0.470,
+    heroTopY: 0.568,
+    queenDimensions: [1.60, 0.25, 2.10],
+    heroDimensions: [2.15, 0.25, 2.55],
+  },
+  royal: {
+    registryId: 'puffy-royal-mattress',
+    name: 'Puffy Royal (High-Contrast Rim)',
+    profileHeightMeters: 0.36, // 14"
+    standaloneTopY: 0.620,
+    heroTopY: 0.680,
+    queenDimensions: [1.60, 0.36, 2.10],
+    heroDimensions: [2.15, 0.36, 2.55],
+  },
+  flux: {
+    registryId: 'puffy-flux-mattress',
+    name: 'Puffy Lux/Flux (Heather Border)',
+    profileHeightMeters: 0.30, // 12"
+    standaloneTopY: 0.550,
+    heroTopY: 0.624,
+    queenDimensions: [1.60, 0.30, 2.10],
+    heroDimensions: [2.15, 0.30, 2.55],
+  },
+};
+
+/**
+ * Exact metric dimensions [width, height, depth] (in meters) for the 3 curated
+ * Puffy Bed Frame catalog specifications (Queen 1.60x2.10m & Hero 2.15x2.55m).
+ */
+export const PUFFY_CATALOG_BED_SPECS = {
+  recessDepth: 0.04,
+  platformDeckY: 0.24,
+  platformRimY: 0.28,
+  frames: {
+    'puffy-kyoto-frame': {
+      name: 'Puffy Kyoto Platform Frame',
+      queenDimensions: [1.91, 0.275, 2.255] as [number, number, number],
+      heroDimensions: [2.46, 0.275, 2.705] as [number, number, number],
+    },
+    'puffy-milan-frame': {
+      name: 'Puffy Milan Upholstered Frame',
+      queenDimensions: [1.79, 0.275, 2.20] as [number, number, number],
+      heroDimensions: [2.34, 0.275, 2.65] as [number, number, number],
+    },
+    'puffy-solace-frame': {
+      name: 'Puffy Solace Sculpted Frame',
+      queenDimensions: [1.83, 0.275, 2.22] as [number, number, number],
+      heroDimensions: [2.38, 0.275, 2.67] as [number, number, number],
+    },
+  },
+  headboards: {
+    kyoto: {
+      queenDimensions: [1.91, 0.975, 0.065] as [number, number, number],
+      heroDimensions: [2.46, 1.035, 0.065] as [number, number, number],
+    },
+    milan: {
+      queenDimensions: [2.35, 1.195, 0.11] as [number, number, number],
+      heroDimensions: [2.90, 1.245, 0.11] as [number, number, number],
+    },
+    solace: {
+      queenDimensions: [1.83, 1.035, 0.11] as [number, number, number],
+      heroDimensions: [2.38, 1.095, 0.11] as [number, number, number],
+    },
+  },
+} as const;
+
 const BEDROOM_CONFIG_ALIASES: Record<string, string> = {
   'bed-throw-blanket': 'puffy-bed-runner',
 };

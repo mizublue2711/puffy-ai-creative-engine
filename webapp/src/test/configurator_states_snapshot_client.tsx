@@ -101,7 +101,6 @@ async function initConfiguratorTestHarness() {
   });
   woolPad.setFloatingEnabled(false, 0.238);
   sanctuary.dockMattress(mattressDockGroup);
-  sanctuary.syncMattressHeight(0.024);
   scene.add(sanctuary.group);
   scene.add(mattressDockGroup);
 
