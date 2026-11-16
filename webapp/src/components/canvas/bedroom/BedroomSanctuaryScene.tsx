@@ -20,6 +20,7 @@ import { createBedThrowBlanket } from './components/BedThrowBlanket.tsx';
 import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
 import { createFramedCanvasArt } from './components/FramedCanvasArt.tsx';
 import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
+import { createPuffyCloudCeilingLight } from './components/PuffyCloudCeilingLight.tsx';
 import { FloatingWoolPad } from '../puffy-hero-3d/FloatingWoolPad.ts';
 import type { SheepFlockEngine } from '../puffy-hero-3d/SheepFlockEngine.ts';
 
@@ -134,6 +135,16 @@ export function createBedroomSanctuaryScene(
   });
   group.add(pendantCluster.group);
 
+  // 7b. Puffy Cloud Architectural Ceiling Light (Independent, geometric room center [0.0, 3.185, 0.70])
+  const puffyCloudCeilingLight = createPuffyCloudCeilingLight({
+    ceilingY: 3.2,
+    positionX: 0.0,
+    positionZ: 0.70,
+    enableAmbientLight: true,
+    ambientLightIntensity: 1.4,
+  });
+  group.add(puffyCloudCeilingLight.group);
+
   // 8. 4-Archetype Decor Props (Throw Blanket, Accent Pillows, Framed Art, Bedside Artbook)
   // Top surface of FloatingWoolPad in local BedroomSanctuaryScene coordinates is ~0.79m when docked at -0.20,
   // or 0.58m when standalone mattress is docked at y=0.35m.
@@ -229,8 +240,8 @@ export function createBedroomSanctuaryScene(
 
     console.group('=== BEDROOM SANCTUARY SMOKE TEST REPORT ===');
     console.log(
-      '0. Registry Keys (11 expected):',
-      registryKeys.length === 11 ? `PASS (${registryKeys.join(', ')})` : `INFO (${registryKeys.length}: ${registryKeys.join(', ')})`,
+      '0. Registry Keys (12 expected):',
+      registryKeys.length === 12 ? `PASS (${registryKeys.join(', ')})` : `INFO (${registryKeys.length}: ${registryKeys.join(', ')})`,
     );
     console.log(
       '1. Rug vs Floor Clearance:',
@@ -258,6 +269,8 @@ export function createBedroomSanctuaryScene(
     disposeComponent('window-curtain-wall');
     disposeComponent('staggered-pendant-cluster');
     pendantCluster.dispose();
+    disposeComponent('puffy-cloud-ceiling-light');
+    puffyCloudCeilingLight.dispose();
     disposeComponent('bed-throw-blanket');
     disposeComponent('puffy-pillow-pair');
     disposeComponent('framed-canvas-art');
