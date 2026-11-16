@@ -71,9 +71,12 @@ export function createPuffyHeadboard(options: PuffyHeadboardOptions = {}): Bedro
     color: '#4A4D55',
     roughness: 0.85,
     metalness: 0.0,
-    sheen: 0.7,
+    clearcoat: 0.0,
+    specularIntensity: 0.12,
+    envMapIntensity: 0.2,
+    sheen: 0.25,
     sheenColor: new THREE.Color('#7A808C'),
-    sheenRoughness: 0.65,
+    sheenRoughness: 0.85,
     normalMap: tuftedNormalMap,
     normalScale: new THREE.Vector2(0.65, 0.65),
     side: THREE.FrontSide, // Backface culling enabled to save draw calls against back wall
@@ -81,10 +84,14 @@ export function createPuffyHeadboard(options: PuffyHeadboardOptions = {}): Bedro
 
   const buttonMat = new THREE.MeshPhysicalMaterial({
     color: '#3D4048',
-    roughness: 0.82,
+    roughness: 0.85,
     metalness: 0.0,
-    sheen: 0.7,
+    clearcoat: 0.0,
+    specularIntensity: 0.12,
+    envMapIntensity: 0.2,
+    sheen: 0.25,
     sheenColor: new THREE.Color('#7A808C'),
+    sheenRoughness: 0.85,
     side: THREE.FrontSide,
   });
 

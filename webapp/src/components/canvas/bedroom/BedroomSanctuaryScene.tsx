@@ -11,7 +11,7 @@ import {
 } from './BedroomRegistry.ts';
 import { createPuffyBedFrame } from './components/PuffyBedFrame.tsx';
 import { createPuffyHeadboard } from './components/PuffyHeadboard.tsx';
-import { createWallSconces } from './components/WallSconces.tsx';
+import { createModernPendantCluster } from './components/ModernPendantCluster.tsx';
 import { createPlushAreaRug } from './components/PlushAreaRug.tsx';
 import { createHardwoodFloor } from './components/HardwoodFloor.tsx';
 import { createRoomBoundary } from './components/RoomBoundary.tsx';
@@ -20,6 +20,11 @@ import { createBedThrowBlanket } from './components/BedThrowBlanket.tsx';
 import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
 import { createFramedCanvasArt } from './components/FramedCanvasArt.tsx';
 import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
+import { createPuffyCloudCeilingLight } from './components/PuffyCloudCeilingLight.tsx';
+import { createCourtyardTerrace } from './components/courtyard/CourtyardTerrace.tsx';
+import { createCourtyardWall } from './components/courtyard/CourtyardWall.tsx';
+import { createTropicalPlanterRig } from './components/courtyard/TropicalPlanterRig.tsx';
+import { createTrailingVinesRig } from './components/courtyard/TrailingVinesRig.tsx';
 import { FloatingWoolPad } from '../puffy-hero-3d/FloatingWoolPad.ts';
 import type { SheepFlockEngine } from '../puffy-hero-3d/SheepFlockEngine.ts';
 
@@ -38,6 +43,8 @@ export interface BedroomSanctuarySceneOptions {
   mattressLength?: number;
   /** Whether directional window sunlight casts soft shadows */
   castShadow?: boolean;
+  /** Intensity of directional window sunlight (defaults to 2.0 for soft grazing light) */
+  sunLightIntensity?: number;
 }
 
 export interface BedroomSanctuaryInstance {
@@ -73,8 +80,9 @@ export function createBedroomSanctuaryScene(
     options.sheepFlock.group.visible = false;
   }
 
-  // 1. Hardwood Floor (y = 0)
-  const floor = createHardwoodFloor({ width: 6.4, length: 6.4 });
+  // 1. Hardwood Floor (y = 0, x = [-3.80, +3.60], slab depth 7.20m centered z = +1.30)
+  const floor = createHardwoodFloor({ width: 7.40, length: 7.20 });
+  floor.group.position.set(-0.10, 0, 1.30);
   group.add(floor.group);
 
   // 2. Plush Area Rug (18mm slab, y = 0.009m)
@@ -107,32 +115,43 @@ export function createBedroomSanctuaryScene(
   });
   group.add(headboard.group);
 
-  // 5. Room Boundary (Mineral Plaster Back Wall + Skirting Baseboard + Architectural Slats)
-  const backWallZ = headboardAnchorZ - 0.12;
+  // 5. Room Boundary (7.00m deep: z = -2.20 .. +4.80, ceiling slab, 15mm Negative Shadow Reveal)
+  const backWallZ = -2.20;
   const roomBoundary = createRoomBoundary({
-    width: 6.4,
-    wallHeight: 3.2,
+    width: 7.40,
+    centerX: -0.10,
+    wallHeight: 3.90,
     wallZ: backWallZ,
+    roomLength: 7.00,
   });
   group.add(roomBoundary.group);
 
-  // 6. Floor-to-Ceiling Curtain Wall & Grand S-Fold Voile Curtain (x = -3.2m)
+  // 6. Panoramic Glass Facade (x = -3.80m, z = -2.00 .. +4.50, 6.50m) + continuous S-Fold Voile
   const windowCurtain = createWindowCurtainWall({
-    wallX: -3.2,
-    startZ: backWallZ,
-    totalLength: 4.5,
-    ceilingHeight: 3.2,
+    wallX: -3.80,
+    startZ: -2.00,
+    totalLength: 6.50,
+    ceilingHeight: 3.90,
   });
   group.add(windowCurtain.group);
 
-  // 7. Dual Minimalist Brushed Brass Wall Sconces (Decorative Resting State: Lights OFF)
-  const sconceOffsetX = Math.max(1.25, mattressW / 2 + 0.30);
-  const sconces = createWallSconces({
-    offsetX: sconceOffsetX,
-    heightY: 1.40,
-    wallZ: backWallZ,
+  // 7. Staggered Geometric Bedroom Pendant Light Cluster (Suspended from y = 3.90m down to 1.35m)
+  const pendantCluster = createModernPendantCluster({
+    ceilingY: 3.90,
+    castShadow,
+    enableAccentLight: true,
   });
-  group.add(sconces.group);
+  group.add(pendantCluster.group);
+
+  // 7b. Puffy Cloud Architectural Ceiling Light (Centered at [0.0, 3.885, 0.70], 1.80m x 1.20m)
+  const puffyCloudCeilingLight = createPuffyCloudCeilingLight({
+    ceilingY: 3.90,
+    positionX: 0.0,
+    positionZ: 0.70,
+    enableAmbientLight: true,
+    ambientLightIntensity: 1.4,
+  });
+  group.add(puffyCloudCeilingLight.group);
 
   // 8. 4-Archetype Decor Props (Throw Blanket, Accent Pillows, Framed Art, Bedside Artbook)
   // Top surface of FloatingWoolPad in local BedroomSanctuaryScene coordinates is ~0.79m when docked at -0.20,
@@ -142,7 +161,7 @@ export function createBedroomSanctuaryScene(
     mattressWidth: mattressW,
     surfaceY: mattressTopY + 0.025,
     footZ: mattressL * 0.28,
-    drapeDrop: 0.15,
+    drapeDrop: 0.18,
   });
   group.add(throwBlanket.group);
 
@@ -166,20 +185,35 @@ export function createBedroomSanctuaryScene(
   });
   group.add(bedsideBook.group);
 
+  // 8b. Outdoor Zen Courtyard & Biophilic Planter Zone (outside curtain wall x = -3.80m)
+  const courtyardZone = new THREE.Group();
+  courtyardZone.name = 'CourtyardSanctuaryZone';
+  const courtyardTerrace = createCourtyardTerrace();
+  const courtyardWall = createCourtyardWall();
+  const tropicalPlanterRig = createTropicalPlanterRig();
+  courtyardZone.add(courtyardTerrace.group);
+  courtyardZone.add(courtyardWall.group);
+  courtyardZone.add(tropicalPlanterRig.group);
+  // Trailing Pothos Vines softening the courtyard wall lips & curtain pocket corner
+  const trailingVinesRig = createTrailingVinesRig();
+  courtyardZone.add(trailingVinesRig.group);
+  group.add(courtyardZone);
+
   // 9. Soft Sanctuary Daylight Rig (4000K Grazing Window Sun + Cool/Warm Hemisphere Fill)
-  const sunLight = new THREE.DirectionalLight(0xfff4e5, 2.8);
-  sunLight.position.set(-5.0, 4.0, 2.0);
+  const sunLightIntensity = options.sunLightIntensity ?? 2.0;
+  const sunLight = new THREE.DirectionalLight(0xfff4e5, sunLightIntensity);
+  sunLight.position.set(-7.5, 5.2, 2.5);
   sunLight.target.position.set(0, 0.4, 0);
   sunLight.castShadow = castShadow;
   if (castShadow) {
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
     sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 16;
-    sunLight.shadow.camera.left = -4.2;
-    sunLight.shadow.camera.right = 4.2;
-    sunLight.shadow.camera.top = 4.2;
-    sunLight.shadow.camera.bottom = -4.2;
+    sunLight.shadow.camera.far = 18;
+    sunLight.shadow.camera.left = -5.0;
+    sunLight.shadow.camera.right = 5.0;
+    sunLight.shadow.camera.top = 5.0;
+    sunLight.shadow.camera.bottom = -5.0;
     sunLight.shadow.bias = -0.0001;
     sunLight.shadow.radius = 4;
   }
@@ -219,6 +253,7 @@ export function createBedroomSanctuaryScene(
     throwBlanket.applyStyle(preset, duration);
     framedArt.applyStyle(preset, duration);
     bedsideBook.applyStyle(preset, duration);
+    pendantCluster.applyStyle(preset, duration);
   };
 
   // Apply initial style immediately (duration = 0)
@@ -237,8 +272,8 @@ export function createBedroomSanctuaryScene(
 
     console.group('=== BEDROOM SANCTUARY SMOKE TEST REPORT ===');
     console.log(
-      '0. Registry Keys (11 expected):',
-      registryKeys.length === 11 ? `PASS (${registryKeys.join(', ')})` : `INFO (${registryKeys.length}: ${registryKeys.join(', ')})`,
+      '0. Registry Keys (12 expected):',
+      registryKeys.length === 12 ? `PASS (${registryKeys.join(', ')})` : `INFO (${registryKeys.length}: ${registryKeys.join(', ')})`,
     );
     console.log(
       '1. Rug vs Floor Clearance:',
@@ -252,7 +287,7 @@ export function createBedroomSanctuaryScene(
     );
     console.log(
       '3. Soft Sanctuary Daylight Rig:',
-      sunLight.intensity === 2.8 && ambientRig.intensity === 0.6 ? 'PASS (4000K Sun + Hemi)' : 'FAIL',
+      sunLight.intensity >= 1.8 && sunLight.intensity <= 2.8 && ambientRig.intensity === 0.6 ? 'PASS (4000K Sun + Hemi)' : 'FAIL',
     );
     console.groupEnd();
   };
@@ -264,11 +299,21 @@ export function createBedroomSanctuaryScene(
     disposeComponent('puffy-headboard');
     disposeComponent('room-boundary');
     disposeComponent('window-curtain-wall');
-    disposeComponent('sconces-pair');
+    disposeComponent('staggered-pendant-cluster');
+    pendantCluster.dispose();
+    disposeComponent('puffy-cloud-ceiling-light');
+    puffyCloudCeilingLight.dispose();
     disposeComponent('bed-throw-blanket');
     disposeComponent('puffy-pillow-pair');
     disposeComponent('framed-canvas-art');
     disposeComponent('bedside-art-book');
+    disposeComponent('courtyard-terrace');
+    courtyardTerrace.dispose();
+    disposeComponent('courtyard-wall');
+    courtyardWall.dispose();
+    disposeComponent('tropical-planter-rig');
+    tropicalPlanterRig.dispose();
+    trailingVinesRig.dispose();
     disposeAllBedroomComponents();
 
     group.clear();
@@ -345,6 +390,9 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 0.6, 0);
+    controls.maxDistance = 8.50; // Allows orbiting out to the expanded courtyard terrace
+    controls.minDistance = 0.80;
+    controls.maxPolarAngle = Math.PI / 2 - 0.03; // Locks camera above ground level
     controls.enableDamping = true;
     controls.update();
 
