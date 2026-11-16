@@ -13,6 +13,11 @@ import {FloatingWoolPad} from './FloatingWoolPad.ts';
 import type {MattressModelId} from './MattressAnatomy.ts';
 import {MeadowTerrain} from './MeadowTerrain.ts';
 import {SheepFlockEngine} from './SheepFlockEngine.ts';
+import {
+  createBedroomSanctuaryScene,
+  type BedroomSanctuaryInstance,
+} from '../bedroom/BedroomSanctuaryScene.tsx';
+import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
 
 export type SanctuaryEnvironmentMode = 'meadow' | 'bedroom';
 
@@ -75,6 +80,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private floatingWoolPad: FloatingWoolPad | null = null;
   private sheepFlock: SheepFlockEngine | null = null;
   private bedroomGroup: THREE.Group | null = null;
+  private bedroomSanctuary: BedroomSanctuaryInstance | null = null;
+  private bedroomStyle: BedroomStyle = 'nordic-coastal';
+  private meadowLights: THREE.Light[] = [];
 
   private environmentMode: SanctuaryEnvironmentMode = 'meadow';
   private isLabPaused = false;
@@ -166,6 +174,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
     const rimLight = new THREE.DirectionalLight('#D6E8FF', 0.5);
     rimLight.position.set(-10, 10, -10);
     scene.add(rimLight);
+    this.meadowLights = [ambientLight, sunLight, rimLight];
 
     // 4. Wide FOV 60 Camera & Smooth Damped OrbitControls
     camera.fov = 60;
@@ -243,15 +252,33 @@ export class WoolMeadowSceneModule implements ISceneModule {
       this.floatingWoolPad?.setFloatingEnabled(false, this.bedSurfaceHeight);
 
       // 3. BUILD & MOUNT SANCTUARY BEDROOM (clean up any prior group first)
+      if (this.bedroomSanctuary) {
+        scene.remove(this.bedroomSanctuary.group);
+        this.bedroomSanctuary.dispose();
+        this.bedroomSanctuary = null;
+      }
       if (this.bedroomGroup) {
         scene.remove(this.bedroomGroup);
         cleanupScene(this.bedroomGroup);
         this.bedroomGroup = null;
       }
-      this.bedroomGroup = this.buildSanctuaryBedroomGroup();
+
+      this.bedroomSanctuary = createBedroomSanctuaryScene({
+        floatingWoolPad: this.floatingWoolPad,
+        sheepFlock: this.sheepFlock,
+        initialStyle: this.bedroomStyle,
+        castShadow: !this.context.isSoftwareGl,
+      });
+      // Align slat height (0.32m) with FloatingWoolPad docked bottom (0.36 - 0.238 = 0.122m)
+      this.bedroomSanctuary.group.position.set(0, -0.20, 0);
+      this.bedroomGroup = this.bedroomSanctuary.group;
       scene.add(this.bedroomGroup);
 
-      // Warm indoor sanctuary atmosphere
+      // Warm indoor sanctuary atmosphere with Soft Sanctuary Daylight Rig
+      this.meadowLights.forEach((l) => {
+        l.visible = false;
+      });
+      scene.environmentIntensity = 0.5;
       scene.background = new THREE.Color('#EFEAE1');
       scene.fog = new THREE.FogExp2('#EFEAE1', 0.012);
 
@@ -260,13 +287,22 @@ export class WoolMeadowSceneModule implements ISceneModule {
       this.isTransitioningCamera = true;
     } else {
       // 1. STRICT RESOURCE DISPOSAL of Bedroom meshes when switching back to Meadow
-      if (this.bedroomGroup) {
+      if (this.bedroomSanctuary) {
+        scene.remove(this.bedroomSanctuary.group);
+        this.bedroomSanctuary.dispose();
+        this.bedroomSanctuary = null;
+        this.bedroomGroup = null;
+      } else if (this.bedroomGroup) {
         scene.remove(this.bedroomGroup);
         cleanupScene(this.bedroomGroup);
         this.bedroomGroup = null;
       }
 
       // 2. RESTORE MEADOW SANCTUARY & SHEEP FLOCK
+      this.meadowLights.forEach((l) => {
+        l.visible = true;
+      });
+      scene.environmentIntensity = 0.75;
       if (this.meadowTerrain) {
         this.meadowTerrain.group.visible = true;
       }
@@ -290,6 +326,11 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
   public getEnvironmentMode(): SanctuaryEnvironmentMode {
     return this.environmentMode;
+  }
+
+  public setBedroomStyle(style: BedroomStyle): void {
+    this.bedroomStyle = style;
+    this.bedroomSanctuary?.setStyle(style, 0.5);
   }
 
   /**
@@ -562,12 +603,14 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
     if (this.floatingWoolPad) {
       if (preset === 'exploded') {
+        this.bedroomSanctuary?.setBedDecorVisible(false);
         this.floatingWoolPad.setExplodedFactor(1.0);
         if (this.floatingWoolPad.getActiveLayerIndex() === null) {
           this.floatingWoolPad.setActiveLayerIndex(0);
           this.onLayerSelectCallback?.(0);
         }
       } else {
+        this.bedroomSanctuary?.setBedDecorVisible(true);
         this.floatingWoolPad.setExplodedFactor(0.0);
         this.floatingWoolPad.setActiveLayerIndex(null);
       }
@@ -704,7 +747,12 @@ export class WoolMeadowSceneModule implements ISceneModule {
       if (this.boundWheel) {
         container.removeEventListener('wheel', this.boundWheel);
       }
-      if (this.bedroomGroup) {
+      if (this.bedroomSanctuary) {
+        scene.remove(this.bedroomSanctuary.group);
+        this.bedroomSanctuary.dispose();
+        this.bedroomSanctuary = null;
+        this.bedroomGroup = null;
+      } else if (this.bedroomGroup) {
         scene.remove(this.bedroomGroup);
         cleanupScene(this.bedroomGroup);
         this.bedroomGroup = null;
