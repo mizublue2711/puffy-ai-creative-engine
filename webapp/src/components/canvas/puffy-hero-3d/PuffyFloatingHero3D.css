@@ -1133,6 +1133,77 @@
   transform: translateY(0);
 }
 
+/* Phase 2 (FLYING) -> Phase 3 (EXPLORING): Morphing HUD Interaction Hint */
+.puffy-floating-hero-3d .intro-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 50;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--puffy3d-navy-ink, #18243b);
+  border: 1px solid rgba(43, 47, 68, 0.16);
+  border-radius: 9999px;
+  padding: 9px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(24, 36, 59, 0.12);
+  opacity: 1;
+  transition:
+    opacity 0.6s ease,
+    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.4s ease;
+  animation: intro-scroll-hint-fade 0.6s ease both;
+}
+
+.puffy-floating-hero-3d .intro-scroll-hint[data-phase="orbit"] {
+  bottom: 96px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.puffy-floating-hero-3d .intro-scroll-hint[data-fading="true"] {
+  opacity: 0;
+}
+
+.puffy-floating-hero-3d .intro-orbit-hint-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.puffy-floating-hero-3d .intro-hand-drag-svg {
+  flex-shrink: 0;
+  animation: intro-hand-drag-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes intro-hand-drag-pulse {
+  0%,
+  100% {
+    transform: translateX(-3px) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(3px) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes intro-scroll-hint-fade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
 /* Hide showroom HUD overlays during IDLE curtain and FLYING spline flight */
 .puffy-floating-hero-3d[data-intro-state="IDLE"] .canvas-top-badge,
 .puffy-floating-hero-3d[data-intro-state="IDLE"] .gallery-trust-overlay,

@@ -259,6 +259,8 @@ export function PuffyFloatingHero3D({
       ? "ready"
       : "void"
   );
+  const [orbitHintPhase, setOrbitHintPhase] = useState<"hidden" | "visible" | "fading">("hidden");
+  const prevIntroStateRef = useRef<IntroState>(introState);
   const [activeEcoModelKey, setActiveEcoModelKey] = useState<PuffyModelKey>(
     () => resolvePuffyModelKey(selectedModel)
   );
@@ -343,12 +345,12 @@ export function PuffyFloatingHero3D({
 
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 0.95;
     renderer.setPixelRatio(
       isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2)
     );
     renderer.shadowMap.enabled = !isSoftwareGl;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setSize(width, height, false);
     renderer.domElement.className = "w-full h-full";
 
@@ -674,6 +676,29 @@ export function PuffyFloatingHero3D({
     sceneModuleRef.current?.setBedroomStyle(style);
   };
 
+  useEffect(() => {
+    const prev = prevIntroStateRef.current;
+    prevIntroStateRef.current = introState;
+
+    if (introState === "EXPLORING" && prev === "FLYING") {
+      setOrbitHintPhase("visible");
+      const fadeTimer = window.setTimeout(() => {
+        setOrbitHintPhase("fading");
+      }, 4000);
+      const hideTimer = window.setTimeout(() => {
+        setOrbitHintPhase("hidden");
+      }, 4600);
+      return () => {
+        window.clearTimeout(fadeTimer);
+        window.clearTimeout(hideTimer);
+      };
+    }
+
+    if (introState !== "EXPLORING") {
+      setOrbitHintPhase("hidden");
+    }
+  }, [introState]);
+
   const handleEnterDream = () => {
     sceneModuleRef.current?.startIntroFlight();
   };
@@ -745,6 +770,41 @@ export function PuffyFloatingHero3D({
         >
           Bỏ qua / Skip
         </button>
+      )}
+
+      {/* Morphing HUD Interaction Hint: Scroll-to-Drift -> Drag-to-Orbit 360° */}
+      {(introState === "FLYING" || orbitHintPhase !== "hidden") && (
+        <div
+          className="intro-scroll-hint"
+          data-phase={introState === "FLYING" ? "scroll" : "orbit"}
+          data-fading={orbitHintPhase === "fading" ? "true" : "false"}
+          aria-live="polite"
+        >
+          {introState === "FLYING" ? (
+            <span>[ 🖱️ Scroll to Drift · Cuộn chuột để bay ]</span>
+          ) : (
+            <span className="intro-orbit-hint-inner">
+              <svg
+                className="intro-hand-drag-svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 11V6a2 2 0 0 0-4 0v5" />
+                <path d="M14 10V4a2 2 0 0 0-4 0v6" />
+                <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
+                <path d="M6 14a2 2 0 0 0-2 2v1a6 6 0 0 0 6 6h4a6 6 0 0 0 6-6v-5a2 2 0 0 0-4 0" />
+              </svg>
+              <span>[ 🔄 Drag to Orbit 360° · Giữ &amp; Rê chuột để xoay nệm 360° ]</span>
+            </span>
+          )}
+        </div>
       )}
 
       {/* 1. Minimal Top-Left Spec Badge + 3-Model Ecosystem Switcher + 4-Archetype Bedroom Switcher */}

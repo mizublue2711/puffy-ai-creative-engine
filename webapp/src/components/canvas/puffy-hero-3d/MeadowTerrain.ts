@@ -131,6 +131,51 @@ function createSoftBladeClusterGeometry(): THREE.BufferGeometry {
   return clusterGeo;
 }
 
+/**
+ * Feathers distant terrain and hill ridge edges into the warm dawn mist (#E3DFD5)
+ * with smooth radial alpha falloff so no sharp polygon tips cut across the sky.
+ */
+function applyHorizonMistFeather(
+  material: THREE.MeshStandardMaterial,
+  colorFadeStart: number,
+  colorFadeEnd: number,
+  alphaFadeStart: number,
+  alphaFadeEnd: number,
+): void {
+  material.transparent = true;
+  material.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+         varying vec3 vMistWorldPos;`,
+      )
+      .replace(
+        '#include <project_vertex>',
+        `#include <project_vertex>
+         vMistWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`,
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+         varying vec3 vMistWorldPos;`,
+      )
+      .replace(
+        '#include <dithering_fragment>',
+        `#include <dithering_fragment>
+         float mistDist = length(vMistWorldPos.xz);
+         float edgeFade = smoothstep(${colorFadeStart.toFixed(1)}, ${colorFadeEnd.toFixed(1)}, mistDist);
+         gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.89, 0.87, 0.83), edgeFade * 0.85);
+         float alphaFade = 1.0 - smoothstep(${alphaFadeStart.toFixed(1)}, ${alphaFadeEnd.toFixed(1)}, mistDist);
+         gl_FragColor.a *= alphaFade;`,
+      );
+  };
+  material.customProgramCacheKey = () =>
+    `horizon-mist-${colorFadeStart}-${colorFadeEnd}-${alphaFadeStart}-${alphaFadeEnd}`;
+}
+
 export class MeadowTerrain {
   public readonly group: THREE.Group;
   public readonly terrainMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
@@ -221,6 +266,7 @@ export class MeadowTerrain {
       roughness: 0.94,
       metalness: 0.0,
     });
+    applyHorizonMistFeather(terrainMat, 12.0, 24.0, 17.0, 25.0);
 
     this.terrainMesh = new THREE.Mesh(planeGeo, terrainMat);
     this.terrainMesh.name = 'MeadowGroundSurface';
@@ -400,6 +446,7 @@ export class MeadowTerrain {
       metalness: 0.0,
       fog: true,
     });
+    applyHorizonMistFeather(midRidgeMat, 12.0, 26.0, 14.0, 28.0);
     const midRidgeMesh = new THREE.Mesh(midRidgeGeo, midRidgeMat);
     midRidgeMesh.position.set(-4.5, -0.4, -16.5);
     midRidgeMesh.receiveShadow = true;
@@ -426,6 +473,7 @@ export class MeadowTerrain {
       metalness: 0.0,
       fog: true,
     });
+    applyHorizonMistFeather(farRidgeMat, 14.0, 28.0, 16.0, 32.0);
     const farRidgeMesh = new THREE.Mesh(farRidgeGeo, farRidgeMat);
     farRidgeMesh.position.set(3.5, -0.2, -24.5);
     this.group.add(farRidgeMesh);
