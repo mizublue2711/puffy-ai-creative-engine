@@ -123,3 +123,38 @@ texture.repeat.set(repeatX, repeatY);
 ### 4. Immediate Remediation & Pre-Bake Safety Gate
 - **Pre-Bake Sanity Check**: If a target surface exceeds `1.0m x 1.0m` in 3D space, it is strictly illegal to bake as one canvas. It must be decomposed into a Class A or Class B modular tile.
 - **Purge Monolithic Commits**: Any uncompressed `.mcmat` or texture exceeding 50 MB must be stripped from Git history using `git rm --cached` before rebaking.
+
+- 
+# 🚨 5 CRITICAL DIRECTIVE: PRODUCTION MATTRESS PROTOTYPE LOCKDOWN
+
+## A. STATUS: LOCKED & IMMUTABLE (PRODUCTION-FROZEN)
+The core mattress prototypes registered in `shared_assets/lego/REGISTRY.json` are **officially completed, approved, and frozen**:
+- **`Cloud`** (Puffy Cloud Mattress)
+- **`Lux`** (Puffy Lux Hybrid)
+- **`Royal`** (Puffy Royal Hybrid)
+
+Their visual aesthetics, 3D meshes/geometry, PBR texture maps (Albedo, Normal, Roughness, Height, AO), shader parameters, physical dimensions, anchor points, and internal 10-layer anatomy structures are strictly **PRODUCTION-READY**.
+
+---
+
+## B. STRICT PROHIBITIONS FOR ALL AGENTS & WORKERS
+Unless explicitly instructed by the User with an authorized bypass, **ALL AGENTS MUST ADHERE TO THE FOLLOWING ZERO-TOLERANCE RULES**:
+
+1. **DO NOT MODIFY GEOMETRY OR MESHES**: Never alter, optimize, decimate, subdivide, or deform the 3D meshes of `Cloud`, `Lux`, or `Royal`.
+2. **DO NOT MODIFY MATERIALS OR SHADERS**: Never change color palettes, hex codes, PBR texture bindings, roughness/metalness values, or custom shader code associated with these three models.
+3. **DO NOT OVERWRITE OR RENAME ASSETS**: Never touch, delete, rename, or overwrite files in `shared_assets/lego/components/` or textures assigned to these models.
+4. **DO NOT ALTER REGISTRY BINDINGS**: Never modify the coordinate anchors, UV placements, scale factors, or SKU identifiers defined in `shared_assets/lego/REGISTRY.json`.
+5. **NO UNINTENDED SIDE EFFECTS**: When implementing room environments (e.g., Bedroom, Meadow), camera animations, lighting rigs, or UI controls, you must treat the mattress models as **READ-ONLY BLACK BOXES**.
+
+---
+
+## C. MANDATORY STOP-AND-ASK PROTOCOL (ESCALATION GATEWAY)
+If any assigned task (e.g., UI refactoring, camera spline tuning, dynamic lighting, layer exploding) appears to require changes to `Cloud`, `Lux`, or `Royal`:
+
+1. **HALT IMMEDIATELY**: Do not attempt to refactor or "fix" the mattress code.
+2. **DO NOT ASSUME OR ESTIMATE**: Never make autonomous modifications to locked assets.
+3. **ESCALATE TO THE USER**: Post an explicit warning in the chat before executing any command:
+
+> **"⚠️ LOCKDOWN VIOLATION ALERT:** The requested task requires modifying the production-frozen mattress prototype `[Cloud / Lux / Royal]` at file `[path/to/file]`. According to `Agent.md`, this model is locked. Please confirm whether you explicitly authorize this modification before I proceed."
+
+D. **AWAIT WRITTEN CONFIRMATION**: Only proceed if the user grants unambiguous, explicit written consent.
