@@ -569,7 +569,10 @@
         "material_slot": "mat_brand_badge_lux",
         "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
         "material": "THREE.MeshPhysicalMaterial",
-        "normal_scale": [1.0, 1.0],
+        "normal_scale": [
+          1.0,
+          1.0
+        ],
         "sheen": 1.0,
         "sheen_roughness": 0.4,
         "sheen_color": "#FFFFFF"
@@ -591,7 +594,10 @@
         "material_slot": "mat_brand_badge_cloud",
         "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
         "material": "THREE.MeshPhysicalMaterial",
-        "normal_scale": [1.0, 1.0],
+        "normal_scale": [
+          1.0,
+          1.0
+        ],
         "sheen": 1.0,
         "sheen_roughness": 0.4,
         "sheen_color": "#FFFFFF"
@@ -639,11 +645,227 @@
         "relief_hex": "#F8FAFC",
         "clouds_per_flank": 5,
         "perimeter_cycles": 19,
-        "normal_scale": [1.2, 1.2],
+        "normal_scale": [
+          1.2,
+          1.2
+        ],
         "sheen": 1.2,
         "sheen_roughness": 0.45,
         "sheen_color": "#FFFFFF",
         "ao_map_intensity": 1.25
+      }
+    },
+    "bed_runner_chenille_woven_v1": {
+      "id": "components/bed_runner/bed_runner_chenille_woven_v1",
+      "version": "1.0.0",
+      "class": "B",
+      "license": "internal-puffy-engine",
+      "reference_image": "Chenille-Bed-Runner_03.jpg",
+      "native_aspect_ratio": "2:1",
+      "physical_unit_meters": [
+        2.2,
+        0.6
+      ],
+      "physical_dimensions_meters": {
+        "width": 2.2,
+        "height": 0.6
+      },
+      "is_strip": false,
+      "craft_sources": {
+        "generator_script": "assets/lego/craft_bed_runner_and_rug.py",
+        "texturecraft_tcraft": "assets/lego/bed_runner/bed_runner.tcraft",
+        "preview_render": "assets/lego/bed_runner/preview_plane_grazing.png"
+      },
+      "threejs_binding": {
+        "material": "THREE.MeshPhysicalMaterial",
+        "wrap_s": "THREE.ClampToEdgeWrapping",
+        "wrap_t": "THREE.ClampToEdgeWrapping",
+        "normal_scale": [
+          1.0,
+          1.0
+        ],
+        "sheen": 1.0,
+        "sheenColor": "#FFFFFF",
+        "sheenRoughness": 0.5,
+        "transparent": true,
+        "alphaTest": 0.5
+      },
+      "maps": {
+        "01_baseColor.webp": {
+          "path": "shared_assets/lego/components/bed_runner/bed_runner_chenille_woven_v1/01_baseColor.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "albedo",
+          "description": "Soft heathered cream / warm oatmeal yarn (#E7E1D7 to #DCD5C9) with warp/weft variation",
+          "bytes": 38068,
+          "sha256": "48e9ab9d64d0fd7ea7afb84413280a2b4a682c41bf4a7af8f8e898720e2ebdd3"
+        },
+        "02_normal.png": {
+          "path": "shared_assets/lego/components/bed_runner/bed_runner_chenille_woven_v1/02_normal.png",
+          "format": "PNG",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "normal_opengl",
+          "description": "OpenGL tangent-space normal map (+Y up) for ribbed chenille waffle weave & braided tassels",
+          "bytes": 931576,
+          "sha256": "77307949c1066a6a719a5396426a4c5e8fd9137422c5d2aa3306f58671eec9c6"
+        },
+        "03_roughness.webp": {
+          "path": "shared_assets/lego/components/bed_runner/bed_runner_chenille_woven_v1/03_roughness.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "roughness",
+          "description": "Matte fabric roughness (0.85-0.94 valleys, 0.75 yarn rib crests)",
+          "bytes": 93050,
+          "sha256": "917dd2e083f7abea984e6f704d8c7347b1c3d50618f5c3e5578156786028ddf3"
+        },
+        "04_alpha.png": {
+          "path": "shared_assets/lego/components/bed_runner/bed_runner_chenille_woven_v1/04_alpha.png",
+          "format": "PNG",
+          "mode": "L",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "alpha",
+          "description": "Solid body mask with knotted tassel fringe cutout borders on both longitudinal ends",
+          "bytes": 28300,
+          "sha256": "9c5a6ef49fe519d535663599bbb8ee8cd48437c1eee52b2f686ff1e0ea042228"
+        },
+        "05_ambientOcclusion.webp": {
+          "path": "shared_assets/lego/components/bed_runner/bed_runner_chenille_woven_v1/05_ambientOcclusion.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "ambient_occlusion",
+          "description": "Micro-shadows in yarn interlaces and knotted tassel bases",
+          "bytes": 243876,
+          "sha256": "55091279334b900609dee8e63d393273a69b2554691a4c7b6fb297bc2e590b02"
+        }
+      }
+    },
+    "rug_natural_jute_loop_v1": {
+      "id": "components/rug/rug_natural_jute_loop_v1",
+      "version": "1.0.0",
+      "class": "A",
+      "license": "internal-puffy-engine",
+      "native_aspect_ratio": "1:1",
+      "physical_unit_meters": [
+        1.2,
+        1.2
+      ],
+      "physical_dimensions_meters": {
+        "width": 2.4,
+        "height": 3.0,
+        "repeat_step_meters": [
+          1.2,
+          1.2
+        ]
+      },
+      "seamless_tileable": true,
+      "craft_sources": {
+        "generator_script": "assets/lego/craft_bed_runner_and_rug.py",
+        "texturecraft_tcraft": "assets/lego/rug/rug.tcraft",
+        "preview_render": "assets/lego/rug/preview_plane_grazing.png"
+      },
+      "threejs_binding": {
+        "material": "THREE.MeshPhysicalMaterial",
+        "wrap_s": "THREE.RepeatWrapping",
+        "wrap_t": "THREE.RepeatWrapping",
+        "repeat": [
+          2.0,
+          2.5
+        ],
+        "normal_scale": [
+          1.2,
+          1.2
+        ]
+      },
+      "maps": {
+        "01_baseColor.webp": {
+          "path": "shared_assets/lego/components/rug/rug_natural_jute_loop_v1/01_baseColor.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "sRGB",
+          "role": "albedo",
+          "description": "Organic natural jute / wool blend (#D8D2C5 to #C4BCAC) with seamless tonal drift",
+          "bytes": 96286,
+          "sha256": "833f4fe0a86c1e5320d2e3e03d240665506b9cbe8a04e375d73f1ecdc5c6a3ae"
+        },
+        "02_normal.png": {
+          "path": "shared_assets/lego/components/rug/rug_natural_jute_loop_v1/02_normal.png",
+          "format": "PNG",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "normal_opengl",
+          "description": "OpenGL tangent-space normal map (+Y up) for chunky looped-pile boucl\u00e9 nodules",
+          "bytes": 883624,
+          "sha256": "86c0e6e052618db504d528ace938fb035cdc4edd7e94ddf5d1cbe1ea55173798"
+        },
+        "03_roughness.webp": {
+          "path": "shared_assets/lego/components/rug/rug_natural_jute_loop_v1/03_roughness.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "roughness",
+          "description": "Ultra-matte natural fiber roughness (0.92-0.98)",
+          "bytes": 61974,
+          "sha256": "36b08bf2bcc1fe42864c17aed658e1d0693689d43384aeef1e34ddd87487e98e"
+        },
+        "05_ambientOcclusion.webp": {
+          "path": "shared_assets/lego/components/rug/rug_natural_jute_loop_v1/05_ambientOcclusion.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "ambient_occlusion",
+          "description": "Intense contact shadows between thick braided boucl\u00e9 nodules",
+          "bytes": 485714,
+          "sha256": "d00ab818d93cb732b26539ce39266502c8469c4a951f934a75bfd486f58ee0a4"
+        }
       }
     }
   },

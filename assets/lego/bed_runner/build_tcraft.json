@@ -1,0 +1,42 @@
+{
+  "open": "assets/lego/bed_runner/bed_runner.tcraft",
+  "steps": [
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/bed_runner/raw/preview_baseColor_rgba.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "shared_assets/lego/components/bed_runner/bed_runner_chenille_woven_v1/02_normal.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/bed_runner/raw/preview_roughness.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/bed_runner/raw/height_16bit.png" }
+    },
+    {
+      "id": "layer.add.fill",
+      "params": { "name": "Chenille_Bed_Runner", "metallic": 0.0, "roughness": 0.88 }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "baseColor", "image": "preview_baseColor_rgba.png" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "normal", "image": "02_normal.png", "normalFormat": "openGl" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "roughness", "image": "preview_roughness.png" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "height", "image": "height_16bit.png" }
+    }
+  ],
+  "save": "assets/lego/bed_runner/bed_runner.tcraft"
+}

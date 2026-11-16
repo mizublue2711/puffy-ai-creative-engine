@@ -86,13 +86,13 @@ export function createBedroomSanctuaryScene(
   floor.group.position.set(-0.10, 0, 1.30);
   group.add(floor.group);
 
-  // 2. Plush Area Rug (18mm slab, y = 0.009m)
-  const rugWidth = Math.max(2.80, mattressW + 1.20);
-  const rugLength = Math.max(3.20, mattressL + 1.10);
+  // 2. Natural Textured Jute Area Rug (10mm slab, y = 0.005m)
+  const rugWidth = Math.max(3.20, mattressW + 1.20);
+  const rugLength = Math.max(3.60, mattressL + 1.40);
   const rug = createPlushAreaRug({
     width: rugWidth,
     length: rugLength,
-    thickness: 0.018,
+    thickness: 0.010,
     centerZ: 0.35,
   });
   group.add(rug.group);
@@ -160,15 +160,17 @@ export function createBedroomSanctuaryScene(
   const mattressTopY = isFloatingPadAttached ? 0.79 : 0.58;
   const throwBlanket = createBedThrowBlanket({
     mattressWidth: mattressW,
-    surfaceY: mattressTopY + 0.025,
+    surfaceY: mattressTopY,
     footZ: mattressL * 0.28,
-    drapeDrop: 0.18,
+    drapeDrop: 0.22,
+    runnerDepth: 0.60,
   });
   group.add(throwBlanket.group);
 
+  const pillowSurfaceY = isFloatingPadAttached ? 0.77 : 0.58;
   const puffyPillowPair = createPuffyPillowPair({
-    surfaceY: mattressTopY,
-    headZ: headboardAnchorZ + 0.25,
+    surfaceY: pillowSurfaceY,
+    headZ: headboardAnchorZ + 0.18,
     offsetX: Math.min(0.42, mattressW * 0.23),
   });
   group.add(puffyPillowPair.group);
@@ -207,11 +209,11 @@ export function createBedroomSanctuaryScene(
   courtyardZone.add(trailingVinesRig.group);
   group.add(courtyardZone);
 
-  // 9. Soft Sanctuary Daylight Rig (4000K Low-Angle Grazing Window Sun + Cool/Warm Hemisphere Fill)
-  const sunLightIntensity = options.sunLightIntensity ?? 2.0;
-  const sunLight = new THREE.DirectionalLight(0xfff4e5, sunLightIntensity);
-  sunLight.position.set(-6.0, 3.8, 2.0);
-  sunLight.target.position.set(0, 0.4, 0);
+  // 9. Soft Sanctuary Daylight Rig (Morning Sun from left panoramic window + Hemisphere Fill)
+  const sunLightIntensity = options.sunLightIntensity ?? 2.6;
+  const sunLight = new THREE.DirectionalLight(0xfff6e8, sunLightIntensity);
+  sunLight.position.set(-6.5, 4.8, 1.8);
+  sunLight.target.position.set(0.5, 0.2, 0.2);
   sunLight.castShadow = castShadow;
   if (castShadow) {
     sunLight.shadow.mapSize.width = 2048;
@@ -222,8 +224,9 @@ export function createBedroomSanctuaryScene(
     sunLight.shadow.camera.right = 5.5;
     sunLight.shadow.camera.top = 6.0;
     sunLight.shadow.camera.bottom = -6.0;
-    sunLight.shadow.bias = -0.0001;
-    sunLight.shadow.radius = 4;
+    sunLight.shadow.bias = -0.0004;
+    sunLight.shadow.normalBias = 0.02;
+    sunLight.shadow.radius = 2.8;
   }
   group.add(sunLight);
   group.add(sunLight.target);
@@ -235,6 +238,11 @@ export function createBedroomSanctuaryScene(
   const dockMattress = (targetGroup: THREE.Object3D) => {
     targetGroup.position.set(0, 0.35, 0);
     targetGroup.rotation.set(0, 0, 0);
+    targetGroup.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        child.castShadow = true;
+      }
+    });
   };
 
   const syncMattressHeight = (heightDeltaMeters: number) => {

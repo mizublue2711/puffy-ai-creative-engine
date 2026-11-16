@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import {
   registerBedroomComponent,
   disposeComponent,
@@ -18,79 +17,70 @@ export interface PuffyPillowPairOptions {
 
 const PILLOW_WIDTH = 0.65; // Standard pillow width (65cm)
 const PILLOW_HEIGHT = 0.45; // Standard pillow height (45cm)
-const PILLOW_DEPTH = 0.22; // Generous plush thickness (22cm)
-const PILLOW_SUBDIVISIONS = 48;
+const PILLOW_DEPTH = 0.20; // Generous plush belly (20cm)
+const PILLOW_SUBDIVISIONS = 40;
 const SINK_DEPTH = 0.025; // 2.5cm weighted sink into mattress surface
-const TILT_X_RAD = -0.15; // Tilt back against the headboard (-0.15 rad)
+const TILT_X_RAD = -0.28; // ~16° backward lean against headboard
 const YAW_Y_RAD = 0.07; // ~±4° outward fan
 
 /**
- * Zero-Seam Clamshell Plush Pillow Generator:
- * Two mirrored quilted fabric domes stitched together at a zero-thickness
- * perimeter seam line (Z = 0) using cosine falloff that converges to 0 at all edges.
+ * Organic Plush Pillow Generator:
+ * Deforms a subdivided BoxGeometry with perimeter barrel bulge, corner pinch
+ * (killing sharp 90° corners), and a cosine dome profile that tapers smoothly
+ * toward the center seam.
  */
-export function createPuffyPlushPillow(
+export function createOrganicPlushPillow(
   width = PILLOW_WIDTH,
   height = PILLOW_HEIGHT,
   depth = PILLOW_DEPTH,
   subdivisions = PILLOW_SUBDIVISIONS,
 ): THREE.BufferGeometry {
-  const geom = new THREE.PlaneGeometry(width, height, subdivisions, subdivisions);
+  const geom = new THREE.BoxGeometry(width, height, depth, subdivisions, subdivisions, 16);
   const pos = geom.attributes.position as THREE.BufferAttribute;
-
-  const frontPos = pos.clone();
-  const backPos = pos.clone();
 
   const halfW = width / 2;
   const halfH = height / 2;
   const halfD = depth / 2;
 
-  // Deform Front & Back using natural cosine falloff that converges to EXACT ZERO at all edges
   for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
+    let x = pos.getX(i);
+    let y = pos.getY(i);
+    let z = pos.getZ(i);
 
-    const nx = x / halfW;
-    const ny = y / halfH;
+    // Normalized coordinates [-1, 1]
+    const u = Math.min(Math.max(x / halfW, -1), 1);
+    const v = Math.min(Math.max(y / halfH, -1), 1);
 
-    const factorX = Math.cos((nx * Math.PI) / 2);
-    const factorY = Math.cos((ny * Math.PI) / 2);
-    const dome = Math.pow(Math.max(0, factorX * factorY), 0.65);
+    // 1. Organic barrel bulge on perimeter (no straight 90° edges):
+    const edgeBulgeX = Math.cos((v * Math.PI) / 2);
+    const edgeBulgeY = Math.cos((u * Math.PI) / 2);
+    x *= 0.92 + 0.08 * edgeBulgeX;
+    y *= 0.92 + 0.08 * edgeBulgeY;
 
-    // Front bulges +Z, Back bulges -Z
-    frontPos.setZ(i, halfD * dome);
-    backPos.setZ(i, -halfD * dome);
+    // 2. Corner pinch (soften sharp rectangular corners):
+    const distFromCenter = Math.sqrt(u * u + v * v) / Math.SQRT2;
+    const cornerPinch = 1.0 - 0.15 * Math.pow(distFromCenter, 2.5);
+    x *= cornerPinch;
+    y *= cornerPinch;
+
+    // 3. Smooth Cosine pillow dome (plump center, tapering toward seam):
+    // Scale proportionally by z/halfD so front/back faces hit ±(0.15 + 0.85*domeFactor)*halfD
+    // and the 16 side segments interpolate smoothly through z=0 without seam artifacts.
+    const domeFactor = Math.pow(Math.max(0, edgeBulgeX * edgeBulgeY), 0.6);
+    const w = z / halfD;
+    z = w * (halfD * 0.15 + halfD * 0.85 * domeFactor);
+
+    pos.setXYZ(i, x, y, z);
   }
 
-  const frontGeom = geom.clone();
-  frontGeom.setAttribute('position', frontPos);
-  frontGeom.computeVertexNormals();
-
-  const backGeom = geom.clone();
-  backGeom.setAttribute('position', backPos);
-  // Flip triangle winding for back face so normals point outward (-Z)
-  const index = backGeom.getIndex();
-  if (index) {
-    for (let i = 0; i < index.count; i += 3) {
-      const a = index.getX(i);
-      const c = index.getX(i + 2);
-      index.setX(i, c);
-      index.setX(i + 2, a);
-    }
-    index.needsUpdate = true;
-  }
-  backGeom.computeVertexNormals();
-
-  geom.dispose();
-
-  const merged = mergeGeometries([frontGeom, backGeom], false);
-  frontGeom.dispose();
-  backGeom.dispose();
-
-  return merged;
+  geom.computeVertexNormals();
+  return geom;
 }
 
-export { createPuffyPlushPillow as createPlushPillowGeometry };
+export {
+  createOrganicPlushPillow as createPuffyPlushPillow,
+  createOrganicPlushPillow as createPlushPillowGeometry,
+};
 
 /**
  * Computes the exact local Y offset needed so that the rotated pillow's lowest
@@ -151,7 +141,7 @@ export function createPuffyPillowPair(
     sheenColor: new THREE.Color('#FFFFFF'),
   });
 
-  const pillowGeometry = createPuffyPlushPillow();
+  const pillowGeometry = createOrganicPlushPillow();
 
   const meshes: THREE.Mesh[] = [];
 
