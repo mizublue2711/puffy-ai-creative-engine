@@ -26,6 +26,8 @@ import {
   type BedroomSanctuaryInstance,
 } from '../bedroom/BedroomSanctuaryScene.tsx';
 import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
+import { createDawnLensFlare, type DawnLensFlareRig } from './dawnLensFlare.ts';
+import { GroundMistLayer } from './GroundMistLayer.ts';
 
 export type SanctuaryEnvironmentMode = 'bedroom' | 'meadow' | 'studio';
 export {FLIGHT_SPLINE, FLIGHT_SPLINE as CINEMATIC_FLIGHT_SPLINE};
@@ -88,6 +90,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private envTexture: THREE.Texture | null = null;
 
   private meadowTerrain: MeadowTerrain | null = null;
+  private groundMist: GroundMistLayer | null = null;
   private floatingWoolPad: FloatingWoolPad | null = null;
   private sheepFlock: SheepFlockEngine | null = null;
   private heroCloudlet: HeroCloudletGuide | null = null;
@@ -95,6 +98,8 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private bedroomSanctuary: BedroomSanctuaryInstance | null = null;
   private bedroomStyle: BedroomStyle = 'nordic-coastal';
   private meadowLights: THREE.Light[] = [];
+  private sunLight: THREE.DirectionalLight | null = null;
+  private dawnFlare: DawnLensFlareRig | null = null;
 
   // Decoupled Scene State Machines
   private currentEnvironment: SanctuaryEnvironmentMode = 'meadow';
@@ -144,9 +149,10 @@ export class WoolMeadowSceneModule implements ISceneModule {
     this.context = context;
     const {scene, camera, renderer, container, isSoftwareGl} = context;
 
-    // 1. Dual-Color Atmospheric Sky & Volumetric Distance Fog
-    scene.background = new THREE.Color('#EBF1F5');
-    scene.fog = new THREE.FogExp2('#EAE6DD', 0.018);
+    // 1. Atmospheric Golden Dawn Mist & Height-Damped Exponential Distance Fog
+    const MIST_COLOR = new THREE.Color('#E3DFD5');
+    scene.background = MIST_COLOR;
+    scene.fog = new THREE.FogExp2('#E3DFD5', 0.048);
 
     // 2. LEGO BLOCK 3: Studio Environment Lighting (PMREM Radiance for MeshPhysicalMaterial Sheen)
     const fallbackPmrem = new THREE.PMREMGenerator(renderer);
@@ -179,30 +185,39 @@ export class WoolMeadowSceneModule implements ISceneModule {
       },
     );
 
-    // 3. Cinematic Directional Sunlight, Low Ambient & Cool Rim Lighting Rig
-    const ambientLight = new THREE.AmbientLight('#FFFFFF', 0.35);
-    scene.add(ambientLight);
+    // 3. Golden Dawn Sunlight, Hemisphere Fill & Soft Rim Lighting Rig (No Texture Burnout)
+    const hemiLight = new THREE.HemisphereLight('#DCEBFA', '#D9E6D0', 0.55);
+    scene.add(hemiLight);
 
-    const sunLight = new THREE.DirectionalLight('#FFF8E7', 1.4);
-    sunLight.position.set(12, 18, 8);
+    const SUN_POSITION = new THREE.Vector3(28.0, 9.5, -65.0);
+    const sunLight = new THREE.DirectionalLight('#FFE4C4', 0.95);
+    sunLight.position.copy(SUN_POSITION);
+    sunLight.target.position.set(0, 0.8, 0);
     sunLight.castShadow = !isSoftwareGl;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
     sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 50;
+    sunLight.shadow.camera.far = 110;
     const d = 10.5;
     sunLight.shadow.camera.left = -d;
     sunLight.shadow.camera.right = d;
     sunLight.shadow.camera.top = d;
     sunLight.shadow.camera.bottom = -d;
-    sunLight.shadow.bias = -0.0005;
+    sunLight.shadow.bias = -0.0002;
     sunLight.shadow.normalBias = 0.02;
     scene.add(sunLight);
+    scene.add(sunLight.target);
+    this.sunLight = sunLight;
 
-    const rimLight = new THREE.DirectionalLight('#D6E8FF', 0.5);
+    // Multi-spectral GPU sprite-based optical lens flare attached to dawn sun position
+    const dawnFlare = createDawnLensFlare(container);
+    sunLight.add(dawnFlare.lensflare);
+    this.dawnFlare = dawnFlare;
+
+    const rimLight = new THREE.DirectionalLight('#D6E8FF', 0.4);
     rimLight.position.set(-10, 10, -10);
     scene.add(rimLight);
-    this.meadowLights = [ambientLight, sunLight, rimLight];
+    this.meadowLights = [hemiLight, sunLight, rimLight];
 
     // 4. Wide FOV 60 Camera & Smooth Damped OrbitControls
     camera.fov = 60;
@@ -242,6 +257,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
     this.meadowTerrain = new MeadowTerrain(maxAnisotropy);
     scene.add(this.meadowTerrain.group);
+
+    this.groundMist = new GroundMistLayer();
+    scene.add(this.groundMist.group);
 
     this.floatingWoolPad = new FloatingWoolPad(maxAnisotropy);
     if (this.activeEcoModel !== 'royal') {
@@ -389,6 +407,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
       if (this.meadowTerrain) {
         this.meadowTerrain.group.visible = false;
       }
+      if (this.groundMist) {
+        this.groundMist.group.visible = false;
+      }
       this.hoverWorldPoint = null;
 
       // 2. REST MATTRESS STATICALLY ON THE WOODEN BED FRAME (disable zero-G hovering)
@@ -453,6 +474,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
       if (this.meadowTerrain) {
         this.meadowTerrain.group.visible = false;
       }
+      if (this.groundMist) {
+        this.groundMist.group.visible = false;
+      }
       if (this.sheepFlock) {
         this.sheepFlock.group.visible = false;
       }
@@ -492,6 +516,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
       if (this.meadowTerrain) {
         this.meadowTerrain.group.visible = true;
       }
+      if (this.groundMist) {
+        this.groundMist.group.visible = true;
+      }
       if (this.sheepFlock) {
         this.sheepFlock.group.visible = true;
       }
@@ -499,9 +526,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
       // 3. RE-ENABLE ZERO-G HOVERING ON MATTRESS
       this.floatingWoolPad?.setFloatingEnabled(true);
 
-      // Restore outdoor morning sky & horizon mist
-      scene.background = new THREE.Color('#EBF1F5');
-      scene.fog = new THREE.FogExp2('#EAE6DD', 0.018);
+      // Restore outdoor morning mist & exponential horizon fog
+      scene.background = new THREE.Color('#E3DFD5');
+      scene.fog = new THREE.FogExp2('#E3DFD5', 0.048);
 
       const pose = CAMERA_PRESETS[this.activeCameraPreset];
       this.targetCameraPos.copy(pose.position);
@@ -1015,6 +1042,16 @@ export class WoolMeadowSceneModule implements ISceneModule {
     }
     this.sanitizeCameraAndControls();
 
+    // Dynamic view-angle & mattress occlusion damping for Golden Dawn optical lens flare
+    if (this.dawnFlare && this.sunLight) {
+      this.dawnFlare.update(
+        this.context.camera,
+        this.sunLight.position,
+        this.currentEnvironment === 'meadow',
+        this.floatingWoolPad?.group,
+      );
+    }
+
     // 2. Update Floating / Bed-Resting Mattress & Memory-Foam Compression Physics
 
     if (this.floatingWoolPad) {
@@ -1027,9 +1064,10 @@ export class WoolMeadowSceneModule implements ISceneModule {
       const elevation = this.floatingWoolPad.getCurrentElevation();
       const compMm = this.floatingWoolPad.getCompressionMm();
 
-      // 3. Meadow-Only Procedural Physics: ONLY run cloud drift & sheep flocking in Meadow Mode!
+      // 3. Meadow-Only Procedural Physics: ONLY run cloud drift, ground mist & sheep flocking in Meadow Mode!
       if (this.currentEnvironment === 'meadow') {
         this.meadowTerrain?.updateClouds(safeElapsed, dt);
+        this.groundMist?.update(safeElapsed);
         this.sheepFlock?.update(
           safeElapsed,
           dt,
@@ -1094,11 +1132,18 @@ export class WoolMeadowSceneModule implements ISceneModule {
       window.removeEventListener('pointerup', this.boundPointerUp);
     }
 
+    this.dawnFlare?.dispose();
+    this.dawnFlare = null;
+    this.sunLight = null;
+
     this.controls?.dispose();
     this.controls = null;
 
     this.meadowTerrain?.dispose();
     this.meadowTerrain = null;
+
+    this.groundMist?.dispose();
+    this.groundMist = null;
 
     this.floatingWoolPad?.dispose();
     this.floatingWoolPad = null;

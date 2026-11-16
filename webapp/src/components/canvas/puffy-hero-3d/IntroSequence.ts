@@ -6,19 +6,39 @@ import type {HeroCloudletGuide} from './HeroCloudletGuide.ts';
 export type IntroState = 'IDLE' | 'FLYING' | 'EXPLORING';
 export type IntroPhase1Stage = 'void' | '2d' | '3d-morph' | 'ready';
 
-// 5-Point Curving Spline
-export const FLIGHT_SPLINE = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(0, 3.8, 14.0),    // High initial altitude
-  new THREE.Vector3(2.2, 1.6, 9.5),   // Gentle descent bank to the right
-  new THREE.Vector3(-1.4, 0.65, 5.8), // Low-grazing skim right past the sheep flock!
-  new THREE.Vector3(1.6, 1.4, -0.6),  // Sweeping arc behind the mattress
-  new THREE.Vector3(0, 1.5, 2.6),     // Emerging smoothly in front of mattress
+// EXTENDED 360° CLOUDLET PATH
+export const CLOUDLET_SPLINE = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 4.2, 16.0),    // 0%: High mist takeoff
+  new THREE.Vector3(2.5, 1.8, 10.5),  // 20%: Banking right
+  new THREE.Vector3(-1.6, 0.55, 6.0), // 40%: Low meadow graze past the sheep face
+  new THREE.Vector3(2.8, 1.6, 1.2),   // 60%: Sweeping right flank of the mattress
+  new THREE.Vector3(1.2, 2.0, -2.4),  // 75%: DEEP BEHIND the mattress (rear view!)
+  new THREE.Vector3(-2.2, 1.8, -1.0), // 85%: Circling left rear corner
+  new THREE.Vector3(-1.4, 1.4, 2.2),  // 92%: Sweeping back to front
+  new THREE.Vector3(0, 0.95, 0.0),    // 100%: Soft touchdown on mattress surface
 ]);
 
-export const FINAL_HERO_CAMERA_POS = new THREE.Vector3(0, 1.5, 3.2);
+// EXTENDED 360° CHASE CAMERA PATH (Flows alongside and frames the mattress)
+export const CAMERA_SPLINE = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 4.5, 17.5),    // 0%
+  new THREE.Vector3(1.8, 2.4, 12.0),  // 20%
+  new THREE.Vector3(-0.8, 1.2, 7.5),  // 40%: Framing sheep & cloudlet
+  new THREE.Vector3(3.6, 2.2, 2.2),   // 60%: High right-quarter angle
+  new THREE.Vector3(1.8, 2.6, -3.4),  // 75%: High angle viewing the BACK of the mattress
+  new THREE.Vector3(-3.0, 2.2, -1.8), // 85%: Sweeping around the left side
+  new THREE.Vector3(-1.8, 1.8, 3.2),  // 92%: Framing return to front
+  new THREE.Vector3(0, 1.6, 3.4),     // 100%: Final front-hero inspection point
+]);
+
+export const CINEMATIC_FLIGHT_SPLINE = CAMERA_SPLINE;
+export const FLIGHT_SPLINE = CAMERA_SPLINE;
+
+export const FINAL_HERO_CAMERA_POS = new THREE.Vector3(0, 1.6, 3.4);
 export const FINAL_HERO_LOOKAT = new THREE.Vector3(0, 0.65, 0);
 
-const CHASE_DAMPING = 0.08;
+const SCROLL_LERP_FACTOR = 0.04;
+const WHEEL_SENSITIVITY = 0.0005;
+const TOUCH_SENSITIVITY = 0.0018;
 
 export interface IntroSequenceConfig {
   scene: THREE.Scene;
@@ -54,11 +74,13 @@ export class IntroSequence {
   private ascendFadeTween: gsap.core.Tween | null = null;
   private failsafeTimer: number | null = null;
 
-  private readonly flightProgress = {t: 0};
-  private readonly desiredChaseCamPos = new THREE.Vector3();
-  private readonly desiredChaseLookAt = new THREE.Vector3();
-  private readonly smoothedChaseLookAt = new THREE.Vector3();
+  private readonly flightProgress = {current: 0, target: 0};
+  private lastTouchY: number | null = null;
+  private scrollListenersAttached = false;
+  private stopAutoRotateHandler: (() => void) | null = null;
   private readonly scratchCloudPos = new THREE.Vector3();
+  private readonly scratchCamPos = new THREE.Vector3();
+  private readonly scratchLookAt = new THREE.Vector3();
   private readonly scratchNextPos = new THREE.Vector3();
   private readonly scratchForwardDir = new THREE.Vector3();
   private readonly scratchEuler = new THREE.Euler(0, 0, 0, 'YXZ');
@@ -103,7 +125,57 @@ export class IntroSequence {
     this.cfg.onStateChange?.(state);
   }
 
+  private readonly handleWheel = (event: WheelEvent): void => {
+    if (this.introState !== 'FLYING') return;
+    event.preventDefault();
+    const delta = event.deltaY * WHEEL_SENSITIVITY;
+    this.flightProgress.target = THREE.MathUtils.clamp(this.flightProgress.target + delta, 0, 1);
+  };
+
+  private readonly handleTouchStart = (event: TouchEvent): void => {
+    if (this.introState !== 'FLYING' || event.touches.length === 0) return;
+    this.lastTouchY = event.touches[0].clientY;
+  };
+
+  private readonly handleTouchMove = (event: TouchEvent): void => {
+    if (this.introState !== 'FLYING' || event.touches.length === 0) return;
+    event.preventDefault();
+    const currentY = event.touches[0].clientY;
+    if (this.lastTouchY !== null) {
+      const deltaY = this.lastTouchY - currentY;
+      const delta = deltaY * TOUCH_SENSITIVITY;
+      this.flightProgress.target = THREE.MathUtils.clamp(this.flightProgress.target + delta, 0, 1);
+    }
+    this.lastTouchY = currentY;
+  };
+
+  private attachScrollListeners(): void {
+    if (this.scrollListenersAttached || typeof window === 'undefined') return;
+    window.addEventListener('wheel', this.handleWheel, {passive: false});
+    window.addEventListener('touchstart', this.handleTouchStart, {passive: true});
+    window.addEventListener('touchmove', this.handleTouchMove, {passive: false});
+    this.scrollListenersAttached = true;
+  }
+
+  private detachScrollListeners(): void {
+    if (!this.scrollListenersAttached || typeof window === 'undefined') return;
+    window.removeEventListener('wheel', this.handleWheel);
+    window.removeEventListener('touchstart', this.handleTouchStart);
+    window.removeEventListener('touchmove', this.handleTouchMove);
+    this.lastTouchY = null;
+    this.scrollListenersAttached = false;
+  }
+
+  private detachAutoRotateListener(): void {
+    if (this.stopAutoRotateHandler && typeof window !== 'undefined') {
+      window.removeEventListener('pointerdown', this.stopAutoRotateHandler);
+      this.stopAutoRotateHandler = null;
+    }
+  }
+
   private killAllTweens(): void {
+    this.detachScrollListeners();
+    this.detachAutoRotateListener();
     if (this.failsafeTimer !== null && typeof window !== 'undefined') {
       window.clearTimeout(this.failsafeTimer);
       this.failsafeTimer = null;
@@ -137,20 +209,13 @@ export class IntroSequence {
       controls.enabled = false;
     }
 
-    const startCloudPos = FLIGHT_SPLINE.getPoint(0);
+    const startCloudPos = CLOUDLET_SPLINE.getPoint(0);
     // Center the cloudlet dead-center in the viewport during IDLE
-    const idleCamPos = new THREE.Vector3(
-      startCloudPos.x,
-      startCloudPos.y,
-      startCloudPos.z + 1.45,
-    );
+    const idleCamPos = CAMERA_SPLINE.getPoint(0);
 
     const {camera} = this.cfg;
     camera.position.copy(idleCamPos);
     camera.lookAt(startCloudPos);
-    this.desiredChaseCamPos.copy(idleCamPos);
-    this.desiredChaseLookAt.copy(startCloudPos);
-    this.smoothedChaseLookAt.copy(startCloudPos);
     this.cfg.onCameraPositionChange?.(idleCamPos.clone());
 
     const cloudlet = this.cfg.getCloudlet();
@@ -195,24 +260,24 @@ export class IntroSequence {
     }
   }
 
-  private applyFlightFrame(t: number, snapCamera = false): void {
+  private applyFlightFrame(t: number): void {
     const clampedT = THREE.MathUtils.clamp(t, 0, 1);
     const {camera} = this.cfg;
     const cloudlet = this.cfg.getCloudlet();
-    const mattressTopY = this.cfg.getMattressTopY();
-    const touchdownY = mattressTopY + 0.04;
 
-    if (clampedT <= 0.85) {
-      const splineU = clampedT / 0.85;
-      FLIGHT_SPLINE.getPoint(splineU, this.scratchCloudPos);
+    // 1. Cloudlet follows CLOUDLET_SPLINE
+    CLOUDLET_SPLINE.getPoint(clampedT, this.scratchCloudPos);
 
-      // Safe forward sampling (avoid zero-length delta at spline end)
-      if (splineU >= 0.98) {
-        const prevPos = FLIGHT_SPLINE.getPoint(Math.max(0.0, splineU - 0.02));
+    if (cloudlet) {
+      cloudlet.group.position.copy(this.scratchCloudPos);
+
+      // Safe forward sampling for subtle banking along CLOUDLET_SPLINE
+      if (clampedT >= 0.98) {
+        const prevPos = CLOUDLET_SPLINE.getPoint(Math.max(0.0, clampedT - 0.02));
         this.scratchNextPos.copy(this.scratchCloudPos);
         this.scratchForwardDir.subVectors(this.scratchNextPos, prevPos);
       } else {
-        FLIGHT_SPLINE.getPoint(Math.min(1.0, splineU + 0.02), this.scratchNextPos);
+        CLOUDLET_SPLINE.getPoint(Math.min(1.0, clampedT + 0.02), this.scratchNextPos);
         this.scratchForwardDir.subVectors(this.scratchNextPos, this.scratchCloudPos);
       }
 
@@ -222,71 +287,27 @@ export class IntroSequence {
         this.scratchForwardDir.set(0, 0, -1);
       }
 
-      if (cloudlet) {
-        cloudlet.group.position.copy(this.scratchCloudPos);
-
-        // Safe orientation without tangent flip or gimbal lock:
-        // Level out banking smoothly as we approach touchdown (t -> 0.85)
-        const bankFade = 1 - THREE.MathUtils.smoothstep(clampedT, 0.72, 0.85);
-        const horizontalCurve = this.scratchNextPos.x - this.scratchCloudPos.x;
-        const clampedRoll = THREE.MathUtils.clamp(-horizontalCurve * 0.4, -0.25, 0.25) * bankFade;
-
-        const targetYaw = Math.atan2(-this.scratchForwardDir.x, -this.scratchForwardDir.z) * 0.45 * bankFade;
-        const targetPitch = Math.asin(THREE.MathUtils.clamp(this.scratchForwardDir.y, -0.6, 0.6)) * 0.5 * bankFade;
-        this.scratchEuler.set(targetPitch, targetYaw, clampedRoll, 'YXZ');
-        cloudlet.group.quaternion.setFromEuler(this.scratchEuler);
-      }
-
-      // Over-The-Shoulder Chase Camera (trailing behind & above the cloudlet)
-      this.desiredChaseCamPos.set(
-        this.scratchCloudPos.x * 0.85,
-        Math.max(0.75, this.scratchCloudPos.y + 0.45),
-        this.scratchCloudPos.z + 1.25,
-      );
-      this.desiredChaseLookAt.set(
-        this.scratchCloudPos.x,
-        this.scratchCloudPos.y + 0.1,
-        this.scratchCloudPos.z - 1.5,
-      );
-    } else {
-      // Touchdown glide onto the top of the mattress quilt (position.y = mattressTopY + 0.04m)
-      const settleT = THREE.MathUtils.smoothstep(clampedT, 0.85, 0.98);
-      const endSplinePos = FLIGHT_SPLINE.getPoint(1.0);
-      this.scratchCloudPos.set(
-        THREE.MathUtils.lerp(endSplinePos.x, 0, settleT),
-        THREE.MathUtils.lerp(endSplinePos.y, touchdownY, settleT),
-        THREE.MathUtils.lerp(endSplinePos.z, 0, settleT),
-      );
-
-      if (cloudlet) {
-        cloudlet.group.position.copy(this.scratchCloudPos);
-        cloudlet.group.rotation.set(0, 0, 0);
-      }
-
-      // Ease camera smoothly to (0, 1.5, 3.2) looking at the mattress
-      const prevCamX = endSplinePos.x * 0.85;
-      const prevCamY = endSplinePos.y + 0.45;
-      const prevCamZ = endSplinePos.z + 1.25;
-      this.desiredChaseCamPos.set(
-        THREE.MathUtils.lerp(prevCamX, FINAL_HERO_CAMERA_POS.x, settleT),
-        THREE.MathUtils.lerp(prevCamY, FINAL_HERO_CAMERA_POS.y, settleT),
-        THREE.MathUtils.lerp(prevCamZ, FINAL_HERO_CAMERA_POS.z, settleT),
-      );
-
-      const mattressTarget = this.cfg.getMattressGroup()?.position ?? FINAL_HERO_LOOKAT;
-      this.desiredChaseLookAt.set(
-        THREE.MathUtils.lerp(endSplinePos.x, mattressTarget.x, settleT),
-        THREE.MathUtils.lerp(endSplinePos.y + 0.1, mattressTarget.y, settleT),
-        THREE.MathUtils.lerp(endSplinePos.z - 1.5, mattressTarget.z, settleT),
-      );
+      const bankFade = 1 - THREE.MathUtils.smoothstep(clampedT, 0.85, 1.0);
+      const horizontalCurve = this.scratchNextPos.x - this.scratchCloudPos.x;
+      const clampedRoll = THREE.MathUtils.clamp(-horizontalCurve * 0.4, -0.25, 0.25) * bankFade;
+      const targetYaw = Math.atan2(-this.scratchForwardDir.x, -this.scratchForwardDir.z) * 0.45 * bankFade;
+      const targetPitch = Math.asin(THREE.MathUtils.clamp(this.scratchForwardDir.y, -0.6, 0.6)) * 0.5 * bankFade;
+      this.scratchEuler.set(targetPitch, targetYaw, clampedRoll, 'YXZ');
+      cloudlet.group.quaternion.setFromEuler(this.scratchEuler);
     }
 
-    if (snapCamera) {
-      camera.position.copy(this.desiredChaseCamPos);
-      this.smoothedChaseLookAt.copy(this.desiredChaseLookAt);
-      camera.lookAt(this.smoothedChaseLookAt);
-      this.cfg.onCameraPositionChange?.(camera.position.clone());
-    }
+    // 2. Camera follows CAMERA_SPLINE independently (360° orbital odyssey)
+    CAMERA_SPLINE.getPoint(clampedT, this.scratchCamPos);
+    camera.position.copy(this.scratchCamPos);
+
+    // 3. Dynamic LookAt:
+    // 0% - 50%: Focus on the cloudlet guide.
+    // 50% - 100%: Smoothly interpolate lookAt toward mattressGroup.position.
+    const mattressTarget = this.cfg.getMattressGroup()?.position ?? FINAL_HERO_LOOKAT;
+    const targetBlend = THREE.MathUtils.smoothstep(clampedT, 0.5, 1.0);
+    this.scratchLookAt.lerpVectors(this.scratchCloudPos, mattressTarget, targetBlend);
+    camera.lookAt(this.scratchLookAt);
+    this.cfg.onCameraPositionChange?.(camera.position.clone());
   }
 
   private handoverOrbitControls(): void {
@@ -300,16 +321,29 @@ export class IntroSequence {
 
     if (controls) {
       controls.enabled = true;
-      controls.enableDamping = !this.cfg.isSoftwareGl;
+      controls.enableDamping = true;
       controls.dampingFactor = 0.05;
+      controls.autoRotate = true; // Subtly tease rotation
+      controls.autoRotateSpeed = 1.0; // Gentle turntable speed
+      controls.enableZoom = true;
+      controls.zoomSpeed = 0.8;
       controls.minAzimuthAngle = -Infinity; // Full 360° rotation
       controls.maxAzimuthAngle = Infinity;
       controls.minPolarAngle = Math.PI / 6;
       controls.maxPolarAngle = Math.PI / 2.05;
-      controls.minDistance = 2.0;
-      controls.maxDistance = 8.5;
+      controls.minDistance = 2.0; // Close enough to inspect fabric stitches
+      controls.maxDistance = 6.5; // Far enough to view whole bedroom/meadow
       controls.target.copy(targetPos);
       controls.update();
+
+      if (typeof window !== 'undefined') {
+        this.detachAutoRotateListener();
+        this.stopAutoRotateHandler = () => {
+          controls.autoRotate = false;
+          this.detachAutoRotateListener();
+        };
+        window.addEventListener('pointerdown', this.stopAutoRotateHandler);
+      }
     }
     camera.lookAt(targetPos);
   }
@@ -317,6 +351,7 @@ export class IntroSequence {
   private beginAscensionAndHandover(): void {
     if (this.introState === 'EXPLORING') return;
 
+    this.detachScrollListeners();
     this.linenCurtainMesh.visible = false;
     this.cfg.onSheepIntroPose?.(false);
     this.setState('EXPLORING');
@@ -362,9 +397,11 @@ export class IntroSequence {
       cloudlet.mesh.material.opacity = 1;
     }
 
-    this.flightProgress.t = 0;
+    this.flightProgress.current = 0;
+    this.flightProgress.target = 0;
     this.setState('FLYING');
     this.cfg.onSheepIntroPose?.(true);
+    this.attachScrollListeners();
 
     // 1.0s soft fade-out of the 3D linen curtain revealing the mist-draped meadow
     this.curtainTween = gsap.to(this.linenCurtainMesh.material, {
@@ -376,24 +413,7 @@ export class IntroSequence {
       },
     });
 
-    // 6.5s Gliding Slalom Flight + 1.2s Touchdown Breathing Pause + Ascension & Handover
-    this.flightTimeline = gsap.timeline();
-    this.flightTimeline.to(this.flightProgress, {
-      t: 1,
-      duration: 6.5,
-      ease: 'power2.inOut',
-      onUpdate: () => {
-        this.applyFlightFrame(this.flightProgress.t, false);
-      },
-    });
-
-    // Pause 1.2s on top of the mattress quilt, breathing softly
-    this.flightTimeline.to({}, {duration: 1.2});
-
-    // At t = 1.0 + pause: Ascension & Control Transfer
-    this.flightTimeline.add(() => {
-      this.beginAscensionAndHandover();
-    });
+    this.applyFlightFrame(0);
   }
 
   public skipFlight(): void {
@@ -434,11 +454,13 @@ export class IntroSequence {
     }
 
     if (this.introState === 'FLYING') {
-      const {camera} = this.cfg;
-      camera.position.lerp(this.desiredChaseCamPos, CHASE_DAMPING);
-      this.smoothedChaseLookAt.lerp(this.desiredChaseLookAt, CHASE_DAMPING);
-      camera.lookAt(this.smoothedChaseLookAt);
-      this.cfg.onCameraPositionChange?.(camera.position.clone());
+      this.flightProgress.current +=
+        (this.flightProgress.target - this.flightProgress.current) * SCROLL_LERP_FACTOR;
+      this.applyFlightFrame(this.flightProgress.current);
+
+      if (this.flightProgress.current >= 0.99) {
+        this.beginAscensionAndHandover();
+      }
     }
   }
 
