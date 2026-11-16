@@ -1,12 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { ViewportMode } from "../../../types/pdp";
+import { type MattressModelId } from "./mattressPresets.ts";
 import {
-  PUFFY_FLAGSHIP_ORDER,
-  PUFFY_FLAGSHIP_PRESETS,
-  type MattressModelId,
-} from "./mattressPresets.ts";
-import { PUFFY_10_LAYERS } from "./puffyLayersData.ts";
+  PUFFY_10_LAYERS,
+  PUFFY_MODEL_ORDER,
+  getActiveLayersForModel,
+  getModelConfig,
+  resolvePuffyModelKey,
+  type LayerBenefitIcon,
+  type MattressModelConfig as PuffyEcoModelConfig,
+  type PuffyModelKey,
+} from "./puffyLayersData.ts";
+import { LayerCutawayPreview3D } from "./LayerCutawayPreview3D.tsx";
 import {
   resolveMattressSizeSpec,
   type CameraAnglePreset,
@@ -32,7 +38,7 @@ export interface ActiveTrustOverlay {
 export interface PuffyFloatingHero3DProps {
   viewport?: ViewportMode;
   selectedSize?: string;
-  selectedModel?: MattressModelId;
+  selectedModel?: MattressModelId | PuffyModelKey;
   activeBadge?: ActiveTrustOverlay;
   onTelemetryUpdate?: (telemetry: TelemetryReadout) => void;
   onLayerSelect?: (layerIndex: number) => void;
@@ -44,19 +50,156 @@ const CAMERA_PRESETS: Array<{ id: CameraAnglePreset; label: string }> = [
   { id: "topDown", label: "Top-Down Cloud" },
 ];
 
-const CRAFT_LAB_BADGES = [
-  "Crafted in the USA",
-  "CertiPUR-US® Certified Foams",
-  "Exclusive Blended Wool (L2)",
-  '6" Contour-Adapt Pocket Coils (L8)',
-];
+const ECO_MODEL_SWATCHES: Record<PuffyModelKey, string> = {
+  cloud: "#9BC2E6",
+  lux: "#3D6B99",
+  royal: "#18243B",
+};
 
-const CRAFT_METRICS = [
-  { val: "Cooler Sleep", lbl: "10x Faster Heat Dissipation" },
-  { val: "5-Zone Support", lbl: "Cloud Breeze™ Sculpted Relief" },
-  { val: "Responsive Comfort", lbl: "99.4% Reflexive Foam Rebound" },
-  { val: '10 Layers · 14"', lbl: "Crafted in USA · Forever Warranty" },
-];
+function getCraftLabBadges(cfg: PuffyEcoModelConfig): string[] {
+  const badges = [
+    "Crafted in the USA",
+    "CertiPUR-US® Certified Foams",
+  ];
+  if (cfg.layerIds.includes(2)) {
+    badges.push("Exclusive Blended Wool");
+  }
+  if (cfg.layerIds.includes(8)) {
+    badges.push('6" Contour-Adapt Pocket Coils');
+  } else {
+    badges.push(`${cfg.profileHeightInches}" All-Foam Contour Core`);
+  }
+  return badges;
+}
+
+function getCraftMetrics(
+  cfg: PuffyEcoModelConfig
+): Array<{ val: string; lbl: string }> {
+  return [
+    { val: "Cooler Sleep", lbl: "10x Faster Heat Dissipation" },
+    cfg.layerIds.includes(7)
+      ? { val: "5-Zone Support", lbl: "Cloud Breeze™ Sculpted Relief" }
+      : cfg.layerIds.includes(8)
+        ? { val: "Hybrid Coils", lbl: '6" Contour-Adapt Pocket Springs' }
+        : { val: "Cloud Contour", lbl: "Plush Pressure-Point Cradling" },
+    cfg.layerIds.includes(6)
+      ? { val: "Responsive Comfort", lbl: "99.4% Reflexive Foam Rebound" }
+      : { val: "Firm Support", lbl: "High-Density Anti-Sag Core" },
+    {
+      val: `${cfg.layersCount} Layers · ${cfg.profileHeightInches}"`,
+      lbl: "Crafted in USA · Forever Warranty",
+    },
+  ];
+}
+
+function LayerBenefitSvg({ icon }: { icon: LayerBenefitIcon }) {
+  switch (icon) {
+    case "snowflake":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M10 2v16M3.07 6l13.86 8M16.93 6L3.07 14M8 3.5L10 5.5l2-2M8 16.5l2-2 2 2M3.5 8.5l2-.5-.5-2M16.5 11.5l-2 .5.5 2M16.5 8.5l-2-.5.5-2M3.5 11.5l2 .5-.5 2"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "zones":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="3" y="4" width="14" height="3" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+          <rect x="3" y="8.5" width="14" height="3" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+          <rect x="3" y="13" width="14" height="3" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+        </svg>
+      );
+    case "airflow":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M3 7h9.5a2 2 0 1 0-2-2M3 10.5h12.5a2 2 0 1 1-2 2M3 14h7.5a1.8 1.8 0 1 1-1.8 1.8"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "feather":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M15.5 4.5c-4.5 0-8.5 3.5-9.5 8.5L4 16l3-2c5-1 8.5-5 8.5-9.5Z"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinejoin="round"
+          />
+          <path d="M6.5 13.5L13 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+      );
+    case "spark":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M10 2.5l1.7 4.8 4.8 1.7-4.8 1.7L10 15.5l-1.7-4.8L3.5 9l4.8-1.7L10 2.5Z"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "spine":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M10 3v14M7 5.5h6M6.5 10h7M7 14.5h6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "coil":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <ellipse cx="10" cy="5.5" rx="4.5" ry="2" stroke="currentColor" strokeWidth="1.4" />
+          <ellipse cx="10" cy="10" rx="4.5" ry="2" stroke="currentColor" strokeWidth="1.4" />
+          <ellipse cx="10" cy="14.5" rx="4.5" ry="2" stroke="currentColor" strokeWidth="1.4" />
+        </svg>
+      );
+    case "anchor":
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="5" r="1.8" stroke="currentColor" strokeWidth="1.4" />
+          <path
+            d="M10 6.8v9.7M6 10h8M4.5 12.5a5.5 5.5 0 0 0 11 0"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "shield":
+    default:
+      return (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M10 2.8l5.5 2.2v4.6c0 3.7-2.4 6.5-5.5 7.6-3.1-1.1-5.5-3.9-5.5-7.6V5L10 2.8Z"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M7.7 10l1.6 1.6 3.2-3.2"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+  }
+}
 
 function detectSoftwareGl(): boolean {
   try {
@@ -91,31 +234,74 @@ export function PuffyFloatingHero3D({
   layerSelectCallbackRef.current = onLayerSelect;
 
   const [activePreset, setActivePreset] = useState<CameraAnglePreset>("hero45");
-  const [environmentMode, setEnvironmentMode] =
+  const [currentEnvironment, setCurrentEnvironment] =
     useState<SanctuaryEnvironmentMode>("meadow");
+  const [isExploded, setIsExploded] = useState<boolean>(false);
+  const [, setCameraPosition] = useState<THREE.Vector3>(
+    () => new THREE.Vector3(3.65, 2.38, 4.85)
+  );
   const [bedroomStyle, setBedroomStyle] =
     useState<BedroomStyle>("nordic-coastal");
   const [activeLayerIndex, setActiveLayerIndex] = useState<number>(0);
   const [isCraftLabVisible, setIsCraftLabVisible] = useState<boolean>(false);
+  const [previewResetSignal, setPreviewResetSignal] = useState<number>(0);
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
-  const [internalModelKey, setInternalModelKey] =
-    useState<MattressModelId>("puffy-royal");
+  const [activeEcoModelKey, setActiveEcoModelKey] = useState<PuffyModelKey>(
+    () => resolvePuffyModelKey(selectedModel)
+  );
 
-  const activeModelKey = selectedModel ?? internalModelKey;
   const isMobile = viewport === "mobile";
   const currentSizeSpec = useMemo(
     () => resolveMattressSizeSpec(selectedSize),
     [selectedSize]
   );
-  const currentModelCfg = PUFFY_FLAGSHIP_PRESETS[activeModelKey];
-  const activeLayer = PUFFY_10_LAYERS[activeLayerIndex] ?? PUFFY_10_LAYERS[0];
+  const ecoModelConfig = getModelConfig(activeEcoModelKey);
+  const activeModelLayers = useMemo(
+    () => getActiveLayersForModel(activeEcoModelKey),
+    [activeEcoModelKey]
+  );
+  const activeLayerSequentialIdx = useMemo(() => {
+    const found = activeModelLayers.findIndex(
+      (layer) => layer.id - 1 === activeLayerIndex
+    );
+    const rawIdx = found >= 0 ? found : 0;
+    return Math.max(
+      0,
+      Math.min(
+        rawIdx,
+        Math.max(0, Math.min(activeModelLayers.length, ecoModelConfig.layersCount) - 1)
+      )
+    );
+  }, [activeModelLayers, activeLayerIndex, ecoModelConfig.layersCount]);
+  const safeLayerIndex = Math.max(
+    0,
+    Math.min(
+      activeLayerSequentialIdx,
+      Math.max(0, ecoModelConfig.layersCount - 1)
+    )
+  );
+  const activeSequentialNum = safeLayerIndex + 1;
+  const activeLayer =
+    activeModelLayers[safeLayerIndex] ??
+    activeModelLayers[0] ??
+    PUFFY_10_LAYERS[0];
+  const craftLabBadges = useMemo(
+    () => getCraftLabBadges(ecoModelConfig),
+    [ecoModelConfig]
+  );
+  const craftMetrics = useMemo(
+    () => getCraftMetrics(ecoModelConfig),
+    [ecoModelConfig]
+  );
 
   // Keep latest initial props available for WebGL initialization
   const initialSizeRef = useRef(currentSizeSpec);
-  const initialModelRef = useRef(activeModelKey);
+  const initialModelRef = useRef(selectedModel ?? activeEcoModelKey);
   const hasSyncedSizeRef = useRef(false);
+  const isExplodedRef = useRef(isExploded);
   initialSizeRef.current = currentSizeSpec;
-  initialModelRef.current = activeModelKey;
+  initialModelRef.current = selectedModel ?? activeEcoModelKey;
+  isExplodedRef.current = isExploded;
 
   useEffect(() => {
     const container = mountContainerRef.current;
@@ -159,6 +345,9 @@ export function PuffyFloatingHero3D({
       setActiveLayerIndex(layerIdx);
       layerSelectCallbackRef.current?.(layerIdx);
     });
+    sceneModule.onCameraPositionChange((pos) => {
+      setCameraPosition(pos);
+    });
 
     sceneModule.init({
       scene,
@@ -172,7 +361,7 @@ export function PuffyFloatingHero3D({
     renderer.domElement.style.touchAction = "pan-y";
 
     sceneModule.setMattressSize(initialSizeRef.current);
-    sceneModule.switchMattressModel(initialModelRef.current);
+    sceneModule.setActiveModel(resolvePuffyModelKey(initialModelRef.current));
 
     const resizeObserver = new ResizeObserver((entries) => {
       if (isDisposed) return;
@@ -223,9 +412,11 @@ export function PuffyFloatingHero3D({
 
     const tick = (timestamp?: number) => {
       if (isDisposed) return;
-      timer.update(timestamp);
-      const deltaTime = timer.getDelta();
-      const elapsedTime = timer.getElapsed();
+      timer.update(timestamp ?? performance.now());
+      const rawDelta = timer.getDelta();
+      const rawElapsed = timer.getElapsed();
+      const deltaTime = Number.isFinite(rawDelta) ? rawDelta : 0;
+      const elapsedTime = Number.isFinite(rawElapsed) ? rawElapsed : 0;
 
       sceneModule.update(elapsedTime, deltaTime);
       renderer.render(scene, camera);
@@ -237,7 +428,7 @@ export function PuffyFloatingHero3D({
       }
     };
 
-    tick();
+    tick(performance.now());
 
     return () => {
       isDisposed = true;
@@ -281,21 +472,35 @@ export function PuffyFloatingHero3D({
     }
   }, [currentSizeSpec]);
 
-  // Sync Flagship PBR Model changes (Puffy Royal vs Puffy Monarch)
+  // Sync external selectedModel prop if provided
   useEffect(() => {
-    sceneModuleRef.current?.switchMattressModel(activeModelKey);
-  }, [activeModelKey]);
+    if (selectedModel !== undefined) {
+      const resolved = resolvePuffyModelKey(selectedModel);
+      setActiveEcoModelKey(resolved);
+      sceneModuleRef.current?.setActiveModel(resolved);
+    }
+  }, [selectedModel]);
+
+  // Clamp activeLayerIndex to Layer 1 (index 0) when switching to a model that omits the current layer
+  useEffect(() => {
+    if (!ecoModelConfig.layerIds.includes(activeLayerIndex + 1)) {
+      setActiveLayerIndex(0);
+      if (isExplodedRef.current) {
+        sceneModuleRef.current?.setActiveLayerIndex(0);
+      }
+    }
+  }, [activeEcoModelKey, ecoModelConfig, activeLayerIndex]);
 
   // Keep active horizontal layer tab centered in the Craft & Specs Lab strip
   useEffect(() => {
     if (!isCraftLabVisible) return;
-    const activeTab = craftTabRefs.current[activeLayerIndex];
+    const activeTab = craftTabRefs.current[safeLayerIndex];
     activeTab?.scrollIntoView({
       behavior: "smooth",
       inline: "center",
       block: "nearest",
     });
-  }, [activeLayerIndex, isCraftLabVisible]);
+  }, [safeLayerIndex, isCraftLabVisible]);
 
   // Sync Desktop/Mobile Viewport Switcher resize
   useEffect(() => {
@@ -323,16 +528,16 @@ export function PuffyFloatingHero3D({
       handleToggleCraftLab(false);
     }
     setActivePreset(preset);
-    if (environmentMode === "bedroom" && preset === "hero45") {
-      setEnvironmentMode("meadow");
-    }
     sceneModuleRef.current?.setCameraPreset(preset);
   };
 
   const handleToggleExplode = () => {
-    const nextPreset: CameraAnglePreset =
-      activePreset === "exploded" ? "hero45" : "exploded";
-    handleSetCameraPreset(nextPreset);
+    if (isCraftLabVisible) {
+      handleToggleCraftLab(false);
+    }
+    const nextExploded = !isExploded;
+    setIsExploded(nextExploded);
+    sceneModuleRef.current?.setExploded(nextExploded);
   };
 
   const handleResetCamera = () => {
@@ -340,24 +545,43 @@ export function PuffyFloatingHero3D({
       handleToggleCraftLab(false);
     }
     setActivePreset("hero45");
-    setEnvironmentMode("meadow");
-    sceneModuleRef.current?.setEnvironmentMode("meadow");
-    sceneModuleRef.current?.setCameraPreset("hero45");
+    sceneModuleRef.current?.resetCamera();
   };
 
-  const handleSelectLayerIn3D = (layerIdx: number, focusCamera = true) => {
+  const handleSelectLayerIn3D = (
+    layerIdx: number,
+    expandIn3D = true,
+    closeLab = true
+  ) => {
     const clamped = Math.max(0, Math.min(PUFFY_10_LAYERS.length - 1, layerIdx));
-    setActiveLayerIndex(clamped);
-    if (focusCamera) {
-      if (isCraftLabVisible) {
+    const targetIdx = ecoModelConfig.layerIds.includes(clamped + 1) ? clamped : 0;
+    setActiveLayerIndex(targetIdx);
+    if (expandIn3D) {
+      if (closeLab && isCraftLabVisible) {
         handleToggleCraftLab(false);
       }
-      setActivePreset("exploded");
-      sceneModuleRef.current?.setActiveLayerIndex(clamped, true);
-    } else {
-      sceneModuleRef.current?.setActiveLayerIndex(clamped, false);
+      setIsExploded(true);
+      sceneModuleRef.current?.setActiveLayerIndex(targetIdx);
     }
-    layerSelectCallbackRef.current?.(clamped);
+    layerSelectCallbackRef.current?.(targetIdx);
+  };
+
+  const handleToggleExplodeInLab = () => {
+    const nextExploded = !isExploded;
+    setIsExploded(nextExploded);
+    sceneModuleRef.current?.setExploded(nextExploded);
+    if (nextExploded) {
+      sceneModuleRef.current?.setActiveLayerIndex(activeLayer.id - 1);
+    }
+  };
+
+  const handleResetLabView = () => {
+    setIsExploded(false);
+    setActiveLayerIndex(0);
+    setActivePreset("hero45");
+    sceneModuleRef.current?.setExploded(false);
+    sceneModuleRef.current?.resetCamera();
+    setPreviewResetSignal((prev) => prev + 1);
   };
 
   const handlePressWoolPad = () => {
@@ -372,14 +596,30 @@ export function PuffyFloatingHero3D({
       handleToggleCraftLab(false);
     }
     const nextMode: SanctuaryEnvironmentMode =
-      environmentMode === "bedroom" ? "meadow" : "bedroom";
-    setEnvironmentMode(nextMode);
+      currentEnvironment === "bedroom" ? "meadow" : "bedroom";
+    setCurrentEnvironment(nextMode);
     sceneModuleRef.current?.setEnvironmentMode(nextMode);
   };
 
-  const handleSelectModel = (modelKey: MattressModelId) => {
-    setInternalModelKey(modelKey);
-    sceneModuleRef.current?.switchMattressModel(modelKey);
+  const handleSelectEcoModel = (newModelKey: PuffyModelKey) => {
+    const nextCfg = getModelConfig(newModelKey);
+    setActiveEcoModelKey(newModelKey);
+    sceneModuleRef.current?.setActiveModel(newModelKey);
+    if (!nextCfg.layerIds.includes(activeLayerIndex + 1)) {
+      setActiveLayerIndex(0);
+      if (isExploded) {
+        sceneModuleRef.current?.setActiveLayerIndex(0);
+      }
+      layerSelectCallbackRef.current?.(0);
+    }
+  };
+
+  const handleFirmnessSliderChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const stepIndex = Number(event.target.value);
+    const nextModelKey = PUFFY_MODEL_ORDER[stepIndex] ?? "royal";
+    handleSelectEcoModel(nextModelKey);
   };
 
   const handleSelectBedroomStyle = (style: BedroomStyle) => {
@@ -389,18 +629,22 @@ export function PuffyFloatingHero3D({
 
   // Top badge copy based on active mode
   let badgeKicker = "CURVED HORIZON · CLAYMATION MEADOW SANCTUARY";
-  let badgeTitle = `${currentModelCfg.displayName} — 14" 10-Layer Profile`;
+  let badgeTitle = `${ecoModelConfig.name} — ${ecoModelConfig.profileHeightInches}" ${ecoModelConfig.layersCount}-Layer Profile`;
   let badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Scroll to dolly · Hover sheep or click pad`;
 
-  if (activePreset === "exploded") {
-    badgeKicker = `10-LAYER CUTAWAY INSPECTOR · LAYER ${activeLayer.id} OF 10`;
-    badgeTitle = `Layer ${activeLayer.id}: ${activeLayer.name} (${activeLayer.badgeLabel})`;
-    badgeSub = `${activeLayer.tagline} · Click any 3D layer or L1–L10 pill below`;
-  } else if (environmentMode === "bedroom") {
+  if (isExploded) {
+    badgeKicker = `${ecoModelConfig.layersCount}-LAYER CUTAWAY INSPECTOR · LAYER ${activeSequentialNum} OF ${ecoModelConfig.layersCount}`;
+    badgeTitle = `Layer ${activeSequentialNum}: ${activeLayer.name} (${activeLayer.badgeLabel})`;
+    badgeSub = `${activeLayer.tagline} · Click any 3D layer or L1–L${ecoModelConfig.layersCount} pill below`;
+  } else if (currentEnvironment === "bedroom") {
     const activeStyleCfg = BEDROOM_STYLE_PRESETS[bedroomStyle];
     badgeKicker = `SANCTUARY BEDROOM · ${activeStyleCfg.label.toUpperCase()}`;
-    badgeTitle = `${currentModelCfg.displayName} — Indoor Bedroom Placement`;
+    badgeTitle = `${ecoModelConfig.name} (${ecoModelConfig.profileHeightInches}") — Indoor Bedroom Placement`;
     badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Puffy Platform Bed · Click pad to test rebound`;
+  } else if (currentEnvironment === "studio") {
+    badgeKicker = "STUDIO SANCTUARY · ISOLATED PRODUCT VIEW";
+    badgeTitle = `${ecoModelConfig.name} (${ecoModelConfig.profileHeightInches}") — Studio Profile`;
+    badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Scroll to dolly · Click pad to test rebound`;
   }
 
   return (
@@ -408,42 +652,41 @@ export function PuffyFloatingHero3D({
       className={`puffy-floating-hero-3d w-full h-full ${isMobile ? "mobile" : "desktop"}`}
       style={{ touchAction: "pan-y" }}
     >
-      {/* 1. Minimal Top-Left Spec Badge + PBR Flagship Switcher + 4-Archetype Bedroom Switcher */}
+      {/* 1. Minimal Top-Left Spec Badge + 3-Model Ecosystem Switcher + 4-Archetype Bedroom Switcher */}
       <div className="canvas-top-badge">
         <span className="canvas-top-badge-kicker">{badgeKicker}</span>
         <span className="canvas-top-badge-title">{badgeTitle}</span>
         <span className="canvas-top-badge-sub tabular-nums">{badgeSub}</span>
 
-        {!selectedModel && (
-          <div
-            className="puffy-model-switcher-pills"
-            role="group"
-            aria-label="3D Mattress Model Preset"
-          >
-            {PUFFY_FLAGSHIP_ORDER.map((modelKey) => {
-              const cfg = PUFFY_FLAGSHIP_PRESETS[modelKey];
-              const isSelected = modelKey === activeModelKey;
-              return (
-                <button
-                  key={modelKey}
-                  type="button"
-                  className="puffy-model-pill"
-                  data-selected={isSelected ? "true" : "false"}
-                  onClick={() => handleSelectModel(modelKey)}
-                >
-                  <span
-                    className="puffy-model-swatch"
-                    style={{ backgroundColor: cfg.upperBand.color }}
-                    aria-hidden="true"
-                  />
-                  <span>{cfg.displayName}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
+        <div
+          className="puffy-model-switcher-pills"
+          role="group"
+          aria-label="3D Mattress Model Preset"
+        >
+          {PUFFY_MODEL_ORDER.map((modelKey) => {
+            const cfg = getModelConfig(modelKey);
+            const isSelected = modelKey === activeEcoModelKey;
+            return (
+              <button
+                key={modelKey}
+                type="button"
+                className="puffy-model-pill"
+                data-selected={isSelected ? "true" : "false"}
+                aria-pressed={isSelected}
+                onClick={() => handleSelectEcoModel(modelKey)}
+              >
+                <span
+                  className="puffy-model-swatch"
+                  style={{ backgroundColor: ECO_MODEL_SWATCHES[modelKey] }}
+                  aria-hidden="true"
+                />
+                <span>{cfg.shortLabel}</span>
+              </button>
+            );
+          })}
+        </div>
 
-        {environmentMode === "bedroom" && (
+        {currentEnvironment === "bedroom" && (
           <div
             className="puffy-model-switcher-pills"
             role="group"
@@ -484,7 +727,7 @@ export function PuffyFloatingHero3D({
         </div>
       )}
 
-      {/* 3. Craft & Specs Lab Overlay (10-Layer Interactive Cutaway) */}
+      {/* 3. Craft & Specs Lab Overlay (Dynamic Layer Interactive Cutaway) */}
       <div
         className="reference-cutout-preview"
         data-visible={isCraftLabVisible ? "true" : "false"}
@@ -493,13 +736,13 @@ export function PuffyFloatingHero3D({
         <div className="craft-lab-header">
           <div>
             <div className="craft-lab-kicker">
-              PUFFY MATERIAL INTEGRITY &amp; 10-LAYER QUALITY LAB
+              PUFFY MATERIAL INTEGRITY &amp; {ecoModelConfig.layersCount}-LAYER QUALITY LAB
             </div>
             <h3 className="craft-lab-title">
-              Experience 10 Layers of Ultra-Plush Comfort
+              Experience {ecoModelConfig.layersCount} Layers of Ultra-Plush Comfort
             </h3>
             <div className="craft-lab-badges-row">
-              {CRAFT_LAB_BADGES.map((badge) => (
+              {craftLabBadges.map((badge) => (
                 <span key={badge} className="craft-usa-badge">
                   {badge}
                 </span>
@@ -511,7 +754,11 @@ export function PuffyFloatingHero3D({
             <button
               type="button"
               className="dock-btn"
-              onClick={() => handleSetCameraPreset("exploded")}
+              onClick={() => {
+                handleToggleCraftLab(false);
+                setIsExploded(true);
+                sceneModuleRef.current?.setExploded(true);
+              }}
             >
               View 3D Slide-Out
             </button>
@@ -525,134 +772,269 @@ export function PuffyFloatingHero3D({
           </div>
         </div>
 
-        {/* Horizontal 10-Layer Tab Bar */}
-        <div className="craft-10layer-tabs-row">
-          <button
-            type="button"
-            className="craft-tab-arrow-btn"
-            aria-label="Previous Layer"
-            onClick={() =>
-              handleSelectLayerIn3D(
-                (activeLayerIndex - 1 + PUFFY_10_LAYERS.length) %
-                  PUFFY_10_LAYERS.length,
-                false
-              )
-            }
-          >
-            &#8249;
-          </button>
+        {/* 1. Primary Interactive Cream Card */}
+        <div className="craft-cream-card">
+          {/* Header Bar: Numbered Pill Tabs (1 to N) with Left/Right Scroll Arrows */}
+          <div className="craft-10layer-tabs-row">
+            <button
+              type="button"
+              className="craft-tab-arrow-btn"
+              aria-label="Previous Layer"
+              onClick={() => {
+                const prevSeq =
+                  (safeLayerIndex - 1 + activeModelLayers.length) %
+                  activeModelLayers.length;
+                const targetLayer = activeModelLayers[prevSeq];
+                if (targetLayer) {
+                  handleSelectLayerIn3D(targetLayer.id - 1, true, false);
+                }
+              }}
+            >
+              &#8249;
+            </button>
 
-          <div className="craft-10layer-tabs-scroll" role="tablist" aria-label="10 Mattress Layers">
-            {PUFFY_10_LAYERS.map((layer, idx) => (
-              <button
-                key={layer.id}
-                ref={(el) => {
-                  craftTabRefs.current[idx] = el;
-                }}
-                type="button"
-                role="tab"
-                aria-selected={idx === activeLayerIndex}
-                className="craft-10layer-tab-pill"
-                data-active={idx === activeLayerIndex ? "true" : "false"}
-                onClick={() => handleSelectLayerIn3D(idx, false)}
-              >
-                <span className="craft-tab-num-circle tabular-nums">
-                  {layer.id}
-                </span>
-                <span className="craft-tab-short-name">
-                  {layer.shortTabLabel}
-                </span>
-              </button>
-            ))}
+            <div
+              className="craft-10layer-tabs-scroll"
+              role="tablist"
+              aria-label={`${ecoModelConfig.layersCount} Mattress Layers`}
+            >
+              {activeModelLayers.map((layer, idx) => {
+                const masterIdx = layer.id - 1;
+                const sequentialNum = idx + 1;
+                const isActive = masterIdx === activeLayer.id - 1;
+                return (
+                  <button
+                    key={layer.id}
+                    ref={(el) => {
+                      craftTabRefs.current[idx] = el;
+                    }}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className="craft-10layer-tab-pill"
+                    data-active={isActive ? "true" : "false"}
+                    onClick={() => handleSelectLayerIn3D(masterIdx, true, false)}
+                  >
+                    <span className="craft-tab-num-circle tabular-nums">
+                      {sequentialNum}
+                    </span>
+                    <span className="craft-tab-short-name">
+                      {layer.shortTabLabel}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              className="craft-tab-arrow-btn"
+              aria-label="Next Layer"
+              onClick={() => {
+                const nextSeq =
+                  (safeLayerIndex + 1) % activeModelLayers.length;
+                const targetLayer = activeModelLayers[nextSeq];
+                if (targetLayer) {
+                  handleSelectLayerIn3D(targetLayer.id - 1, true, false);
+                }
+              }}
+            >
+              &#8250;
+            </button>
           </div>
 
-          <button
-            type="button"
-            className="craft-tab-arrow-btn"
-            aria-label="Next Layer"
-            onClick={() =>
-              handleSelectLayerIn3D(
-                (activeLayerIndex + 1) % PUFFY_10_LAYERS.length,
-                false
-              )
-            }
-          >
-            &#8250;
-          </button>
+          {/* Cream Card Body: Left = Live 3D Layer Render, Right = Dynamic Layer Details */}
+          <div className="craft-cream-card-body">
+            <div className="craft-cream-visual-col">
+              <LayerCutawayPreview3D
+                activeLayerIndex={activeLayer.id - 1}
+                isExploded={isExploded}
+                activeModelKey={activeEcoModelKey}
+                isVisible={isCraftLabVisible}
+                resetSignal={previewResetSignal}
+                onSelectLayer={(idx) => handleSelectLayerIn3D(idx, true, false)}
+              />
+              <div className="craft-cream-3d-caption tabular-nums">
+                Layer {activeSequentialNum} of {ecoModelConfig.layersCount} · Click any layer in 3D
+              </div>
+            </div>
+
+            <div className="craft-cream-details-col">
+              <div className="craft-cream-badge-row">
+                <span className="craft-cream-badge tabular-nums">
+                  {activeLayer.badgeLabel}
+                </span>
+                <span className="craft-cream-subtitle">
+                  {activeLayer.subtitle}
+                </span>
+                {activeLayer.exclusiveTag && (
+                  <span className="craft-cream-exclusive">
+                    {activeLayer.exclusiveTag}
+                  </span>
+                )}
+              </div>
+
+              <h4 className="craft-cream-headline">{activeLayer.tagline}</h4>
+
+              <div className="craft-cream-copy-group">
+                <p className="craft-cream-copy-line">
+                  <strong>What it is:</strong> {activeLayer.whatItIs}
+                </p>
+                <p className="craft-cream-copy-line">
+                  <strong>How it works:</strong> {activeLayer.howItWorks}
+                </p>
+              </div>
+
+              <div className="craft-cream-benefits-row">
+                {activeLayer.benefits.map((benefit) => (
+                  <span key={benefit.label} className="craft-cream-benefit-pill">
+                    <span className="craft-cream-benefit-icon">
+                      <LayerBenefitSvg icon={benefit.icon} />
+                    </span>
+                    <span>{benefit.label}</span>
+                  </span>
+                ))}
+              </div>
+
+              <p className="craft-cream-disclaimer">
+                Cover design and materials may vary slightly. All internal
+                specifications remain identical.
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="craft-lab-body-grid">
-          <div className="craft-cutaway-stage">
-            <div className="craft-cutaway-img-wrap">
-              <img
-                src={activeLayer.screenshotUrl}
-                alt={`Layer ${activeLayer.id}: ${activeLayer.name}`}
-                referrerPolicy="no-referrer"
-              />
+        {/* 2. Redesigned Lower Navy Panel: Sleek Mattress Spec, 3-Step Snap Slider & Action Bar */}
+        <div
+          className="craft-navy-action-bar"
+          role="region"
+          aria-label="Mattress Specifications and 3D View Controls"
+        >
+          <div className="craft-navy-specs">
+            <span className="craft-navy-model-name">
+              {ecoModelConfig.name}
+            </span>
+            <span className="craft-navy-dot" aria-hidden="true">
+              •
+            </span>
+            <span className="craft-navy-spec-item tabular-nums">
+              {ecoModelConfig.profileHeightInches}&quot; Total Profile
+            </span>
+            <span className="craft-navy-dot" aria-hidden="true">
+              •
+            </span>
+            <span className="craft-navy-spec-item tabular-nums">
+              {ecoModelConfig.layersCount} Targeted Layers
+            </span>
+          </div>
+
+          <div
+            className="craft-navy-firmness"
+            role="group"
+            aria-label={`Model & Firmness Scale: ${ecoModelConfig.shortLabel}, ${ecoModelConfig.firmnessLabel} (${ecoModelConfig.firmnessScore.toFixed(1)} out of 10)`}
+          >
+            <div
+              className="craft-model-stops-row"
+              role="group"
+              aria-label="Select Puffy Mattress Model"
+            >
+              {PUFFY_MODEL_ORDER.map((modelKey, idx) => {
+                const cfg = getModelConfig(modelKey);
+                const isSelected = modelKey === activeEcoModelKey;
+                return (
+                  <Fragment key={modelKey}>
+                    {idx > 0 && (
+                      <span
+                        className="craft-model-stop-connector"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <button
+                      type="button"
+                      className="craft-model-stop-btn"
+                      data-selected={isSelected ? "true" : "false"}
+                      aria-pressed={isSelected}
+                      onClick={() => handleSelectEcoModel(modelKey)}
+                    >
+                      {cfg.shortLabel}
+                    </button>
+                  </Fragment>
+                );
+              })}
             </div>
 
-            <div className="craft-tooltip-card">
-              <div className="craft-tooltip-header">
-                <strong className="craft-tooltip-title">
-                  Layer {activeLayer.id}: {activeLayer.name}
-                </strong>
-                <span className="craft-tooltip-badge tabular-nums">
-                  {activeLayer.badgeLabel}
-                  {activeLayer.exclusiveTag
-                    ? ` · ${activeLayer.exclusiveTag}`
-                    : ""}
-                </span>
-              </div>
-              <div className="craft-tooltip-tagline">{activeLayer.tagline}</div>
-              <div className="craft-tooltip-desc">
-                {activeLayer.description}
-              </div>
-
-              <div className="craft-structured-specs-wrap">
-                <div className="craft-spec-detail-block">
-                  <div className="craft-spec-detail-label">What it is</div>
-                  <p className="craft-spec-detail-text">
-                    {activeLayer.whatItIs}
-                  </p>
+            <div className="craft-firmness-slider-row">
+              <span className="craft-firmness-end">Plush Soft</span>
+              <div className="craft-firmness-track-wrap">
+                <input
+                  type="range"
+                  min={0}
+                  max={2}
+                  step={1}
+                  value={ecoModelConfig.sliderStep}
+                  onChange={handleFirmnessSliderChange}
+                  className="craft-firmness-range-input"
+                  aria-label="Select Mattress Model and Firmness"
+                  aria-valuetext={`${ecoModelConfig.shortLabel} — ${ecoModelConfig.firmnessLabel} (${ecoModelConfig.firmnessScore.toFixed(1)}/10)`}
+                />
+                <div className="craft-firmness-track" aria-hidden="true">
+                  <div
+                    className="craft-firmness-fill"
+                    style={{ width: `${ecoModelConfig.sliderValue}%` }}
+                  />
+                  <span
+                    className="craft-firmness-notch"
+                    style={{ left: "0%" }}
+                  />
+                  <span
+                    className="craft-firmness-notch"
+                    style={{ left: "50%" }}
+                  />
+                  <span
+                    className="craft-firmness-notch"
+                    style={{ left: "100%" }}
+                  />
+                  <span
+                    className="craft-firmness-knob"
+                    style={{ left: `${ecoModelConfig.sliderValue}%` }}
+                  />
                 </div>
-                <div className="craft-spec-detail-block">
-                  <div className="craft-spec-detail-label">How it works</div>
-                  <p className="craft-spec-detail-text">
-                    {activeLayer.howItWorks}
-                  </p>
-                </div>
               </div>
+              <span className="craft-firmness-end">Firm</span>
+              <span className="craft-firmness-readout tabular-nums">
+                {ecoModelConfig.firmnessLabel} (
+                {ecoModelConfig.firmnessScore.toFixed(1)}/10)
+              </span>
             </div>
           </div>
 
-          <div className="craft-layer-list">
-            {PUFFY_10_LAYERS.map((layerSpec, idx) => (
-              <button
-                key={layerSpec.id}
-                type="button"
-                className="craft-layer-btn"
-                data-active={idx === activeLayerIndex ? "true" : "false"}
-                onClick={() => handleSelectLayerIn3D(idx, false)}
-              >
-                <span className="craft-layer-btn-left">
-                  <span
-                    className="craft-layer-swatch"
-                    style={{ backgroundColor: layerSpec.colorHex }}
-                  />
-                  <span>
-                    {layerSpec.id}. {layerSpec.name}
-                  </span>
-                </span>
-                <span className="craft-layer-btn-right tabular-nums">
-                  {layerSpec.badgeLabel}
-                </span>
-              </button>
-            ))}
+          <div className="craft-navy-actions">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isExploded}
+              className="craft-navy-toggle-btn"
+              data-active={isExploded ? "true" : "false"}
+              onClick={handleToggleExplodeInLab}
+            >
+              <span className="craft-toggle-track" aria-hidden="true">
+                <span className="craft-toggle-thumb" />
+              </span>
+              <span>Exploded View</span>
+            </button>
+
+            <button
+              type="button"
+              className="craft-navy-reset-btn"
+              onClick={handleResetLabView}
+            >
+              Reset View
+            </button>
           </div>
         </div>
 
         <div className="craft-metrics-strip">
-          {CRAFT_METRICS.map((m) => (
+          {craftMetrics.map((m) => (
             <div key={m.val} className="craft-metric-box">
               <span className="craft-metric-val">{m.val}</span>
               <span className="craft-metric-lbl">{m.lbl}</span>
@@ -669,25 +1051,30 @@ export function PuffyFloatingHero3D({
         aria-label="Interactive 3D Puffy Floating Mattress Meadow Sanctuary"
       />
 
-      {/* 5. 10-Layer Cutaway HUD Pill Strip */}
+      {/* 5. Active-Layer Cutaway HUD Pill Strip */}
       <div
         className="canvas-cutaway-10layer-hud"
-        data-visible={activePreset === "exploded" ? "true" : "false"}
-        aria-hidden={activePreset !== "exploded"}
+        data-visible={isExploded ? "true" : "false"}
+        aria-hidden={!isExploded}
       >
         <span className="canvas-cutaway-hud-label">3D Slide-Out Layer:</span>
-        {PUFFY_10_LAYERS.map((layer, idx) => (
-          <button
-            key={layer.id}
-            type="button"
-            className="canvas-cutaway-hud-pill tabular-nums"
-            data-active={idx === activeLayerIndex ? "true" : "false"}
-            title={`Layer ${layer.id}: ${layer.name} (${layer.badgeLabel})`}
-            onClick={() => handleSelectLayerIn3D(idx, true)}
-          >
-            L{layer.id}
-          </button>
-        ))}
+        {activeModelLayers.map((layer, idx) => {
+          const masterIdx = layer.id - 1;
+          const sequentialNum = idx + 1;
+          const isActive = masterIdx === activeLayer.id - 1;
+          return (
+            <button
+              key={layer.id}
+              type="button"
+              className="canvas-cutaway-hud-pill tabular-nums"
+              data-active={isActive ? "true" : "false"}
+              title={`Layer ${sequentialNum}: ${layer.name} (${layer.badgeLabel})`}
+              onClick={() => handleSelectLayerIn3D(masterIdx, true)}
+            >
+              L{sequentialNum}
+            </button>
+          );
+        })}
       </div>
 
       {/* 6. Collapsible Bottom Control Dock */}
@@ -707,10 +1094,12 @@ export function PuffyFloatingHero3D({
           <button
             type="button"
             className="dock-btn"
-            data-active={activePreset === "exploded" ? "true" : "false"}
+            data-active={isExploded ? "true" : "false"}
             onClick={handleToggleExplode}
           >
-            {activePreset === "exploded" ? "Collapse Layers" : "Explode Layers"}
+            {isExploded
+              ? "📦 Assemble Mattress"
+              : `💥 Explode ${ecoModelConfig.layersCount} Layers`}
           </button>
 
           <button
@@ -757,10 +1146,10 @@ export function PuffyFloatingHero3D({
           <button
             type="button"
             className="dock-btn"
-            data-active={environmentMode === "bedroom" ? "true" : "false"}
+            data-active={currentEnvironment === "bedroom" ? "true" : "false"}
             onClick={handleToggleBedroomMode}
           >
-            {environmentMode === "bedroom"
+            {currentEnvironment === "bedroom"
               ? "Return to Meadow"
               : "View in Bedroom (XR)"}
           </button>

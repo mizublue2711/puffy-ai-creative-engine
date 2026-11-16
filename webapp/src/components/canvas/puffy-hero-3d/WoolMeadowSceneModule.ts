@@ -11,6 +11,7 @@ import type {
 } from './types.ts';
 import {FloatingWoolPad} from './FloatingWoolPad.ts';
 import type {MattressModelId} from './MattressAnatomy.ts';
+import {resolvePuffyModelKey, type PuffyModelKey} from './puffyLayersData.ts';
 import {MeadowTerrain} from './MeadowTerrain.ts';
 import {SheepFlockEngine} from './SheepFlockEngine.ts';
 import {
@@ -19,7 +20,7 @@ import {
 } from '../bedroom/BedroomSanctuaryScene.tsx';
 import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
 
-export type SanctuaryEnvironmentMode = 'meadow' | 'bedroom';
+export type SanctuaryEnvironmentMode = 'bedroom' | 'meadow' | 'studio';
 
 /**
  * Strict Resource Disposal Protocol to guarantee 0 VRAM leaks across scene transitions.
@@ -58,15 +59,16 @@ const CAMERA_PRESETS: Record<CameraAnglePreset, CameraPose> = {
     position: new THREE.Vector3(0.0, 3.65, 0.65),
     target: new THREE.Vector3(0.0, 0.45, 0.0),
   },
-  exploded: {
-    position: new THREE.Vector3(2.95, 1.45, 2.45),
-    target: new THREE.Vector3(0.0, 0.58, 0.0),
-  },
 };
 
 const BEDROOM_CAMERA_POSE: CameraPose = {
   position: new THREE.Vector3(2.75, 1.56, 3.25),
   target: new THREE.Vector3(0.0, 0.36, -0.1),
+};
+
+const STUDIO_CAMERA_POSE: CameraPose = {
+  position: new THREE.Vector3(3.15, 1.85, 3.75),
+  target: new THREE.Vector3(0.0, 0.45, 0.0),
 };
 
 export class WoolMeadowSceneModule implements ISceneModule {
@@ -84,13 +86,22 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private bedroomStyle: BedroomStyle = 'nordic-coastal';
   private meadowLights: THREE.Light[] = [];
 
-  private environmentMode: SanctuaryEnvironmentMode = 'meadow';
+  // Decoupled Scene State Machines
+  private currentEnvironment: SanctuaryEnvironmentMode = 'meadow';
+  private activeEcoModel: PuffyModelKey = 'royal';
+  private isExploded = false;
+  private cameraPosition = new THREE.Vector3().copy(CAMERA_PRESETS.hero45.position);
+
   private isLabPaused = false;
   private readonly bedSurfaceHeight = 0.36;
 
   private raycaster = new THREE.Raycaster();
   private pointerNdc = new THREE.Vector2();
-  private isPointerDown = false;
+  private isPointerDownOnMattress = false;
+  private isOrbitingCamera = false;
+  private isDraggingCamera = false;
+  private pointerDownScreenX = 0;
+  private pointerDownScreenY = 0;
   private hoverWorldPoint: THREE.Vector3 | null = null;
   private scratchHoverVec = new THREE.Vector3();
   private lastHoverRaycastTime = 0;
@@ -103,6 +114,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
   private onTelemetryCallback: ((readout: TelemetryReadout) => void) | null = null;
   private onLayerSelectCallback: ((layerIndex: number) => void) | null = null;
+  private onCameraPositionChangeCallback: ((pos: THREE.Vector3) => void) | null = null;
   private lastTelemetryEmit = 0;
 
   // Bound event listeners for deterministic removal in dispose()
@@ -194,6 +206,20 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
     this.controls.addEventListener('start', () => {
       this.isTransitioningCamera = false;
+      this.isOrbitingCamera = true;
+      if (this.isPointerDownOnMattress) {
+        this.isPointerDownOnMattress = false;
+        this.floatingWoolPad?.releaseCompression();
+      }
+    });
+
+    this.controls.addEventListener('end', () => {
+      this.isOrbitingCamera = false;
+      this.isDraggingCamera = false;
+      if (this.context) {
+        this.cameraPosition.copy(this.context.camera.position);
+        this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
+      }
     });
 
     // 5. Instantiate 3D Sub-Modules
@@ -202,10 +228,31 @@ export class WoolMeadowSceneModule implements ISceneModule {
     scene.add(this.meadowTerrain.group);
 
     this.floatingWoolPad = new FloatingWoolPad(maxAnisotropy);
+    if (this.activeEcoModel !== 'royal') {
+      this.floatingWoolPad.updateModel(this.activeEcoModel, true);
+    }
     scene.add(this.floatingWoolPad.group);
 
     this.sheepFlock = new SheepFlockEngine(8);
     scene.add(this.sheepFlock.group);
+
+    if (typeof window !== 'undefined' && window.location.search.includes('audit=exploded')) {
+      this.setEnvironmentMode('studio');
+      this.floatingWoolPad.setFloatingEnabled(false, 0.25);
+      this.floatingWoolPad.setAllLayersExplodedStack(true, true);
+      const auditPos = new THREE.Vector3(1.85, 1.68, 3.45);
+      const auditTarget = new THREE.Vector3(0, 0.82, 0);
+      camera.position.copy(auditPos);
+      this.targetCameraPos.copy(auditPos);
+      this.cameraPosition.copy(auditPos);
+      this.targetLookAt.copy(auditTarget);
+      if (this.controls) {
+        this.controls.target.copy(auditTarget);
+        this.controls.update();
+      }
+      camera.lookAt(auditTarget);
+      this.isTransitioningCamera = false;
+    }
 
     if (!isSoftwareGl) {
       renderer.compile(scene, camera);
@@ -217,6 +264,11 @@ export class WoolMeadowSceneModule implements ISceneModule {
     this.boundPointerUp = () => this.handlePointerUp();
     this.boundPointerLeave = () => {
       this.hoverWorldPoint = null;
+      if (this.isPointerDownOnMattress) {
+        this.isPointerDownOnMattress = false;
+        this.floatingWoolPad?.releaseCompression();
+      }
+      this.isDraggingCamera = false;
       this.floatingWoolPad?.setHoverState(false);
     };
     this.boundWheel = (ev: WheelEvent) => this.handleWheelDolly(ev);
@@ -228,14 +280,56 @@ export class WoolMeadowSceneModule implements ISceneModule {
     window.addEventListener('pointerup', this.boundPointerUp);
   }
 
+  private getDefaultPoseForEnvironment(mode: SanctuaryEnvironmentMode): CameraPose {
+    if (mode === 'bedroom') return BEDROOM_CAMERA_POSE;
+    if (mode === 'studio') return STUDIO_CAMERA_POSE;
+    return CAMERA_PRESETS.hero45;
+  }
+
+  private isVectorFinite(v: THREE.Vector3): boolean {
+    return Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z);
+  }
+
   /**
-   * Switches between the outdoor Meadow Sanctuary and the indoor Sanctuary Bedroom (XR)
+   * Restores camera & OrbitControls target to valid finite coordinates for the active environment
+   * if any NaN/Infinity slips into camera or controls state.
+   */
+  private sanitizeCameraAndControls(): void {
+    const defaultPose = this.getDefaultPoseForEnvironment(this.currentEnvironment);
+    if (!this.isVectorFinite(this.targetCameraPos)) {
+      this.targetCameraPos.copy(defaultPose.position);
+    }
+    if (!this.isVectorFinite(this.targetLookAt)) {
+      this.targetLookAt.copy(defaultPose.target);
+    }
+    if (this.controls && !this.isVectorFinite(this.controls.target)) {
+      this.controls.target.copy(defaultPose.target);
+      this.controls.update();
+    }
+    if (this.context && !this.isVectorFinite(this.context.camera.position)) {
+      this.context.camera.position.copy(defaultPose.position);
+      this.cameraPosition.copy(defaultPose.position);
+      this.context.camera.lookAt(
+        this.controls ? this.controls.target : defaultPose.target,
+      );
+    }
+  }
+
+  /**
+   * Switches between the outdoor Meadow Sanctuary, indoor Sanctuary Bedroom (XR), and Studio
    * within the single unified WebGL render loop, strictly disposing temporary bedroom meshes
-   * when returning to the meadow to maintain 0 VRAM leaks.
+   * when leaving the bedroom to maintain 0 VRAM leaks.
+   * Preserves `isExploded` state across environment transitions.
    */
   public setEnvironmentMode(mode: SanctuaryEnvironmentMode): void {
-    if (!this.context || this.environmentMode === mode) return;
-    this.environmentMode = mode;
+    if (this.floatingWoolPad) {
+      this.floatingWoolPad.group.visible = true;
+    }
+    if (!this.context || this.currentEnvironment === mode) {
+      this.sanitizeCameraAndControls();
+      return;
+    }
+    this.currentEnvironment = mode;
     const {scene} = this.context;
 
     if (mode === 'bedroom') {
@@ -271,6 +365,12 @@ export class WoolMeadowSceneModule implements ISceneModule {
       });
       // Align slat height (0.32m) with FloatingWoolPad docked bottom (0.36 - 0.238 = 0.122m)
       this.bedroomSanctuary.group.position.set(0, -0.20, 0);
+      // Respect current independent isExploded state
+      this.bedroomSanctuary.setBedDecorVisible(!this.isExploded);
+      // Sync pillows and throw blanket immediately to the active mattress height
+      this.bedroomSanctuary.syncMattressHeight(
+        this.floatingWoolPad?.getHeightDeltaFromRoyal() ?? 0,
+      );
       this.bedroomGroup = this.bedroomSanctuary.group;
       scene.add(this.bedroomGroup);
 
@@ -284,6 +384,43 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
       this.targetCameraPos.copy(BEDROOM_CAMERA_POSE.position);
       this.targetLookAt.copy(BEDROOM_CAMERA_POSE.target);
+      this.cameraPosition.copy(BEDROOM_CAMERA_POSE.position);
+      this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
+      this.isTransitioningCamera = true;
+    } else if (mode === 'studio') {
+      // 1. STRICT RESOURCE DISPOSAL of Bedroom meshes
+      if (this.bedroomSanctuary) {
+        scene.remove(this.bedroomSanctuary.group);
+        this.bedroomSanctuary.dispose();
+        this.bedroomSanctuary = null;
+        this.bedroomGroup = null;
+      } else if (this.bedroomGroup) {
+        scene.remove(this.bedroomGroup);
+        cleanupScene(this.bedroomGroup);
+        this.bedroomGroup = null;
+      }
+
+      // 2. HIDE MEADOW & SHEEP FOR CLEAN STUDIO BACKDROP
+      if (this.meadowTerrain) {
+        this.meadowTerrain.group.visible = false;
+      }
+      if (this.sheepFlock) {
+        this.sheepFlock.group.visible = false;
+      }
+      this.hoverWorldPoint = null;
+      this.meadowLights.forEach((l) => {
+        l.visible = true;
+      });
+      scene.environmentIntensity = 0.85;
+      this.floatingWoolPad?.setFloatingEnabled(true);
+
+      scene.background = new THREE.Color('#F4F6F9');
+      scene.fog = new THREE.FogExp2('#F4F6F9', 0.01);
+
+      this.targetCameraPos.copy(STUDIO_CAMERA_POSE.position);
+      this.targetLookAt.copy(STUDIO_CAMERA_POSE.target);
+      this.cameraPosition.copy(STUDIO_CAMERA_POSE.position);
+      this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
       this.isTransitioningCamera = true;
     } else {
       // 1. STRICT RESOURCE DISPOSAL of Bedroom meshes when switching back to Meadow
@@ -320,12 +457,15 @@ export class WoolMeadowSceneModule implements ISceneModule {
       const pose = CAMERA_PRESETS[this.activeCameraPreset];
       this.targetCameraPos.copy(pose.position);
       this.targetLookAt.copy(pose.target);
+      this.cameraPosition.copy(pose.position);
+      this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
       this.isTransitioningCamera = true;
     }
+    this.sanitizeCameraAndControls();
   }
 
   public getEnvironmentMode(): SanctuaryEnvironmentMode {
-    return this.environmentMode;
+    return this.currentEnvironment;
   }
 
   public setBedroomStyle(style: BedroomStyle): void {
@@ -496,12 +636,20 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
   private handlePointerDown(event: PointerEvent): void {
     if (!this.context || !this.floatingWoolPad || this.isLabPaused) return;
+
+    this.pointerDownScreenX = event.clientX;
+    this.pointerDownScreenY = event.clientY;
+    this.isDraggingCamera = false;
+
+    // If OrbitControls is actively orbiting, bypass mattress interaction
+    if (this.isOrbitingCamera) return;
+
     this.updatePointerNdc(event);
     this.raycaster.setFromCamera(this.pointerNdc, this.context.camera);
 
     // If in Exploded/Cutaway mode (or a layer is currently active), check if the user clicked a specific 3D layer (0..9)
     if (
-      this.activeCameraPreset === 'exploded' ||
+      this.isExploded ||
       this.floatingWoolPad.getActiveLayerIndex() !== null
     ) {
       const hitLayerIdx = this.floatingWoolPad.raycastLayerIndex(this.raycaster);
@@ -514,21 +662,44 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
     const hits = this.raycaster.intersectObject(this.floatingWoolPad.hitProxyMesh, false);
     if (hits.length > 0) {
-      this.isPointerDown = true;
-      // Pause OrbitControls while pressing the mattress so cushion compression feels grounded
-      if (this.controls) {
-        this.controls.enabled = false;
-      }
+      this.isPointerDownOnMattress = true;
       this.floatingWoolPad.setHoverState(true, this.pointerNdc);
-      this.floatingWoolPad.triggerCompressionAtWorldPoint(hits[0].point, 0.11);
+      // Gentle authentic tactile squish with local foam dent & macro buoyancy tilt
+      this.floatingWoolPad.triggerCompressionAtWorldPoint(hits[0].point, 0.035);
+    } else {
+      this.isPointerDownOnMattress = false;
     }
   }
 
   private handlePointerMove(event: PointerEvent): void {
     if (!this.context || this.isLabPaused) return;
+
+    // Distinguish between "Click/Hold to press mattress" and "Drag mouse to rotate camera OrbitControls"
+    if (this.isPointerDownOnMattress && !this.isDraggingCamera) {
+      const dragDist = Math.hypot(
+        event.clientX - this.pointerDownScreenX,
+        event.clientY - this.pointerDownScreenY,
+      );
+      if (dragDist > 6) {
+        // Drag threshold exceeded: transition to camera orbit, release mattress compression
+        this.isDraggingCamera = true;
+        this.isPointerDownOnMattress = false;
+        this.floatingWoolPad?.releaseCompression();
+      }
+    }
+
+    // When user is dragging to rotate the camera or OrbitControls is actively orbiting,
+    // suppress raycasting onto the mattress to prevent accidental continuous indentation during view orbit
+    if (this.isOrbitingCamera || this.isDraggingCamera) {
+      if (this.context.container.style.cursor === 'pointer') {
+        this.context.container.style.cursor = '';
+      }
+      return;
+    }
+
     const now = performance.now();
     // Throttle hover raycasting to 30Hz for deterministic 60 FPS
-    if (!this.isPointerDown && now - this.lastHoverRaycastTime < 32) return;
+    if (!this.isPointerDownOnMattress && now - this.lastHoverRaycastTime < 32) return;
     this.lastHoverRaycastTime = now;
 
     this.updatePointerNdc(event);
@@ -539,14 +710,10 @@ export class WoolMeadowSceneModule implements ISceneModule {
       const isHoveringPad = padHits.length > 0;
       this.floatingWoolPad.setHoverState(isHoveringPad, this.pointerNdc);
       this.context.container.style.cursor = isHoveringPad ? 'pointer' : '';
-
-      if (this.isPointerDown && isHoveringPad) {
-        this.floatingWoolPad.triggerCompressionAtWorldPoint(padHits[0].point, 0.11);
-      }
     }
 
     // Raycast against curved meadow terrain for smooth sheep hover avoidance ONLY in Meadow Mode
-    if (this.environmentMode === 'meadow' && this.meadowTerrain) {
+    if (this.currentEnvironment === 'meadow' && this.meadowTerrain) {
       const groundHits = this.raycaster.intersectObject(this.meadowTerrain.terrainMesh, false);
       if (groundHits.length > 0) {
         this.scratchHoverVec.copy(groundHits[0].point);
@@ -560,13 +727,11 @@ export class WoolMeadowSceneModule implements ISceneModule {
   }
 
   private handlePointerUp(): void {
-    if (this.isPointerDown) {
-      this.isPointerDown = false;
-      if (this.controls) {
-        this.controls.enabled = true;
-      }
+    if (this.isPointerDownOnMattress) {
+      this.isPointerDownOnMattress = false;
       this.floatingWoolPad?.releaseCompression();
     }
+    this.isDraggingCamera = false;
   }
 
   private handleWheelDolly(event: WheelEvent): void {
@@ -574,8 +739,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
     event.preventDefault();
     const delta = Math.sign(event.deltaY) * -0.14;
     this.dollyProgress = THREE.MathUtils.clamp(this.dollyProgress + delta, 0, 1);
-    const startPose =
-      this.environmentMode === 'bedroom' ? BEDROOM_CAMERA_POSE : CAMERA_PRESETS.hero45;
+    const startPose = this.getDefaultPoseForEnvironment(this.currentEnvironment);
     this.targetCameraPos.lerpVectors(
       startPose.position,
       CAMERA_PRESETS.dollyClose.position,
@@ -586,50 +750,88 @@ export class WoolMeadowSceneModule implements ISceneModule {
       CAMERA_PRESETS.dollyClose.target,
       this.dollyProgress,
     );
+    this.cameraPosition.copy(this.targetCameraPos);
+    this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
     this.isTransitioningCamera = true;
   }
 
+  /**
+   * Repositions the camera to a preset angle WITHOUT mutating `currentEnvironment` or `isExploded`.
+   */
   public setCameraPreset(preset: CameraAnglePreset): void {
     this.activeCameraPreset = preset;
-    // Switching to a Meadow camera preset automatically returns to the Meadow Sanctuary if in Bedroom mode
-    if (this.environmentMode === 'bedroom' && preset === 'hero45') {
-      this.setEnvironmentMode('meadow');
-    }
-    const pose = CAMERA_PRESETS[preset];
+    const pose =
+      preset === 'hero45'
+        ? this.getDefaultPoseForEnvironment(this.currentEnvironment)
+        : CAMERA_PRESETS[preset];
     this.targetCameraPos.copy(pose.position);
     this.targetLookAt.copy(pose.target);
+    this.cameraPosition.copy(pose.position);
+    this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
     this.dollyProgress = preset === 'dollyClose' ? 1 : 0;
     this.isTransitioningCamera = true;
-
-    if (this.floatingWoolPad) {
-      if (preset === 'exploded') {
-        this.bedroomSanctuary?.setBedDecorVisible(false);
-        this.floatingWoolPad.setExplodedFactor(1.0);
-        if (this.floatingWoolPad.getActiveLayerIndex() === null) {
-          this.floatingWoolPad.setActiveLayerIndex(0);
-          this.onLayerSelectCallback?.(0);
-        }
-      } else {
-        this.bedroomSanctuary?.setBedDecorVisible(true);
-        this.floatingWoolPad.setExplodedFactor(0.0);
-        this.floatingWoolPad.setActiveLayerIndex(null);
-      }
-    }
   }
 
   public getCameraPreset(): CameraAnglePreset {
     return this.activeCameraPreset;
   }
 
-  public setActiveLayerIndex(index: number | null, focusCamera = false): void {
+  /**
+   * Sanitizes Reset Camera behavior:
+   * ONLY repositions Camera and Controls target to default coordinates relative to the current room.
+   * NEVER mutates `currentEnvironment` or `isExploded` layer anatomy.
+   */
+  public resetCamera(): void {
+    if (!this.context) return;
+    this.activeCameraPreset = 'hero45';
+    this.dollyProgress = 0;
+    const defaultPose = this.getDefaultPoseForEnvironment(this.currentEnvironment);
+    this.targetCameraPos.copy(defaultPose.position);
+    this.targetLookAt.copy(defaultPose.target);
+    this.cameraPosition.copy(defaultPose.position);
+    this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
+    this.isTransitioningCamera = true;
+  }
+
+  public getCameraPosition(): THREE.Vector3 {
+    return this.cameraPosition.clone();
+  }
+
+  public onCameraPositionChange(cb: (pos: THREE.Vector3) => void): void {
+    this.onCameraPositionChangeCallback = cb;
+  }
+
+  /**
+   * Independent Layer Explosion state machine (`isExploded`).
+   * Elevates or collapses the 10 layers strictly in-place inside the current environment
+   * without mutating `currentEnvironment` or `cameraPosition`.
+   */
+  public setExploded(exploded: boolean): void {
+    this.isExploded = exploded;
     if (!this.floatingWoolPad) return;
-    if (index !== null && focusCamera && this.activeCameraPreset !== 'exploded') {
-      this.activeCameraPreset = 'exploded';
-      const pose = CAMERA_PRESETS.exploded;
-      this.targetCameraPos.copy(pose.position);
-      this.targetLookAt.copy(pose.target);
-      this.isTransitioningCamera = true;
+
+    if (exploded) {
+      this.bedroomSanctuary?.setBedDecorVisible(false);
+      this.floatingWoolPad.setExplodedFactor(1.0);
+      if (this.floatingWoolPad.getActiveLayerIndex() === null) {
+        this.floatingWoolPad.setActiveLayerIndex(0);
+        this.onLayerSelectCallback?.(0);
+      }
+    } else {
+      this.bedroomSanctuary?.setBedDecorVisible(true);
+      this.floatingWoolPad.setExplodedFactor(0.0);
+      this.floatingWoolPad.setActiveLayerIndex(null);
     }
+  }
+
+  public getIsExploded(): boolean {
+    return this.isExploded;
+  }
+
+  public setActiveLayerIndex(index: number | null): void {
+    if (!this.floatingWoolPad) return;
+    this.isExploded = index !== null;
+    this.bedroomSanctuary?.setBedDecorVisible(index === null);
     this.floatingWoolPad.setExplodedFactor(index !== null ? 1.0 : 0.0);
     this.floatingWoolPad.setActiveLayerIndex(index);
   }
@@ -644,10 +846,42 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
   public setMattressSize(spec: MattressSizeSpec): void {
     this.floatingWoolPad?.setSizeSpec(spec);
+    if (this.currentEnvironment === 'meadow') {
+      this.floatingWoolPad?.setFloatingEnabled(true);
+    }
   }
 
-  public switchMattressModel(modelKey: MattressModelId): void {
-    this.floatingWoolPad?.switchMattressModel(modelKey);
+  public setActiveModel(modelKey: PuffyModelKey | string): void {
+    this.activeEcoModel = resolvePuffyModelKey(modelKey);
+    if (this.floatingWoolPad) {
+      this.floatingWoolPad.group.visible = true;
+      // Apply immediately while the Craft & Specs Lab pauses the main loop so the mattress
+      // is already in its target height/layer configuration upon closing the overlay.
+      this.floatingWoolPad.updateModel(this.activeEcoModel, this.isLabPaused);
+      if (this.currentEnvironment === 'meadow') {
+        this.floatingWoolPad.setFloatingEnabled(true);
+      }
+    }
+    this.bedroomSanctuary?.syncMattressHeight(
+      this.floatingWoolPad?.getHeightDeltaFromRoyal() ?? 0,
+    );
+    this.sanitizeCameraAndControls();
+  }
+
+  public getActiveModel(): PuffyModelKey {
+    return this.activeEcoModel;
+  }
+
+  public switchMattressModel(modelKey: MattressModelId | PuffyModelKey): void {
+    if (modelKey === 'cloud' || modelKey === 'lux' || modelKey === 'royal') {
+      this.setActiveModel(modelKey);
+      return;
+    }
+    if (this.floatingWoolPad) {
+      this.floatingWoolPad.group.visible = true;
+      this.floatingWoolPad.switchMattressModel(modelKey);
+    }
+    this.sanitizeCameraAndControls();
   }
 
   public setExplodedFactor(factor: number): void {
@@ -661,8 +895,8 @@ export class WoolMeadowSceneModule implements ISceneModule {
       0.55,
       (Math.random() - 0.5) * 0.55,
     );
-    // Softly sinks for 0.15s, holds briefly, then slowly recovers over 0.8s
-    this.floatingWoolPad.triggerCompressionAtWorldPoint(randomOffset, 0.11, 240);
+    // Softly indents top memory foam, holds briefly, then smoothly rebounds over 0.8s
+    this.floatingWoolPad.triggerCompressionAtWorldPoint(randomOffset, 0.035, 320);
   }
 
   public onTelemetry(cb: (readout: TelemetryReadout) => void): void {
@@ -674,7 +908,12 @@ export class WoolMeadowSceneModule implements ISceneModule {
     // Background CPU Throttling: pause procedural simulation when inspecting the Craft & Specs Lab
     if (this.isLabPaused) return;
 
-    const dt = Math.min(deltaTime, 0.05);
+    const safeElapsed = Number.isFinite(elapsedTime) ? elapsedTime : 0;
+    const dt = Number.isFinite(deltaTime)
+      ? THREE.MathUtils.clamp(deltaTime, 0, 0.05)
+      : 0.016;
+
+    this.sanitizeCameraAndControls();
 
     // 1. Smoothly lerp Camera Dolly & Preset transitions with 0.05 damping factor
     if (this.isTransitioningCamera && this.controls) {
@@ -691,18 +930,24 @@ export class WoolMeadowSceneModule implements ISceneModule {
     }
 
     this.controls?.update();
+    this.sanitizeCameraAndControls();
 
     // 2. Update Floating / Bed-Resting Mattress & Memory-Foam Compression Physics
     if (this.floatingWoolPad) {
-      this.floatingWoolPad.update(elapsedTime, dt);
+      this.floatingWoolPad.update(safeElapsed, dt);
+      if (this.currentEnvironment === 'bedroom' && this.bedroomSanctuary) {
+        this.bedroomSanctuary.syncMattressHeight(
+          this.floatingWoolPad.getHeightDeltaFromRoyal(),
+        );
+      }
       const elevation = this.floatingWoolPad.getCurrentElevation();
       const compMm = this.floatingWoolPad.getCompressionMm();
 
       // 3. Meadow-Only Procedural Physics: ONLY run cloud drift & sheep flocking in Meadow Mode!
-      if (this.environmentMode === 'meadow') {
-        this.meadowTerrain?.updateClouds(elapsedTime, dt);
+      if (this.currentEnvironment === 'meadow') {
+        this.meadowTerrain?.updateClouds(safeElapsed, dt);
         this.sheepFlock?.update(
-          elapsedTime,
+          safeElapsed,
           dt,
           elevation,
           compMm > 12,
@@ -711,13 +956,13 @@ export class WoolMeadowSceneModule implements ISceneModule {
       }
 
       // 4. Emit live telemetry to UI throttled to 200ms (5Hz) with smooth interpolation
-      if (this.onTelemetryCallback && elapsedTime - this.lastTelemetryEmit >= 0.2) {
-        this.lastTelemetryEmit = elapsedTime;
-        const targetAirflow = 48.2 + Math.sin(elapsedTime * 0.9) * 0.8;
+      if (this.onTelemetryCallback && safeElapsed - this.lastTelemetryEmit >= 0.2) {
+        this.lastTelemetryEmit = safeElapsed;
+        const targetAirflow = 48.2 + Math.sin(safeElapsed * 0.9) * 0.8;
         this.onTelemetryCallback({
           springCompressionMm: compMm,
           activeSheepCount:
-            this.environmentMode === 'meadow' ? (this.sheepFlock?.getActiveCount() ?? 8) : 0,
+            this.currentEnvironment === 'meadow' ? (this.sheepFlock?.getActiveCount() ?? 8) : 0,
           airflowCfm: Number(targetAirflow.toFixed(1)),
           surfaceTempC: 28.5,
         });

@@ -131,12 +131,17 @@
   font-size: 10.5px;
 }
 
-/* Flagship PBR Model Switcher Pills inside Top Badge */
+/* 3-Model Switcher Pills inside Top Badge */
 .puffy-floating-hero-3d .puffy-model-switcher-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 4px;
+}
+
+.puffy-floating-hero-3d.mobile .puffy-model-switcher-pills {
+  gap: 4px;
+  margin-top: 3px;
 }
 
 .puffy-floating-hero-3d .puffy-model-pill {
@@ -155,6 +160,12 @@
   transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
+.puffy-floating-hero-3d.mobile .puffy-model-pill {
+  gap: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+}
+
 .puffy-floating-hero-3d .puffy-model-pill:hover {
   border-color: var(--puffy3d-navy-ink);
 }
@@ -171,6 +182,11 @@
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.25);
   flex-shrink: 0;
+}
+
+.puffy-floating-hero-3d.mobile .puffy-model-swatch {
+  width: 8px;
+  height: 8px;
 }
 
 /* Trust Badge Overlay on Desktop */
@@ -226,6 +242,7 @@
   gap: 12px;
   border-bottom: 1px solid var(--puffy3d-border-hairline);
   padding-bottom: 12px;
+  flex-shrink: 0;
 }
 
 .puffy-floating-hero-3d .craft-lab-header-actions {
@@ -270,94 +287,534 @@
   gap: 4px;
 }
 
-.puffy-floating-hero-3d .craft-lab-body-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 14px;
-  align-items: stretch;
-  margin: 12px 0;
+/* 1. Primary Interactive Cream Card */
+.puffy-floating-hero-3d .craft-cream-card {
+  background-color: #faf7f2;
+  border: 1px solid #e5e1d8;
+  border-radius: 16px;
+  padding: 14px 16px 16px;
+  box-shadow: 0 8px 24px rgba(43, 47, 68, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+  flex-shrink: 0;
 }
 
-.puffy-floating-hero-3d.mobile .craft-lab-body-grid {
+.puffy-floating-hero-3d .craft-cream-card-body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.28fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.puffy-floating-hero-3d.mobile .craft-cream-card-body {
   grid-template-columns: 1fr;
 }
 
-.puffy-floating-hero-3d .craft-cutaway-stage {
+@media (max-width: 768px) {
+  .puffy-floating-hero-3d .craft-cream-card-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.puffy-floating-hero-3d .craft-cream-visual-col {
+  position: relative;
+  background: radial-gradient(circle at 50% 42%, #ffffff 0%, #f1ece2 100%);
+  border: 1px solid rgba(43, 47, 68, 0.08);
+  border-radius: 12px;
+  height: 260px;
+  min-height: 240px;
+  max-height: 280px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.puffy-floating-hero-3d .craft-cream-3d-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  max-height: 280px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.puffy-floating-hero-3d .craft-cream-3d-viewport canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+}
+
+.puffy-floating-hero-3d .craft-cream-3d-caption {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(43, 47, 68, 0.12);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #4b4f62;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.puffy-floating-hero-3d .craft-cream-details-col {
   background-color: var(--puffy3d-pure-white);
-  border: 1px solid var(--puffy3d-border-hairline);
-  border-radius: 14px;
-  padding: 12px;
+  border: 1px solid rgba(43, 47, 68, 0.08);
+  border-radius: 12px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
 }
 
-.puffy-floating-hero-3d .craft-cutaway-img-wrap {
-  position: relative;
-  width: 100%;
+.puffy-floating-hero-3d .craft-cream-badge-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.puffy-floating-hero-3d .craft-cream-badge {
+  background-color: #b78d4a;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 5px;
+  letter-spacing: 0.02em;
+}
+
+.puffy-floating-hero-3d .craft-cream-subtitle {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #5a5e70;
+}
+
+.puffy-floating-hero-3d .craft-cream-exclusive {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #067a57;
+  background-color: rgba(6, 122, 87, 0.09);
+  border: 1px solid rgba(6, 122, 87, 0.25);
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.puffy-floating-hero-3d .craft-cream-headline {
+  margin: 0;
+  font-family: var(--puffy3d-serif);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.22;
+  color: var(--puffy3d-navy-ink);
+}
+
+.puffy-floating-hero-3d .craft-cream-copy-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.puffy-floating-hero-3d .craft-cream-copy-line {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #414558;
+}
+
+.puffy-floating-hero-3d .craft-cream-copy-line strong {
+  color: var(--puffy3d-navy-ink);
+  font-weight: 700;
+}
+
+.puffy-floating-hero-3d .craft-cream-benefits-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding-top: 10px;
+  border-top: 1px solid #ece8e0;
+}
+
+.puffy-floating-hero-3d .craft-cream-benefit-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--puffy3d-navy-ink);
+}
+
+.puffy-floating-hero-3d .craft-cream-benefit-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background-color: #f6f1e7;
+  border: 1px solid rgba(183, 141, 74, 0.35);
+  color: #9e7535;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.puffy-floating-hero-3d .craft-cutaway-img-wrap img {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
+.puffy-floating-hero-3d .craft-cream-benefit-icon svg {
+  width: 13px;
+  height: 13px;
 }
 
-.puffy-floating-hero-3d .craft-tooltip-card {
+.puffy-floating-hero-3d .craft-cream-disclaimer {
+  margin: 0;
+  font-size: 10.5px;
+  color: #7c8091;
+}
+
+/* 2. Redesigned Lower Navy Panel: Sleek Mattress Spec & Action Bar */
+.puffy-floating-hero-3d .craft-navy-action-bar {
   background-color: var(--puffy3d-navy-ink);
   color: var(--puffy3d-pure-white);
-  border-radius: 10px;
-  padding: 11px 13px;
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.puffy-floating-hero-3d .craft-tooltip-header {
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 5px;
+  gap: 14px;
   flex-wrap: wrap;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(28, 32, 48, 0.16);
 }
 
-.puffy-floating-hero-3d .craft-tooltip-title {
-  color: var(--puffy3d-gold-leather);
-  font-family: var(--puffy3d-serif);
-  font-size: 13.5px;
+.puffy-floating-hero-3d .craft-navy-specs {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.88);
 }
 
-.puffy-floating-hero-3d .craft-tooltip-badge {
-  background: rgba(197, 168, 128, 0.22);
-  color: #f5e6c8;
-  padding: 2px 8px;
-  border-radius: 4px;
+.puffy-floating-hero-3d .craft-navy-model-name {
   font-weight: 700;
+  color: #f5e6c8;
+}
+
+.puffy-floating-hero-3d .craft-navy-dot {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.puffy-floating-hero-3d .craft-navy-firmness {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.puffy-floating-hero-3d .craft-model-stops-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.puffy-floating-hero-3d .craft-model-stop-connector {
+  width: 14px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.28);
+  flex-shrink: 0;
+}
+
+.puffy-floating-hero-3d .craft-model-stop-btn {
+  font-family: var(--puffy3d-sans);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-model-stop-btn:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.puffy-floating-hero-3d .craft-model-stop-btn[data-selected="true"] {
+  background-color: #067a57;
+  border-color: #5eead4;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(6, 122, 87, 0.35);
+}
+
+.puffy-floating-hero-3d .craft-firmness-slider-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.puffy-floating-hero-3d .craft-firmness-end {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
+}
+
+.puffy-floating-hero-3d .craft-firmness-track-wrap {
+  position: relative;
+  width: 138px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.puffy-floating-hero-3d .craft-firmness-range-input {
+  position: absolute;
+  inset: -4px -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 8px);
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.puffy-floating-hero-3d .craft-firmness-track {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.22);
+}
+
+.puffy-floating-hero-3d .craft-firmness-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #9adbc3 0%, #c5a880 100%);
+  transition: left 0.35s cubic-bezier(0.22, 1, 0.36, 1), width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.puffy-floating-hero-3d .craft-firmness-notch {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.puffy-floating-hero-3d .craft-firmness-knob {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(-50%, -50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 2px solid #c5a880;
+  box-shadow: 0 0 0 2px rgba(43, 47, 68, 0.72);
+  pointer-events: none;
+  transition: left 0.35s cubic-bezier(0.22, 1, 0.36, 1), width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.puffy-floating-hero-3d .craft-firmness-range-input:focus-visible + .craft-firmness-track .craft-firmness-knob {
+  box-shadow: 0 0 0 3px #5eead4;
+}
+
+.puffy-floating-hero-3d .craft-firmness-readout {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f5e6c8;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(245, 230, 200, 0.25);
+  border-radius: 9999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.puffy-floating-hero-3d.mobile .craft-navy-action-bar {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.puffy-floating-hero-3d.mobile .craft-navy-specs {
+  justify-content: center;
   font-size: 11px;
 }
 
-.puffy-floating-hero-3d .craft-tooltip-tagline {
-  font-weight: 700;
-  color: var(--puffy3d-pure-white);
-  font-size: 12.5px;
-  margin-bottom: 3px;
+.puffy-floating-hero-3d.mobile .craft-model-stop-btn {
+  font-size: 10px;
+  padding: 2px 8px;
 }
 
-.puffy-floating-hero-3d .craft-tooltip-desc {
-  color: rgba(255, 255, 255, 0.88);
+.puffy-floating-hero-3d.mobile .craft-model-stop-connector {
+  width: 8px;
+}
+
+.puffy-floating-hero-3d.mobile .craft-firmness-track-wrap {
+  width: 108px;
+}
+
+.puffy-floating-hero-3d.mobile .craft-navy-actions {
+  justify-content: center;
+}
+
+@media (max-width: 960px) {
+  .puffy-floating-hero-3d .craft-navy-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .puffy-floating-hero-3d .craft-navy-specs,
+  .puffy-floating-hero-3d .craft-navy-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .puffy-floating-hero-3d .canvas-top-badge {
+    top: 10px;
+    left: 10px;
+    max-width: calc(100% - 20px);
+    padding: 7px 10px;
+  }
+
+  .puffy-floating-hero-3d .puffy-model-switcher-pills {
+    gap: 4px;
+  }
+
+  .puffy-floating-hero-3d .puffy-model-pill {
+    gap: 4px;
+    padding: 2px 7px;
+    font-size: 10px;
+  }
+
+  .puffy-floating-hero-3d .craft-model-stop-btn {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+
+  .puffy-floating-hero-3d .craft-model-stop-connector {
+    width: 8px;
+  }
+
+  .puffy-floating-hero-3d .craft-firmness-track-wrap {
+    width: 112px;
+  }
+}
+
+.puffy-floating-hero-3d .craft-navy-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.puffy-floating-hero-3d .craft-navy-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 5px 12px 5px 7px;
+  font-family: var(--puffy3d-sans);
   font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-navy-toggle-btn[data-active="true"] {
+  background-color: rgba(6, 122, 87, 0.35);
+  border-color: #36c295;
+}
+
+.puffy-floating-hero-3d .craft-toggle-track {
+  position: relative;
+  width: 28px;
+  height: 16px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.28);
+  transition: background-color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-navy-toggle-btn[data-active="true"] .craft-toggle-track {
+  background-color: #067a57;
+}
+
+.puffy-floating-hero-3d .craft-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  transition: transform 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-navy-toggle-btn[data-active="true"] .craft-toggle-thumb {
+  transform: translateX(12px);
+}
+
+.puffy-floating-hero-3d .craft-navy-reset-btn {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-family: var(--puffy3d-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-navy-reset-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
 .puffy-floating-hero-3d .craft-10layer-tabs-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
 }
 
 .puffy-floating-hero-3d .craft-tab-arrow-btn {
@@ -444,100 +901,13 @@
   color: var(--puffy3d-pure-white);
 }
 
-.puffy-floating-hero-3d .craft-structured-specs-wrap {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 9px;
-  padding-top: 9px;
-  border-top: 1px solid rgba(229, 227, 223, 0.22);
-}
-
-.puffy-floating-hero-3d.mobile .craft-structured-specs-wrap {
-  grid-template-columns: 1fr;
-}
-
-.puffy-floating-hero-3d .craft-spec-detail-block {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(229, 227, 223, 0.16);
-  border-radius: 8px;
-  padding: 7px 9px;
-}
-
-.puffy-floating-hero-3d .craft-spec-detail-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #e5e3df;
-  margin-bottom: 3px;
-}
-
-.puffy-floating-hero-3d .craft-spec-detail-text {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.86);
-}
-
-.puffy-floating-hero-3d .craft-layer-list {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  max-height: 255px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.puffy-floating-hero-3d .craft-layer-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  text-align: left;
-  background-color: var(--puffy3d-pure-white);
-  border: 1px solid var(--puffy3d-border-hairline);
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-family: var(--puffy3d-sans);
-  font-size: 12px;
-  color: var(--puffy3d-navy-ink);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.puffy-floating-hero-3d .craft-layer-btn[data-active="true"] {
-  border-color: var(--puffy3d-ocean-teal);
-  background-color: rgba(6, 122, 87, 0.08);
-  font-weight: 700;
-}
-
-.puffy-floating-hero-3d .craft-layer-btn-left {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.puffy-floating-hero-3d .craft-layer-btn-right {
-  font-size: 11px;
-  color: #5c5f70;
-  flex-shrink: 0;
-}
-
-.puffy-floating-hero-3d .craft-layer-swatch {
-  width: 13px;
-  height: 13px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  flex-shrink: 0;
-}
+/* Removed redundant .craft-structured-specs-wrap & .craft-layer-list */
 
 .puffy-floating-hero-3d .craft-metrics-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .puffy-floating-hero-3d.mobile .craft-metrics-strip {

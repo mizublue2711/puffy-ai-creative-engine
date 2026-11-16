@@ -1,5 +1,11 @@
 import * as THREE from 'three';
-import {PUFFY_10_LAYERS} from './puffyLayersData.ts';
+import {
+  getModelConfig,
+  isLayerActiveInModel,
+  PUFFY_10_LAYERS,
+  resolvePuffyModelKey,
+  type PuffyModelKey,
+} from './puffyLayersData.ts';
 import type {MattressSizeSpec} from './types.ts';
 import {
   createMattressPBRMaterials,
@@ -7,22 +13,11 @@ import {
   PUFFY_FLAGSHIP_PRESETS,
   switchMattressModel,
   updateColorPresetTransitions,
+  updateModelAnatomy,
   type LoadedAssets,
   type MattressModelConfig,
   type MattressModelId,
 } from './MattressAnatomy.ts';
-
-interface FoamTweenState {
-  startTime: number;
-  duration: number;
-  fromSinkY: number;
-  toSinkY: number;
-  fromScaleY: number;
-  toScaleY: number;
-  fromScaleXZ: number;
-  toScaleXZ: number;
-  mode: 'press' | 'release' | 'idle';
-}
 
 interface LayerLiftSlideTween {
   defaultY: number;
@@ -55,14 +50,6 @@ function easeInOutQuad(t: number): number {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
 
-// Soft breathing cushion rebound matching elastic.out(1, 0.5) without harsh oscillation
-function easeOutPlushMemoryFoam(t: number): number {
-  if (t <= 0) return 0;
-  if (t >= 1) return 1;
-  const c4 = (2 * Math.PI) / 0.5;
-  return Math.pow(2, -11 * t) * Math.sin((t - 0.5 / 4) * c4) * 0.12 + (1 - Math.pow(1 - t, 3));
-}
-
 const OCEAN_TEAL_EMISSIVE = new THREE.Color('#067A57');
 const ZERO_EMISSIVE = new THREE.Color('#000000');
 
@@ -78,6 +65,45 @@ export class FloatingWoolPad {
   public readonly materials: Map<string, THREE.MeshStandardMaterial>;
   public readonly loadedAssets: LoadedAssets;
   private activeModelKey: MattressModelId = 'puffy-royal';
+  private activeEcoModelKey: PuffyModelKey = 'royal';
+
+  // Encasement tray & top cover dynamic sub-mesh references for multi-model Lego swapping
+  private sidewallMesh!: THREE.Mesh;
+  private badgeMesh!: THREE.Mesh;
+  private badgeRoyalMesh!: THREE.Mesh;
+  private badgeLuxMesh!: THREE.Mesh;
+  private badgeCloudMesh!: THREE.Mesh;
+  private badgeMonarchMesh!: THREE.Mesh;
+  private handleMeshes: THREE.Mesh[] = [];
+  private hybridTagMesh!: THREE.Mesh;
+  private cornerStrapMeshes: THREE.Mesh[] = [];
+
+  // Baseline dimensions for 14" Puffy Royal encasement & internal layers 1..9
+  private readonly baseLayerThickness: number[] = [
+    0.032, // Layer 1: Quilted Cloud Cover underside slab
+    0.024, // Layer 2: Premium Blended Wool
+    0.018, // Layer 3: Fire-Resistant Fiber Layer
+    0.034, // Layer 4: Comfort Quilt Foam Layer
+    0.038, // Layer 5: Plush Contouring Foam
+    0.036, // Layer 6: Reflexive Memory Foam
+    0.046, // Layer 7: Cloud Breeze™ Cooling Technology
+    0.118, // Layer 8: Contour-Adapt Pocket Coils
+    0.044, // Layer 9: Firm Core Support Foam
+  ];
+  private readonly baseGripBottomY = -0.238; // gripBase center -0.222, height 0.032
+  private readonly baseSidewallBottomY = -0.206;
+  private readonly baseSidewallHeight = 0.394; // spans -0.206 to +0.188
+  private readonly baseCharcoalHeight = 0.264;
+
+  // 0.4s ease-out ecosystem model morph state (`cloud` 10", `lux` 12", `royal` 14")
+  private currentHeightRatio = 1.0;
+  private targetHeightRatio = 1.0;
+  private fromHeightRatio = 1.0;
+  private modelMorphStartTime = 0;
+  private readonly modelMorphDuration = 0.4;
+  private isMorphingModel = false;
+  private pendingMorphStart = false;
+  private isExplodedStackMode = false;
 
   // 10-Layer Puffy Royal Interactive Stack (indexed 0..9 matching PUFFY_10_LAYERS)
   public readonly layerMeshes: THREE.Object3D[] = [];
@@ -111,25 +137,44 @@ export class FloatingWoolPad {
     -0.188, // Layer 9: Firm Core Support Foam (1")
     0.0, // Layer 10: Grip Base & Open-Top Encasement Tray
   ];
+  private readonly targetDefaultLayerY: number[] = [...this.defaultLayerY];
+  private readonly fromDefaultLayerY: number[] = [...this.defaultLayerY];
+  private readonly currentLayerScaleY: number[] = new Array(9).fill(1.0);
+  private readonly targetLayerScaleY: number[] = new Array(9).fill(1.0);
+  private readonly fromLayerScaleY: number[] = new Array(9).fill(1.0);
 
-  // Method A: Whole-Pad Cushion Sink & Scale Compression state
-  private currentSinkY = 0;
+  // Top Quilted Foam Mesh & Rest Vertices for Local Memory Foam Indentation
+  public topQuiltMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial> | null = null;
+  private topQuiltGeo: THREE.PlaneGeometry | null = null;
+  private topBaseVertices: Float32Array | null = null;
+  private isDented = false;
+
+  // Local Memory Foam Indentation State
+  private localHitPoint = new THREE.Vector3(0, 0, 0);
+  private currentDentDepth = 0.0;
+  private targetDentDepth = 0.0;
+  private readonly maxDentDepth = 0.035; // 35mm authentic local memory-foam sink
+  private readonly dentRadius = 0.28; // Gaussian sigma radius (~0.5m gentle depression)
+
+  // Two-Tier Motion Decoupling: Continuous Antigravity Idle Wave + Damped Buoyancy
+  private readonly floatSpeed = 1.2;
+  private readonly floatAmplitude = 0.045; // Smooth zero-g elevation oscillation
+  private currentBuoyancySinkY = 0.0;
+  private targetBuoyancySinkY = 0.0;
+  private readonly maxBuoyancySink = 0.035; // Damped buoyancy (strictly <= 0.05m / ~2 inches clamp)
+
+  // Macro Inertial Angular Tilt / Torque Response
+  private currentTorqueRotX = 0.0;
+  private currentTorqueRotZ = 0.0;
+  private targetTorqueRotX = 0.0;
+  private targetTorqueRotZ = 0.0;
+
+  // Subtle volumetric breathing scale
   private currentPressScaleY = 1.0;
   private currentPressScaleXZ = 1.0;
+
   private isPressed = false;
   private autoReleaseTimer: number | null = null;
-
-  private tween: FoamTweenState = {
-    startTime: 0,
-    duration: 0.15,
-    fromSinkY: 0,
-    toSinkY: 0,
-    fromScaleY: 1,
-    toScaleY: 1,
-    fromScaleXZ: 1,
-    toScaleXZ: 1,
-    mode: 'idle',
-  };
 
   // Tactile hover state (1° max cursor parallax tilt)
   private isHovered = false;
@@ -269,13 +314,8 @@ export class FloatingWoolPad {
     this.layer4ComfortQuiltMesh.position.set(0, this.defaultLayerY[3], 0);
     this.internalCoreGroup.add(this.layer4ComfortQuiltMesh);
 
-    // LAYER 3 (index 2): Fire-Resistant Fiber Layer (#D9D6D0, roughness: 0.9)
-    const matFireFelt = this.materials.get('mat_wool')!.clone();
-    matFireFelt.name = 'mat_fire_felt';
-    matFireFelt.color.set('#D9D6D0');
-    matFireFelt.roughness = 0.9;
-    matFireFelt.metalness = 0.0;
-    this.disposables.push(matFireFelt);
+    // LAYER 3 (index 2): Fire-Resistant Fiber Layer (`mat_fire_felt` #E8D7B8, roughness: 0.92)
+    const matFireFelt = this.materials.get('mat_fire_felt')!;
     this.layer3FireFeltMesh = this.createPBRSlabMesh(coreWidth, 0.018, coreLength, matFireFelt);
     this.layer3FireFeltMesh.position.set(0, this.defaultLayerY[2], 0);
     this.internalCoreGroup.add(this.layer3FireFeltMesh);
@@ -350,17 +390,266 @@ export class FloatingWoolPad {
         mode: 'reset',
       });
     });
+
+    // Synchronize initial seamless 14" Royal stacking & badge/UV state
+    this.updateModel('royal', true);
+  }
+
+  /**
+   * Updates the 3D mattress to the selected Puffy ecosystem model (`cloud` 10", `lux` 12", `royal` 14"):
+   * toggles active layers, recomputes zero-gap vertical cavity stacking, updates badge & sidewall UVs,
+   * and triggers a smooth 0.4s ease-out morph transition.
+   */
+  public updateModel(modelKey: PuffyModelKey | string, immediate = false): void {
+    const resolvedKey = resolvePuffyModelKey(modelKey);
+    const cfg = getModelConfig(resolvedKey);
+    const rawHeightRatio = cfg.profileHeightInches / 14;
+    const newTargetHeightRatio =
+      Number.isFinite(rawHeightRatio) && rawHeightRatio > 0
+        ? THREE.MathUtils.clamp(rawHeightRatio, 0.5, 1.25)
+        : 1.0;
+
+    // If called before the first update() tick, apply immediately so geometry never waits on uninitialized clocks
+    const applyImmediate = immediate || this.lastElapsedTime === 0;
+
+    this.group.visible = true;
+    this.encasementTrayGroup.visible = true;
+    this.internalCoreGroup.visible = true;
+
+    this.activeEcoModelKey = resolvedKey;
+    this.targetHeightRatio = newTargetHeightRatio;
+
+    updateModelAnatomy(resolvedKey, this.loadedAssets, newTargetHeightRatio);
+
+    // Toggle model-specific sidewall materials, dedicated PBR badge meshes, handles, hybrid tag & corner straps
+    if (this.sidewallMesh) {
+      const {sidewallRoyal, sidewallLux, sidewallCloudFront, sidewallCloudWrap} =
+        this.loadedAssets.materials;
+      if (resolvedKey === 'cloud') {
+        this.sidewallMesh.material = [sidewallCloudFront, sidewallCloudWrap];
+      } else if (resolvedKey === 'lux') {
+        this.sidewallMesh.material = [sidewallLux, sidewallLux];
+      } else {
+        this.sidewallMesh.material = [sidewallRoyal, sidewallRoyal];
+      }
+    }
+
+    if (this.badgeRoyalMesh) this.badgeRoyalMesh.visible = resolvedKey === 'royal';
+    if (this.badgeLuxMesh) this.badgeLuxMesh.visible = resolvedKey === 'lux';
+    if (this.badgeCloudMesh) this.badgeCloudMesh.visible = resolvedKey === 'cloud';
+    if (this.badgeMonarchMesh) this.badgeMonarchMesh.visible = false;
+    this.badgeMesh =
+      resolvedKey === 'cloud'
+        ? this.badgeCloudMesh
+        : resolvedKey === 'lux'
+          ? this.badgeLuxMesh
+          : this.badgeRoyalMesh;
+
+    const showHybridExtras = resolvedKey !== 'cloud';
+    for (const handle of this.handleMeshes) {
+      handle.visible = showHybridExtras;
+    }
+    if (this.hybridTagMesh) {
+      this.hybridTagMesh.visible = showHybridExtras;
+    }
+    for (const strap of this.cornerStrapMeshes) {
+      strap.visible = resolvedKey !== 'cloud';
+    }
+
+    for (let i = 0; i < this.layerMeshes.length; i++) {
+      this.layerMeshes[i].visible = isLayerActiveInModel(i + 1, resolvedKey);
+    }
+
+    const cavityBottomY = this.baseSidewallBottomY;
+    const targetSidewallH = this.baseSidewallHeight * newTargetHeightRatio;
+    const targetCasingTopY = cavityBottomY + targetSidewallH;
+
+    let activeInternalBaseSum = 0;
+    for (let i = 1; i <= 8; i++) {
+      if (this.layerMeshes[i]?.visible) {
+        activeInternalBaseSum += this.baseLayerThickness[i];
+      }
+    }
+    const fillScale =
+      activeInternalBaseSum > 0 && Number.isFinite(targetSidewallH)
+        ? Math.max(0.05, targetSidewallH / activeInternalBaseSum)
+        : 1.0;
+
+    let cursorY = cavityBottomY;
+    for (let i = 8; i >= 1; i--) {
+      if (this.layerMeshes[i]?.visible) {
+        const scaledH = this.baseLayerThickness[i] * fillScale;
+        this.targetLayerScaleY[i] = fillScale;
+        this.targetDefaultLayerY[i] = cursorY + scaledH * 0.5;
+        cursorY += scaledH;
+      } else {
+        this.targetLayerScaleY[i] = 1.0;
+        this.targetDefaultLayerY[i] = cursorY;
+      }
+    }
+
+    // Layer 1 anchors flush at targetCasingTopY with unstretched quilting (scale.y = 1.0)
+    this.targetLayerScaleY[0] = 1.0;
+    this.targetDefaultLayerY[0] = targetCasingTopY;
+    // Layer 10 (encasementTrayGroup) stays fixed at 0.0 (gripBase bottom anchored at -0.238)
+    this.targetDefaultLayerY[9] = 0.0;
+
+    if (applyImmediate) {
+      this.isMorphingModel = false;
+      this.pendingMorphStart = false;
+      this.currentHeightRatio = newTargetHeightRatio;
+      this.fromHeightRatio = newTargetHeightRatio;
+      this.applyTrayGeometryForHeightRatio(this.currentHeightRatio);
+
+      for (let i = 0; i < 9; i++) {
+        this.defaultLayerY[i] = this.targetDefaultLayerY[i];
+        this.fromDefaultLayerY[i] = this.targetDefaultLayerY[i];
+        this.currentLayerScaleY[i] = this.targetLayerScaleY[i];
+        this.fromLayerScaleY[i] = this.targetLayerScaleY[i];
+        this.layerMeshes[i].scale.y = Math.max(
+          0.001,
+          i === 0 ? 1.0 : this.currentLayerScaleY[i],
+        );
+        this.layerMeshes[i].userData.defaultY = this.defaultLayerY[i];
+        this.layerKinematics[i].defaultY = this.defaultLayerY[i];
+        if (this.activeLayerIndex === null && !this.isExplodedStackMode) {
+          this.layerKinematics[i].fromY = this.defaultLayerY[i];
+          this.layerKinematics[i].liftTargetY = this.defaultLayerY[i];
+          this.layerKinematics[i].currentY = this.defaultLayerY[i];
+          this.layerMeshes[i].position.y = this.defaultLayerY[i];
+        }
+      }
+      this.defaultLayerY[9] = this.targetDefaultLayerY[9];
+      this.fromDefaultLayerY[9] = this.targetDefaultLayerY[9];
+      this.layerMeshes[9].userData.defaultY = this.defaultLayerY[9];
+      this.layerKinematics[9].defaultY = this.defaultLayerY[9];
+    } else {
+      this.fromHeightRatio = Number.isFinite(this.currentHeightRatio)
+        ? this.currentHeightRatio
+        : newTargetHeightRatio;
+      for (let i = 0; i < 9; i++) {
+        this.fromDefaultLayerY[i] = Number.isFinite(this.defaultLayerY[i])
+          ? this.defaultLayerY[i]
+          : this.targetDefaultLayerY[i];
+        this.fromLayerScaleY[i] =
+          Number.isFinite(this.currentLayerScaleY[i]) && this.currentLayerScaleY[i] > 0
+            ? this.currentLayerScaleY[i]
+            : this.targetLayerScaleY[i];
+      }
+      this.fromDefaultLayerY[9] = Number.isFinite(this.defaultLayerY[9])
+        ? this.defaultLayerY[9]
+        : 0.0;
+      this.modelMorphStartTime = this.lastElapsedTime;
+      this.pendingMorphStart = true;
+      this.isMorphingModel = true;
+    }
+
+    if (this.isExplodedStackMode) {
+      this.setAllLayersExplodedStack(true, applyImmediate);
+    } else if (this.activeLayerIndex !== null) {
+      this.setActiveLayerIndex(this.activeLayerIndex);
+      if (applyImmediate) {
+        for (let i = 0; i < this.layerMeshes.length; i++) {
+          const kin = this.layerKinematics[i];
+          kin.currentX = 0;
+          kin.currentY = Number.isFinite(kin.liftTargetY) ? kin.liftTargetY : kin.defaultY;
+          kin.currentZ = Number.isFinite(kin.slideTargetZ) ? kin.slideTargetZ : 0;
+          kin.currentRotX = Number.isFinite(kin.targetRotX) ? kin.targetRotX : 0;
+          kin.currentEmissive = kin.toEmissive;
+          this.layerMeshes[i].position.set(kin.currentX, kin.currentY, kin.currentZ);
+          this.layerMeshes[i].rotation.set(kin.currentRotX, 0, 0);
+        }
+      }
+    }
+  }
+
+  private applyTrayGeometryForHeightRatio(ratio: number): void {
+    const safeRatio = Number.isFinite(ratio) && ratio > 0 ? ratio : 1.0;
+    const clampedRatio = THREE.MathUtils.clamp(safeRatio, 0.5, 1.25);
+
+    if (this.sidewallMesh) {
+      this.sidewallMesh.scale.y = clampedRatio;
+      this.sidewallMesh.position.y =
+        this.baseSidewallBottomY + this.baseSidewallHeight * clampedRatio * 0.5;
+    }
+
+    const scaledCharcoalY =
+      this.baseSidewallBottomY + this.baseCharcoalHeight * clampedRatio * 0.5;
+    const scaledFullFrontMidY =
+      this.baseSidewallBottomY + this.baseSidewallHeight * clampedRatio * 0.5;
+    const badgeScale = 0.85 + 0.15 * clampedRatio;
+
+    for (const badge of [this.badgeRoyalMesh, this.badgeLuxMesh, this.badgeMonarchMesh]) {
+      if (!badge) continue;
+      badge.position.y = scaledCharcoalY;
+      badge.scale.set(badgeScale, badgeScale, 1);
+    }
+    if (this.badgeCloudMesh) {
+      this.badgeCloudMesh.position.y = scaledFullFrontMidY;
+      this.badgeCloudMesh.scale.set(badgeScale, badgeScale, 1);
+    }
+
+    for (const handle of this.handleMeshes) {
+      handle.position.y = scaledCharcoalY;
+      handle.scale.y = clampedRatio;
+    }
+
+    if (this.hybridTagMesh) {
+      this.hybridTagMesh.position.y = scaledCharcoalY;
+      this.hybridTagMesh.scale.y = clampedRatio;
+    }
+
+    if (this.hitProxyMesh) {
+      const proxyScaleY = Math.max(
+        0.1,
+        (0.077 + this.baseSidewallHeight * clampedRatio) / 0.471,
+      );
+      this.hitProxyMesh.scale.y = proxyScaleY;
+      this.hitProxyMesh.position.y = this.baseGripBottomY + 0.471 * proxyScaleY * 0.5;
+    }
+  }
+
+  public getActiveEcoModelKey(): PuffyModelKey {
+    return this.activeEcoModelKey;
+  }
+
+  public getHeightDeltaFromRoyal(): number {
+    const safeRatio = Number.isFinite(this.currentHeightRatio) ? this.currentHeightRatio : 1.0;
+    return (safeRatio - 1.0) * this.baseSidewallHeight;
+  }
+
+  public getCurrentHeightRatio(): number {
+    return Number.isFinite(this.currentHeightRatio) ? this.currentHeightRatio : 1.0;
   }
 
   /**
    * Dual Flagship Modular "Lego" Swapping Logic:
-   * Switches between `'puffy-royal'` (Midnight Navy Fluted Velvet + Puffy ROYAL Badge)
-   * and `'puffy-monarch'` (Espresso Mocha Micro-Diamond + Puffy MONARCH Badge)
-   * while keeping all shared components (Top Cloud Cover, Charcoal Lower Border, Piping, Coils) untouched.
+   * Routes ecosystem keys (`'cloud' | 'lux' | 'royal'`) to `updateModel`, and preserves
+   * `'puffy-royal'` / `'puffy-monarch'` flagship preset switching.
    */
-  public switchMattressModel(modelKey: MattressModelId): void {
+  public switchMattressModel(modelKey: MattressModelId | PuffyModelKey): void {
+    if (modelKey === 'cloud' || modelKey === 'lux' || modelKey === 'royal') {
+      this.updateModel(modelKey);
+      return;
+    }
     this.activeModelKey = modelKey;
     switchMattressModel(modelKey, this.loadedAssets);
+
+    const isMonarch = modelKey === 'puffy-monarch';
+    if (this.badgeRoyalMesh) this.badgeRoyalMesh.visible = !isMonarch;
+    if (this.badgeLuxMesh) this.badgeLuxMesh.visible = false;
+    if (this.badgeCloudMesh) this.badgeCloudMesh.visible = false;
+    if (this.badgeMonarchMesh) this.badgeMonarchMesh.visible = isMonarch;
+    this.badgeMesh = isMonarch ? this.badgeMonarchMesh : this.badgeRoyalMesh;
+    for (const handle of this.handleMeshes) {
+      handle.visible = true;
+    }
+    if (this.hybridTagMesh) {
+      this.hybridTagMesh.visible = true;
+    }
+    for (const strap of this.cornerStrapMeshes) {
+      strap.visible = true;
+    }
   }
 
   public getActiveModelConfig(): MattressModelConfig {
@@ -376,11 +665,20 @@ export class FloatingWoolPad {
    * - Inactive layers smoothly reset back to `{ x: 0, y: defaultY, z: 0, rotation: (0,0,0) }` over 0.3s (`power2.inOut`).
    */
   public setActiveLayerIndex(index: number | null): void {
-    const normalized =
+    this.isExplodedStackMode = false;
+    let normalized =
       index !== null && index >= 0 && index < this.layerMeshes.length ? index : null;
+
+    if (normalized !== null && !this.layerMeshes[normalized]?.visible) {
+      const firstVisible = this.layerMeshes.findIndex((layerObj) => layerObj.visible);
+      normalized = firstVisible >= 0 ? firstVisible : null;
+    }
+
     this.activeLayerIndex = normalized;
 
-    const trayRimClearanceY = 0.24; // Ensures even lower layers (L7, L8, L9) clear the open-top tray rim at y = +0.165
+    const targetCasingTopY =
+      this.baseSidewallBottomY + this.baseSidewallHeight * this.targetHeightRatio;
+    const trayRimClearanceY = targetCasingTopY + 0.052; // Ensures even lower layers clear the active tray rim
 
     for (let i = 0; i < this.layerMeshes.length; i++) {
       const kin = this.layerKinematics[i];
@@ -391,6 +689,15 @@ export class FloatingWoolPad {
       kin.fromRotX = kin.currentRotX;
       kin.fromEmissive = kin.currentEmissive;
 
+      if (!this.layerMeshes[i].visible) {
+        kin.mode = 'reset';
+        kin.liftTargetY = this.targetDefaultLayerY[i];
+        kin.slideTargetZ = 0;
+        kin.targetRotX = 0;
+        kin.toEmissive = 0.0;
+        continue;
+      }
+
       // Layer 10 (index 9) is `encasementTrayGroup`: slide forward & drop slightly without mutating or green-tinting casing color
       if (i === 9) {
         if (normalized === 9) {
@@ -400,7 +707,7 @@ export class FloatingWoolPad {
           kin.targetRotX = 0;
         } else {
           kin.mode = 'reset';
-          kin.liftTargetY = kin.defaultY;
+          kin.liftTargetY = this.targetDefaultLayerY[i];
           kin.slideTargetZ = 0;
           kin.targetRotX = 0;
         }
@@ -411,7 +718,7 @@ export class FloatingWoolPad {
       if (normalized !== null && i === normalized) {
         // Active Layer (Layers 1..9): Lift-then-Slide!
         kin.mode = 'lift-then-slide';
-        kin.liftTargetY = Math.max(kin.defaultY + 0.3, trayRimClearanceY);
+        kin.liftTargetY = Math.max(this.targetDefaultLayerY[i] + 0.3, trayRimClearanceY);
         kin.slideTargetZ = kin.defaultZ + 0.32;
         kin.targetRotX = THREE.MathUtils.degToRad(3);
         kin.toEmissive = 0.22;
@@ -419,10 +726,11 @@ export class FloatingWoolPad {
         // Layers positioned ABOVE the selected layer lift cleanly upward at z=0 so the active layer
         // can lift above the tray rim without passing through upper layers
         const activeTargetY = Math.max(
-          this.defaultLayerY[normalized] + 0.3,
+          this.targetDefaultLayerY[normalized] + 0.3,
           trayRimClearanceY,
         );
-        const stackOffsetAboveActive = this.defaultLayerY[i] - this.defaultLayerY[normalized] + 0.045;
+        const stackOffsetAboveActive =
+          this.targetDefaultLayerY[i] - this.targetDefaultLayerY[normalized] + 0.045;
         kin.mode = 'upper-clearance';
         kin.liftTargetY = activeTargetY + stackOffsetAboveActive;
         kin.slideTargetZ = 0;
@@ -431,7 +739,7 @@ export class FloatingWoolPad {
       } else {
         // Inactive layers below the active layer (or all layers when deselected) reset to resting position
         kin.mode = 'reset';
-        kin.liftTargetY = kin.defaultY;
+        kin.liftTargetY = this.targetDefaultLayerY[i];
         kin.slideTargetZ = 0;
         kin.targetRotX = 0;
         kin.toEmissive = 0.0;
@@ -444,11 +752,23 @@ export class FloatingWoolPad {
   }
 
   /**
-   * Raycasts directly against the 10 3D layer meshes so clicking a layer in 3D selects it.
+   * Raycasts directly against visible 3D layer meshes so clicking a layer in 3D selects it.
    */
   public raycastLayerIndex(raycaster: THREE.Raycaster): number | null {
-    const hits = raycaster.intersectObjects(this.layerMeshes, true);
+    const visibleLayerMeshes = this.layerMeshes.filter((layerObj) => layerObj.visible);
+    const hits = raycaster.intersectObjects(visibleLayerMeshes, true);
     for (const hit of hits) {
+      let visibleInHierarchy = true;
+      let visNode: THREE.Object3D | null = hit.object;
+      while (visNode) {
+        if (!visNode.visible) {
+          visibleInHierarchy = false;
+          break;
+        }
+        visNode = visNode.parent;
+      }
+      if (!visibleInHierarchy) continue;
+
       let obj: THREE.Object3D | null = hit.object;
       while (obj) {
         if (typeof obj.userData?.layerIndex === 'number') {
@@ -477,57 +797,113 @@ export class FloatingWoolPad {
   }
 
   /**
-   * Builds Layer 7: Cloud Breeze™ Cooling Technology (`mat_transition_foam` #4B5478)
-   * laying flat on the horizontal XZ plane with 5-zone sculpted ventilation channels.
+   * Builds Layer 7: Cloud Breeze™ Cooling Technology (`mat_transition_foam` #3E4F7D)
+   * laying flat on the horizontal XZ plane with sculpted 5-zone contour channel grooves
+   * (wavy cooling grid channels) matching the reference surface relief.
    */
   private buildContourTransitionFoam(
     width: number,
     height: number,
     length: number,
   ): THREE.MeshStandardMaterial[] {
-    const baseHeight = height * 0.65;
-    const ribHeight = height * 0.35;
+    const baseHeight = height * 0.62;
+    const padHeight = height * 0.38;
 
     const foamMat = this.materials.get('mat_transition_foam')!;
     const channelHighlightMat = foamMat.clone();
-    channelHighlightMat.color.set('#5C6791');
+    channelHighlightMat.color.set('#53689E');
     this.disposables.push(channelHighlightMat);
 
     const baseSlabGeo = new THREE.BoxGeometry(width, baseHeight, length);
     preparePBRGeometry(baseSlabGeo);
     const baseSlab = new THREE.Mesh(baseSlabGeo, foamMat);
-    baseSlab.position.set(0, -ribHeight * 0.5, 0);
+    baseSlab.position.set(0, -padHeight * 0.5, 0);
     baseSlab.rotation.set(0, 0, 0);
     baseSlab.castShadow = true;
     baseSlab.receiveShadow = true;
     this.layer7CloudBreezeGroup.add(baseSlab);
 
-    const ribCount = 9;
-    const ribWidth = (width / ribCount) * 0.72;
-    const ribGeo = new THREE.BoxGeometry(ribWidth, ribHeight, length * 0.996);
-    preparePBRGeometry(ribGeo);
-    for (let i = 0; i < ribCount; i++) {
-      const rx = ((i + 0.5) / ribCount - 0.5) * width;
-      const rib = new THREE.Mesh(ribGeo, channelHighlightMat);
-      rib.position.set(rx, baseHeight * 0.5, 0);
-      rib.rotation.set(0, 0, 0);
-      rib.castShadow = true;
-      rib.receiveShadow = true;
-      this.layer7CloudBreezeGroup.add(rib);
-    }
+    // Sculpted rounded-cloud contour pad geometry for 5-zone wavy cooling grid channels
+    const cols = 12;
+    const rows = 15;
+    const cellW = (width * 0.96) / cols;
+    const cellL = (length * 0.96) / rows;
+    const padW = cellW * 0.72;
+    const padL = cellL * 0.7;
+    const padR = Math.min(padW, padL) * 0.34;
 
-    this.disposables.push(baseSlabGeo, ribGeo);
+    const hw = padW * 0.5;
+    const hl = padL * 0.5;
+    const padShape = new THREE.Shape();
+    padShape.moveTo(-hw + padR, -hl);
+    padShape.lineTo(hw - padR, -hl);
+    padShape.quadraticCurveTo(hw, -hl, hw, -hl + padR);
+    padShape.lineTo(hw, hl - padR);
+    padShape.quadraticCurveTo(hw, hl, hw - padR, hl);
+    padShape.lineTo(-hw + padR, hl);
+    padShape.quadraticCurveTo(-hw, hl, -hw, hl - padR);
+    padShape.lineTo(-hw, -hl + padR);
+    padShape.quadraticCurveTo(-hw, -hl, -hw + padR, -hl);
+
+    const padGeo = new THREE.ExtrudeGeometry(padShape, {
+      depth: padHeight * 0.78,
+      bevelEnabled: true,
+      bevelThickness: padHeight * 0.22,
+      bevelSize: 0.006,
+      bevelSegments: 2,
+      curveSegments: 6,
+    });
+    padGeo.rotateX(-Math.PI * 0.5);
+    preparePBRGeometry(padGeo);
+
+    const totalPads = cols * rows;
+    const padsInstanced = new THREE.InstancedMesh(padGeo, channelHighlightMat, totalPads);
+    padsInstanced.castShadow = true;
+    padsInstanced.receiveShadow = true;
+
+    const dummy = new THREE.Object3D();
+    let idx = 0;
+    for (let r = 0; r < rows; r++) {
+      const normZ = r / (rows - 1) - 0.5; // -0.5 (head) to +0.5 (foot)
+      // 5-zone ergonomic modulation: lumbar center (|normZ| < 0.16) denser/firmer, shoulders/hips contoured
+      const zoneIndex = Math.min(4, Math.floor((normZ + 0.5) * 5));
+      const zoneScaleZ = zoneIndex === 2 ? 1.16 : zoneIndex === 1 || zoneIndex === 3 ? 0.92 : 1.0;
+      const waveOffsetX = Math.sin(r * 0.85) * cellW * 0.16;
+
+      for (let c = 0; c < cols; c++) {
+        const normX = c / (cols - 1) - 0.5;
+        const waveOffsetZ = Math.cos(c * 0.75) * cellL * 0.1;
+        const px = normX * (width * 0.96 - cellW) + waveOffsetX;
+        const pz = normZ * (length * 0.96 - cellL) + waveOffsetZ;
+        dummy.position.set(
+          THREE.MathUtils.clamp(px, -width * 0.47, width * 0.47),
+          baseHeight * 0.5 - padHeight * 0.5,
+          THREE.MathUtils.clamp(pz, -length * 0.47, length * 0.47),
+        );
+        dummy.scale.set(1.0, 1.0, zoneScaleZ);
+        dummy.updateMatrix();
+        padsInstanced.setMatrixAt(idx++, dummy.matrix);
+      }
+    }
+    padsInstanced.instanceMatrix.needsUpdate = true;
+    padsInstanced.computeBoundingSphere();
+    this.layer7CloudBreezeGroup.add(padsInstanced);
+
+    this.disposables.push(baseSlabGeo, padGeo);
     return [foamMat, channelHighlightMat];
   }
 
   /**
    * Builds Layer 8: Contour-Adapt Pocket Coils (`mat_pocket_coils` — LOCKED to #F8F9FA clean white spun-bond fabric)
+   * enclosed within a high-density white foam perimeter casing (`mat_coil_perimeter_foam`).
    */
   private buildWhitePocketSpringsCore(
     width: number,
     length: number,
   ): THREE.MeshStandardMaterial[] {
     const matPocketCoils = this.materials.get('mat_pocket_coils')!;
+    const matPerimeterFoam =
+      this.materials.get('mat_coil_perimeter_foam') ?? this.materials.get('mat_cooling_foam')!;
     const coilCapMat = new THREE.MeshStandardMaterial({
       name: 'mat_pocket_coils_cap',
       map: null,
@@ -537,12 +913,46 @@ export class FloatingWoolPad {
     });
 
     const coilHeight = 0.118;
-    const coilRadius = 0.086;
+    const railThick = 0.095;
+
+    // High-density white foam perimeter casing (Left, Right, Back walls + low-profile front support rim)
+    const sideRailGeo = new THREE.BoxGeometry(railThick, coilHeight, length);
+    preparePBRGeometry(sideRailGeo);
+    const leftRail = new THREE.Mesh(sideRailGeo, matPerimeterFoam);
+    leftRail.position.set(-width * 0.5 + railThick * 0.5, 0, 0);
+    leftRail.castShadow = true;
+    leftRail.receiveShadow = true;
+
+    const rightRail = new THREE.Mesh(sideRailGeo, matPerimeterFoam);
+    rightRail.position.set(width * 0.5 - railThick * 0.5, 0, 0);
+    rightRail.castShadow = true;
+    rightRail.receiveShadow = true;
+
+    const innerSpanW = width - railThick * 2;
+    const backRailGeo = new THREE.BoxGeometry(innerSpanW, coilHeight, railThick);
+    preparePBRGeometry(backRailGeo);
+    const backRail = new THREE.Mesh(backRailGeo, matPerimeterFoam);
+    backRail.position.set(0, 0, -length * 0.5 + railThick * 0.5);
+    backRail.castShadow = true;
+    backRail.receiveShadow = true;
+
+    // Low-profile front foam lip so the front row of fabric-encased pocket coils remains clearly visible
+    const frontLipGeo = new THREE.BoxGeometry(innerSpanW, 0.02, 0.065);
+    preparePBRGeometry(frontLipGeo);
+    const frontLip = new THREE.Mesh(frontLipGeo, matPerimeterFoam);
+    frontLip.position.set(0, -coilHeight * 0.5 + 0.01, length * 0.5 - 0.0325);
+    frontLip.castShadow = true;
+    frontLip.receiveShadow = true;
+
+    this.layer8PocketSpringsGroup.add(leftRail, rightRail, backRail, frontLip);
+
+    // Individually fabric-encased cylindrical coils inside the foam perimeter cavity
+    const coilRadius = 0.056;
     const coilGeo = new THREE.CylinderGeometry(coilRadius, coilRadius, coilHeight, 20, 1, false);
     preparePBRGeometry(coilGeo);
 
-    const cols = 10;
-    const rows = 11;
+    const cols = 14;
+    const rows = 15;
     const totalCoils = cols * rows;
     const coilInstanced = new THREE.InstancedMesh(
       coilGeo,
@@ -553,10 +963,10 @@ export class FloatingWoolPad {
     coilInstanced.receiveShadow = true;
 
     const dummy = new THREE.Object3D();
-    const gridW = width - coilRadius * 2.2;
-    const gridL = length - coilRadius * 2.2;
+    const gridW = innerSpanW - coilRadius * 2.15;
+    const gridL = length - railThick - 0.03 - coilRadius * 2.15;
     const startX = -gridW * 0.5;
-    const startZ = -gridL * 0.5;
+    const startZ = -length * 0.5 + railThick + coilRadius * 1.1;
 
     let idx = 0;
     for (let r = 0; r < rows; r++) {
@@ -572,8 +982,8 @@ export class FloatingWoolPad {
     coilInstanced.computeBoundingSphere();
     this.layer8PocketSpringsGroup.add(coilInstanced);
 
-    this.disposables.push(coilGeo, coilCapMat);
-    return [matPocketCoils, coilCapMat];
+    this.disposables.push(sideRailGeo, backRailGeo, frontLipGeo, coilGeo, coilCapMat);
+    return [matPocketCoils, coilCapMat, matPerimeterFoam];
   }
 
   /**
@@ -590,10 +1000,17 @@ export class FloatingWoolPad {
     maxAnisotropy: number,
   ): THREE.MeshStandardMaterial[] {
     const matGripBase = this.materials.get('mat_grip_base')!;
-    const matSidewallStrip =
-      this.materials.get('mat_sidewall_strip') ?? this.materials.get('mat_side_border')!;
+    const {
+      sidewallRoyal: matSidewallStrip,
+      sidewallLux: matSidewallLux,
+      sidewallCloudFront: matSidewallCloudFront,
+      sidewallCloudWrap: matSidewallCloudWrap,
+      brandBadgeRoyal: matBadgeRoyal,
+      brandBadgeLux: matBadgeLux,
+      brandBadgeCloud: matBadgeCloud,
+      brandBadgeMonarch: matBadgeMonarch,
+    } = this.loadedAssets.materials;
     const matPipingCord = this.materials.get('mat_piping_cord')!;
-    const matBrandBadge = this.materials.get('mat_brand_badge')!;
 
     // 1. Bottom Grip Base Plate (Layer 10 foundation floor of the open-top tray, 5cm rounded corners)
     const cornerRadius = 0.05; // 5cm continuous rounded corner radius
@@ -629,20 +1046,40 @@ export class FloatingWoolPad {
       4.4, // 4.4 * repeat.x(10) = 44 exact integer tile repeats around ~9.31m perimeter (~5.29cm per diamond)
     );
     preparePBRGeometry(sidewallGeo);
-    const sidewallMesh = new THREE.Mesh(sidewallGeo, matSidewallStrip);
+    const sidewallMesh = new THREE.Mesh(sidewallGeo, [matSidewallStrip, matSidewallStrip]);
     sidewallMesh.position.set(0, sidewallY, 0);
     sidewallMesh.castShadow = true;
     sidewallMesh.receiveShadow = true;
     this.encasementTrayGroup.add(sidewallMesh);
+    this.sidewallMesh = sidewallMesh;
     this.disposables.push(sidewallGeo);
 
-    // 3. Centered "Puffy ROYAL / MONARCH" Embroidered Patch (`mat_brand_badge`) flush on front wall (0.001m offset)
+    // 3. Dedicated Embroidered Brand Badges per model (zero shared normal/AO ROYAL ghosting)
     const badgeGeo = new THREE.PlaneGeometry(0.12, 0.06);
     preparePBRGeometry(badgeGeo);
-    const badgeMesh = new THREE.Mesh(badgeGeo, matBrandBadge);
-    badgeMesh.name = 'puffy-embroidered-badge';
-    badgeMesh.position.set(0, charcoalY, length / 2 + 0.001);
-    this.encasementTrayGroup.add(badgeMesh);
+
+    const createBadgeMesh = (
+      name: string,
+      mat: THREE.MeshPhysicalMaterial,
+      visible: boolean,
+    ): THREE.Mesh => {
+      const mesh = new THREE.Mesh(badgeGeo, mat);
+      mesh.name = name;
+      mesh.position.set(0, charcoalY, length / 2 + 0.001);
+      mesh.visible = visible;
+      this.encasementTrayGroup.add(mesh);
+      return mesh;
+    };
+
+    this.badgeRoyalMesh = createBadgeMesh('puffy-embroidered-badge-royal', matBadgeRoyal, true);
+    this.badgeLuxMesh = createBadgeMesh('puffy-embroidered-badge-lux', matBadgeLux, false);
+    this.badgeCloudMesh = createBadgeMesh('puffy-embroidered-badge-cloud', matBadgeCloud, false);
+    this.badgeMonarchMesh = createBadgeMesh(
+      'puffy-embroidered-badge-monarch',
+      matBadgeMonarch,
+      false,
+    );
+    this.badgeMesh = this.badgeRoyalMesh;
 
     // 4. Symmetrical Vertical Fabric Loop Handles flush against the front wall (x = ±width * 0.28)
     const handleTex = this.createFlushHandleStrapTexture(maxAnisotropy);
@@ -653,6 +1090,7 @@ export class FloatingWoolPad {
       metalness: 0.0,
     });
 
+    this.handleMeshes = [];
     for (const side of [-1, 1]) {
       const handleMesh = new THREE.Mesh(handleGeo, [
         matPipingCord,
@@ -664,6 +1102,7 @@ export class FloatingWoolPad {
       ]);
       handleMesh.position.set(side * width * 0.28, charcoalY, length / 2 + 0.004);
       this.encasementTrayGroup.add(handleMesh);
+      this.handleMeshes.push(handleMesh);
     }
 
     // 5. Flush "HYBRID Signature of Quality" Woven Strip on the front-right border
@@ -677,6 +1116,7 @@ export class FloatingWoolPad {
     const hybridTagMesh = new THREE.Mesh(hybridTagGeo, hybridTagMat);
     hybridTagMesh.position.set(width * 0.4, charcoalY, length / 2 + 0.003);
     this.encasementTrayGroup.add(hybridTagMesh);
+    this.hybridTagMesh = hybridTagMesh;
 
     this.disposables.push(
       badgeGeo,
@@ -688,7 +1128,13 @@ export class FloatingWoolPad {
       hybridTagMat,
     );
 
-    return [matGripBase, matSidewallStrip];
+    return [
+      matGripBase,
+      matSidewallStrip,
+      matSidewallLux,
+      matSidewallCloudFront,
+      matSidewallCloudWrap,
+    ];
   }
 
   /**
@@ -808,6 +1254,21 @@ export class FloatingWoolPad {
     geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
     geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     geo.setIndex(indices);
+
+    // Split perimeter into 2 material groups:
+    // materialIndex 0 = Front Foot Panel (+Z edge between 45° front-right & 45° front-left corners)
+    // materialIndex 1 = Left, Back, and Right 3-side wrap
+    const mid0 = Math.floor(cornerSegments / 2);
+    const mid1 = cornerSegments + 1 + Math.floor(cornerSegments / 2);
+    const totalSegments = pts.length - 1;
+    if (mid0 > 0 && mid1 > mid0 && mid1 < totalSegments) {
+      geo.addGroup(0, mid0 * 6, 1);
+      geo.addGroup(mid0 * 6, (mid1 - mid0) * 6, 0);
+      geo.addGroup(mid1 * 6, (totalSegments - mid1) * 6, 1);
+    } else {
+      geo.addGroup(0, indices.length, 0);
+    }
+
     return geo;
   }
 
@@ -900,39 +1361,57 @@ export class FloatingWoolPad {
     topGeo.rotateX(-Math.PI / 2);
 
     const posAttr = topGeo.attributes.position;
+    const uvAttr = topGeo.attributes.uv;
     const halfW = (outerWidth * 0.996) / 2;
     const halfL = (outerLength * 0.996) / 2;
     const cornerR = 0.048;
     const seamOverlapLipDepth = -0.015; // 0.015m downward curvature/bevel that tucks inside the outer border
+    const ix = halfW - cornerR;
+    const iz = halfL - cornerR;
+
+    // Maps any (x, z) in [-halfW, halfW] x [-halfL, halfL] to a strictly non-degenerate
+    // concentric rounded-rectangle grid + normalized ring parameter s in [0, 1].
+    const mapToRoundedRect = (rawX: number, rawZ: number): {x: number; z: number; s: number} => {
+      const u = THREE.MathUtils.clamp(rawX / halfW, -1, 1);
+      const v = THREE.MathUtils.clamp(rawZ / halfL, -1, 1);
+      const s = Math.max(Math.abs(u), Math.abs(v));
+      if (s < 1e-6) {
+        return {x: 0, z: 0, s: 0};
+      }
+      // Project onto unit square perimeter, then map onto rounded-rectangle perimeter
+      let bx = (u / s) * halfW;
+      let bz = (v / s) * halfL;
+      if (Math.abs(bx) > ix && Math.abs(bz) > iz) {
+        const dx = Math.abs(bx) - ix;
+        const dz = Math.abs(bz) - iz;
+        const dist = Math.hypot(dx, dz) || 1;
+        bx = Math.sign(bx) * (ix + (dx / dist) * cornerR);
+        bz = Math.sign(bz) * (iz + (dz / dist) * cornerR);
+      }
+      return {x: s * bx, z: s * bz, s};
+    };
+
+    const sampleTopCoverY = (x: number, z: number, sOverride?: number): number => {
+      let s = sOverride;
+      if (s === undefined) {
+        const u = Math.abs(x) / halfW;
+        const v = Math.abs(z) / halfL;
+        s = Math.min(1, Math.max(u, v));
+      }
+      const edgeDrop = Math.pow(Math.max(0, 1 - s * s), 0.34);
+      const quiltPuff =
+        Math.abs(Math.sin(x * 7.5) * Math.cos(z * 7.5)) * 0.010 * edgeDrop;
+      return seamOverlapLipDepth + edgeDrop * 0.060 + quiltPuff;
+    };
 
     for (let i = 0; i < posAttr.count; i++) {
-      let x = posAttr.getX(i);
-      let z = posAttr.getZ(i);
-      // Clamp corners onto 4.8cm rounded rectangle so top cover matches sidewall rounded corners
-      const ix = halfW - cornerR;
-      const iz = halfL - cornerR;
-      if (Math.abs(x) > ix && Math.abs(z) > iz) {
-        const dx = Math.abs(x) - ix;
-        const dz = Math.abs(z) - iz;
-        const dist = Math.hypot(dx, dz);
-        if (dist > cornerR) {
-          const scale = cornerR / dist;
-          x = Math.sign(x) * (ix + dx * scale);
-          z = Math.sign(z) * (iz + dz * scale);
-          posAttr.setX(i, x);
-          posAttr.setZ(i, z);
-        }
+      const {x, z, s} = mapToRoundedRect(posAttr.getX(i), posAttr.getZ(i));
+      posAttr.setX(i, x);
+      posAttr.setZ(i, z);
+      posAttr.setY(i, sampleTopCoverY(x, z, s));
+      if (uvAttr) {
+        uvAttr.setXY(i, (x / (halfW * 2)) + 0.5, (z / (halfL * 2)) + 0.5);
       }
-      const nx = x / halfW;
-      const nz = z / halfL;
-      const edgeDrop = Math.pow(Math.max(0, 1 - nx * nx) * Math.max(0, 1 - nz * nz), 0.28);
-      const quiltPuff =
-        Math.abs(Math.sin(x * 7.5) * Math.cos(z * 7.5)) * 0.018 * edgeDrop;
-      // At the outer perimeter (edgeDrop = 0), y = -0.015m (tucking inside the border below casingWallTopY)
-      // Across the sleeping surface, it rises smoothly into the plush quilted crown (+0.052m)
-      const y = seamOverlapLipDepth + edgeDrop * 0.064 + quiltPuff;
-
-      posAttr.setY(i, y);
     }
     topGeo.computeVertexNormals();
     preparePBRGeometry(topGeo);
@@ -942,8 +1421,98 @@ export class FloatingWoolPad {
     topCoverMesh.receiveShadow = true;
     this.layer1TopCoverGroup.add(topCoverMesh);
 
+    // 3. Two Dark Charcoal Diagonal Woven Corner Strap Badges angled 45° across the top front corners
+    this.cornerStrapMeshes = [];
+    const matCornerStrap = this.materials.get('mat_corner_strap');
+    if (matCornerStrap) {
+      const strapSpan = 0.27;
+      const strapWidth = 0.072;
+      const segU = 20;
+      const segV = 8;
+
+      for (const sideSign of [-1, 1] as const) {
+        const strapGeo = new THREE.BufferGeometry();
+        const positions: number[] = [];
+        const uvs: number[] = [];
+        const indices: number[] = [];
+
+        // 45° diagonal across the actual front-left / front-right corner
+        const pStart = new THREE.Vector2(sideSign * halfW, halfL - strapSpan);
+        const pEnd = new THREE.Vector2(sideSign * (halfW - strapSpan), halfL);
+        const dir = pEnd.clone().sub(pStart).normalize();
+        const inwardNormal =
+          sideSign < 0 ? new THREE.Vector2(dir.y, -dir.x) : new THREE.Vector2(-dir.y, dir.x);
+        if (inwardNormal.dot(new THREE.Vector2(-sideSign, -1)) < 0) {
+          inwardNormal.negate();
+        }
+
+        for (let iv = 0; iv <= segV; iv++) {
+          const vFrac = iv / segV; // 0 = outer corner edge, 1 = inner edge
+          for (let iu = 0; iu <= segU; iu++) {
+            const uFrac = iu / segU;
+            const tU = uFrac;
+            const basePt = pStart.clone().lerp(pEnd, tU);
+            const pt = basePt.addScaledVector(inwardNormal, vFrac * strapWidth);
+
+            // Clamp smoothly to the rounded-rect perimeter so the strap never overhangs into air
+            let cx = THREE.MathUtils.clamp(pt.x, -halfW, halfW);
+            let cz = THREE.MathUtils.clamp(pt.y, -halfL, halfL);
+            if (Math.abs(cx) > ix && Math.abs(cz) > iz) {
+              const dx = Math.abs(cx) - ix;
+              const dz = Math.abs(cz) - iz;
+              const dist = Math.hypot(dx, dz);
+              if (dist > cornerR) {
+                cx = Math.sign(cx) * (ix + (dx / dist) * cornerR);
+                cz = Math.sign(cz) * (iz + (dz / dist) * cornerR);
+              }
+            }
+
+            // +0.003m (+3mm) elevation clearance above the quilted cover curvature
+            const cy = sampleTopCoverY(cx, cz) + 0.003;
+
+            positions.push(cx, cy, cz);
+            const texU = sideSign < 0 ? uFrac : 1 - uFrac;
+            uvs.push(texU, vFrac);
+          }
+        }
+
+        for (let iv = 0; iv < segV; iv++) {
+          for (let iu = 0; iu < segU; iu++) {
+            const a = iv * (segU + 1) + iu;
+            const b = a + 1;
+            const c = (iv + 1) * (segU + 1) + iu;
+            const d = c + 1;
+            if (sideSign < 0) {
+              indices.push(a, b, c, b, d, c);
+            } else {
+              indices.push(a, c, b, b, c, d);
+            }
+          }
+        }
+
+        strapGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+        strapGeo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+        strapGeo.setIndex(indices);
+        strapGeo.computeVertexNormals();
+        preparePBRGeometry(strapGeo);
+
+        const strapMesh = new THREE.Mesh(strapGeo, matCornerStrap);
+        strapMesh.name = sideSign < 0 ? 'corner-strap-left' : 'corner-strap-right';
+        strapMesh.castShadow = false;
+        strapMesh.receiveShadow = true;
+        this.layer1TopCoverGroup.add(strapMesh);
+        this.cornerStrapMeshes.push(strapMesh);
+        this.disposables.push(strapGeo);
+      }
+    }
+
+    this.topQuiltMesh = topCoverMesh;
+    this.topQuiltGeo = topGeo;
+    this.topBaseVertices = new Float32Array(posAttr.array.length);
+    this.topBaseVertices.set(posAttr.array);
+
     this.disposables.push(underSlabGeo, topGeo);
-    return [matTopCover];
+    return matCornerStrap ? [matTopCover, matCornerStrap] : [matTopCover];
   }
 
   public setHoverState(hovered: boolean, mouseNdc?: THREE.Vector2): void {
@@ -954,8 +1523,8 @@ export class FloatingWoolPad {
   }
 
   public triggerCompressionAtWorldPoint(
-    _worldPoint: THREE.Vector3,
-    _dentStrength = 0.02,
+    worldPoint: THREE.Vector3,
+    dentStrength = 0.032,
     autoReleaseAfterMs?: number,
   ): void {
     if (this.autoReleaseTimer !== null) {
@@ -963,20 +1532,40 @@ export class FloatingWoolPad {
       this.autoReleaseTimer = null;
     }
 
-    if (!this.isPressed) {
-      this.isPressed = true;
-      this.tween = {
-        startTime: this.lastElapsedTime,
-        duration: 0.15,
-        fromSinkY: this.currentSinkY,
-        toSinkY: -0.15,
-        fromScaleY: this.currentPressScaleY,
-        toScaleY: 0.9,
-        fromScaleXZ: this.currentPressScaleXZ,
-        toScaleXZ: 1.02,
-        mode: 'press',
-      };
+    this.isPressed = true;
+
+    // Transform world hit point into local coordinates of topQuiltMesh
+    if (this.topQuiltMesh) {
+      this.topQuiltMesh.updateWorldMatrix(true, false);
+      const scratch = new THREE.Vector3();
+      this.topQuiltMesh.worldToLocal(scratch.copy(worldPoint));
+      this.localHitPoint.copy(scratch);
+    } else {
+      this.localHitPoint.set(worldPoint.x, 0, worldPoint.z);
     }
+
+    // 1. Local Dent Target Depth (simulating Puffy high-density memory foam)
+    this.targetDentDepth = Math.min(Math.max(dentStrength, 0.015), this.maxDentDepth);
+
+    // 2. Macro Inertial Response (Subtle Buoyancy & Tilt)
+    const halfW = (2.15 * this.currentScaleX) / 2;
+    const halfL = (2.55 * this.currentScaleZ) / 2;
+    const normX = THREE.MathUtils.clamp(this.localHitPoint.x / halfW, -1, 1);
+    const normZ = THREE.MathUtils.clamp(this.localHitPoint.z / halfL, -1, 1);
+
+    // Gentle angular torque:
+    // If pressed on the right edge (normX = +1), tilt rotation.z by +0.03 rad
+    // If pressed on the front (normZ = +1), tilt rotation.x by +0.03 rad
+    this.targetTorqueRotZ = normX * 0.03;
+    this.targetTorqueRotX = normZ * 0.03;
+
+    // Damped vertical impulse: maximum displacement clamped to 0.035m (strictly <= 0.05m / ~2 inches),
+    // absorbing the press like a floating cushion on calm water, never breaching the ground plane
+    this.targetBuoyancySinkY = THREE.MathUtils.clamp(
+      this.maxBuoyancySink * (0.65 + 0.35 * (1 - Math.hypot(normX, normZ) * 0.5)),
+      0.015,
+      this.maxBuoyancySink,
+    );
 
     if (autoReleaseAfterMs && autoReleaseAfterMs > 0) {
       this.autoReleaseTimer = window.setTimeout(() => {
@@ -987,24 +1576,26 @@ export class FloatingWoolPad {
   }
 
   public releaseCompression(): void {
-    if (!this.isPressed && this.tween.mode !== 'press') return;
     this.isPressed = false;
-    this.tween = {
-      startTime: this.lastElapsedTime,
-      duration: 0.8,
-      fromSinkY: this.currentSinkY,
-      toSinkY: 0.0,
-      fromScaleY: this.currentPressScaleY,
-      toScaleY: 1.0,
-      fromScaleXZ: this.currentPressScaleXZ,
-      toScaleXZ: 1.0,
-      mode: 'release',
-    };
+    this.targetDentDepth = 0.0;
+    this.targetBuoyancySinkY = 0.0;
+    this.targetTorqueRotX = 0.0;
+    this.targetTorqueRotZ = 0.0;
+    if (this.autoReleaseTimer !== null) {
+      window.clearTimeout(this.autoReleaseTimer);
+      this.autoReleaseTimer = null;
+    }
   }
 
   public setSizeSpec(spec: MattressSizeSpec): void {
-    this.targetScaleX = spec.widthMeters / 2.15;
-    this.targetScaleZ = spec.lengthMeters / 2.55;
+    const nextX = spec.widthMeters / 2.15;
+    const nextZ = spec.lengthMeters / 2.55;
+    if (Number.isFinite(nextX) && nextX > 0) {
+      this.targetScaleX = nextX;
+    }
+    if (Number.isFinite(nextZ) && nextZ > 0) {
+      this.targetScaleZ = nextZ;
+    }
   }
 
   public setExplodedFactor(target: number): void {
@@ -1013,6 +1604,93 @@ export class FloatingWoolPad {
       this.setActiveLayerIndex(null);
     } else if (clamped >= 0.5 && this.activeLayerIndex === null) {
       this.setActiveLayerIndex(0);
+    }
+  }
+
+  /**
+   * Separates active model layers vertically in a clean exploded stack above the encasement tray
+   * with compact spacing for 6 (Cloud), 8 (Lux), or 10 (Royal) layers.
+   */
+  public setAllLayersExplodedStack(exploded: boolean, immediate = false): void {
+    if (!exploded) {
+      this.isExplodedStackMode = false;
+      this.setActiveLayerIndex(null);
+      return;
+    }
+    this.isExplodedStackMode = true;
+    this.activeLayerIndex = 0;
+
+    const stackY: number[] = new Array(10).fill(0);
+    if (this.activeEcoModelKey === 'royal') {
+      const royalStack = [
+        1.24, // Layer 1: Quilted Cloud Cover + Corner Straps
+        1.11, // Layer 2: Premium Blended Wool (#EADCC3)
+        1.01, // Layer 3: Fire-Resistant Fiber Layer (#E8D7B8)
+        0.90, // Layer 4: Comfort Quilt Foam (#B4D5F6)
+        0.78, // Layer 5: Plush Contouring Foam (#4A5D84 + gel speckles)
+        0.66, // Layer 6: Reflexive Memory Foam (#46BCA8)
+        0.53, // Layer 7: Cloud Breeze™ 5-Zone Contour Channels
+        0.36, // Layer 8: Contour-Adapt Pocket Coils + White Foam Perimeter
+        0.20, // Layer 9: Firm Core Support Foam (#E8E6E1)
+        -0.16, // Layer 10: Open-Top Encasement Tray & Grip Base
+      ];
+      for (let i = 0; i < 10; i++) {
+        stackY[i] = royalStack[i];
+      }
+    } else {
+      const trayY = this.activeEcoModelKey === 'cloud' ? -0.14 : -0.15;
+      stackY[9] = trayY;
+      const targetTopRim =
+        this.baseSidewallBottomY + this.baseSidewallHeight * this.targetHeightRatio;
+      const gap = this.activeEcoModelKey === 'cloud' ? 0.065 : 0.056;
+      let cursorTop = Math.max(0.1, trayY + targetTopRim + 0.16);
+
+      for (let i = 8; i >= 1; i--) {
+        if (!this.layerMeshes[i].visible) {
+          stackY[i] = this.targetDefaultLayerY[i];
+          continue;
+        }
+        const halfH = this.baseLayerThickness[i] * this.targetLayerScaleY[i] * 0.5;
+        const centerY = cursorTop + halfH;
+        stackY[i] = centerY;
+        cursorTop = centerY + halfH + gap;
+      }
+      stackY[0] = cursorTop + 0.022;
+    }
+
+    for (let i = 0; i < this.layerMeshes.length; i++) {
+      const kin = this.layerKinematics[i];
+      kin.startTime = this.lastElapsedTime;
+      kin.fromX = kin.currentX;
+      kin.fromY = kin.currentY;
+      kin.fromZ = kin.currentZ;
+      kin.fromRotX = kin.currentRotX;
+      kin.fromEmissive = kin.currentEmissive;
+
+      if (!this.layerMeshes[i].visible) {
+        kin.mode = 'reset';
+        kin.liftTargetY = this.targetDefaultLayerY[i];
+        kin.slideTargetZ = 0;
+        kin.targetRotX = 0;
+        kin.toEmissive = 0;
+        continue;
+      }
+
+      kin.mode = 'upper-clearance';
+      kin.liftTargetY = stackY[i] ?? kin.defaultY;
+      kin.slideTargetZ = 0;
+      kin.targetRotX = 0;
+      kin.toEmissive = 0;
+
+      if (immediate) {
+        kin.currentX = 0;
+        kin.currentY = kin.liftTargetY;
+        kin.currentZ = 0;
+        kin.currentRotX = 0;
+        kin.currentEmissive = 0;
+        this.layerMeshes[i].position.set(0, kin.currentY, 0);
+        this.layerMeshes[i].rotation.set(0, 0, 0);
+      }
     }
   }
 
@@ -1025,8 +1703,9 @@ export class FloatingWoolPad {
   }
 
   public getCompressionMm(): number {
-    const sinkRatio = Math.abs(this.currentSinkY) / 0.15;
-    return Math.round(THREE.MathUtils.clamp(sinkRatio, 0, 1.1) * 55);
+    const foamMm = (this.currentDentDepth / this.maxDentDepth) * 35;
+    const sinkMm = (this.currentBuoyancySinkY / this.maxBuoyancySink) * 15;
+    return Math.round(foamMm + sinkMm);
   }
 
   public getCurrentElevation(): number {
@@ -1041,89 +1720,243 @@ export class FloatingWoolPad {
   }
 
   public update(elapsedTime: number, deltaTime: number): void {
-    const dt = Math.min(deltaTime, 0.05);
-    this.lastElapsedTime = elapsedTime;
+    const safeElapsed = Number.isFinite(elapsedTime) ? elapsedTime : this.lastElapsedTime;
+    const safeDelta = Number.isFinite(deltaTime) && deltaTime >= 0 ? deltaTime : 0.016;
+    const dt = Math.min(safeDelta, 0.05);
+    this.lastElapsedTime = safeElapsed;
+
+    this.group.visible = true;
+    this.encasementTrayGroup.visible = true;
+    this.internalCoreGroup.visible = true;
+
+    if (!Number.isFinite(this.currentHeightRatio) || this.currentHeightRatio <= 0) {
+      this.currentHeightRatio = Number.isFinite(this.targetHeightRatio)
+        ? this.targetHeightRatio
+        : 1.0;
+    }
+    if (!Number.isFinite(this.currentBuoyancySinkY)) {
+      this.currentBuoyancySinkY = 0;
+    }
+    if (!Number.isFinite(this.currentScaleX) || this.currentScaleX <= 0) {
+      this.currentScaleX = 1.0;
+    }
+    if (!Number.isFinite(this.currentScaleZ) || this.currentScaleZ <= 0) {
+      this.currentScaleZ = 1.0;
+    }
+    if (!Number.isFinite(this.currentPressScaleY) || this.currentPressScaleY <= 0) {
+      this.currentPressScaleY = 1.0;
+    }
+    if (!Number.isFinite(this.currentPressScaleXZ) || this.currentPressScaleXZ <= 0) {
+      this.currentPressScaleXZ = 1.0;
+    }
 
     // Advance any active 0.4s runtime color preset transitions (`applyColorPreset`)
     updateColorPresetTransitions();
 
-    // 1. Evaluate Method A Whole-Pad Cushion Sink (0.15s power2.out) & Rebound (0.8s elastic.out(1, 0.5))
-    if (this.tween.mode !== 'idle') {
-      const rawProgress =
-        this.tween.duration > 0
-          ? (elapsedTime - this.tween.startTime) / this.tween.duration
+    // 0. Smooth 0.4s ease-out model height & internal layer morph animation
+    if (this.isMorphingModel) {
+      if (this.pendingMorphStart) {
+        this.modelMorphStartTime = safeElapsed;
+        this.pendingMorphStart = false;
+      }
+      const morphElapsed = Math.max(0, safeElapsed - this.modelMorphStartTime);
+      const t =
+        this.modelMorphDuration > 0
+          ? THREE.MathUtils.clamp(morphElapsed / this.modelMorphDuration, 0, 1)
           : 1;
-      const clamped = THREE.MathUtils.clamp(rawProgress, 0, 1);
+      const eased = easeOutQuad(t);
 
-      if (this.tween.mode === 'press') {
-        const eased = easeOutQuad(clamped);
-        this.currentSinkY = THREE.MathUtils.lerp(this.tween.fromSinkY, this.tween.toSinkY, eased);
-        this.currentPressScaleY = THREE.MathUtils.lerp(
-          this.tween.fromScaleY,
-          this.tween.toScaleY,
-          eased,
-        );
-        this.currentPressScaleXZ = THREE.MathUtils.lerp(
-          this.tween.fromScaleXZ,
-          this.tween.toScaleXZ,
-          eased,
-        );
-      } else if (this.tween.mode === 'release') {
-        const easedFoam = easeOutPlushMemoryFoam(clamped);
-        this.currentSinkY = THREE.MathUtils.lerp(
-          this.tween.fromSinkY,
-          this.tween.toSinkY,
-          easedFoam,
-        );
-        this.currentPressScaleY = THREE.MathUtils.lerp(
-          this.tween.fromScaleY,
-          this.tween.toScaleY,
-          easedFoam,
-        );
-        this.currentPressScaleXZ = THREE.MathUtils.lerp(
-          this.tween.fromScaleXZ,
-          this.tween.toScaleXZ,
-          easedFoam,
-        );
-        if (clamped >= 1) {
-          this.tween.mode = 'idle';
-        }
+      const safeFromRatio = Number.isFinite(this.fromHeightRatio) ? this.fromHeightRatio : 1.0;
+      const safeTargetRatio = Number.isFinite(this.targetHeightRatio) ? this.targetHeightRatio : 1.0;
+      this.currentHeightRatio = THREE.MathUtils.lerp(safeFromRatio, safeTargetRatio, eased);
+      this.applyTrayGeometryForHeightRatio(this.currentHeightRatio);
+
+      for (let i = 0; i < 9; i++) {
+        const fromY = Number.isFinite(this.fromDefaultLayerY[i])
+          ? this.fromDefaultLayerY[i]
+          : this.targetDefaultLayerY[i];
+        const toY = Number.isFinite(this.targetDefaultLayerY[i])
+          ? this.targetDefaultLayerY[i]
+          : 0;
+        const fromScale =
+          Number.isFinite(this.fromLayerScaleY[i]) && this.fromLayerScaleY[i] > 0
+            ? this.fromLayerScaleY[i]
+            : 1.0;
+        const toScale =
+          Number.isFinite(this.targetLayerScaleY[i]) && this.targetLayerScaleY[i] > 0
+            ? this.targetLayerScaleY[i]
+            : 1.0;
+
+        this.defaultLayerY[i] = THREE.MathUtils.lerp(fromY, toY, eased);
+        this.currentLayerScaleY[i] = Math.max(0.001, THREE.MathUtils.lerp(fromScale, toScale, eased));
+        this.layerMeshes[i].scale.y = i === 0 ? 1.0 : this.currentLayerScaleY[i];
+        this.layerMeshes[i].userData.defaultY = this.defaultLayerY[i];
+        this.layerKinematics[i].defaultY = this.defaultLayerY[i];
+      }
+      this.defaultLayerY[9] = this.targetDefaultLayerY[9];
+      this.layerMeshes[9].userData.defaultY = this.defaultLayerY[9];
+      this.layerKinematics[9].defaultY = this.defaultLayerY[9];
+
+      if (t >= 1) {
+        this.isMorphingModel = false;
       }
     }
 
-    // 2. Zero-G Harmonic Floating Motion (Meadow Mode) vs Static Bed Frame Rest (Bedroom Mode)
-    const zeroGFloatOffset = this.floatingEnabled ? Math.sin(elapsedTime * 1.2) * 0.065 : 0;
-    this.currentElevation = this.baseY + zeroGFloatOffset + this.currentSinkY;
+    // 1. Two-Tier Motion Decoupling: Continuous Idle Antigravity Wave + Damped Buoyancy
+    // Keep continuous idle floating sine wave running on the base coordinate:
+    const idleFloatY = this.floatingEnabled
+      ? Math.sin(safeElapsed * this.floatSpeed) * this.floatAmplitude
+      : 0;
+    const y_base = this.baseY + idleFloatY;
+
+    // Damp vertical impulse smoothly like floating cushion on calm water (max clamped to 0.035m <= 0.05m)
+    const sinkDampSpeed = this.isPressed ? 7.5 : 3.8;
+    this.currentBuoyancySinkY = THREE.MathUtils.damp(
+      this.currentBuoyancySinkY,
+      Number.isFinite(this.targetBuoyancySinkY) ? this.targetBuoyancySinkY : 0,
+      sinkDampSpeed,
+      dt,
+    );
+    if (!Number.isFinite(this.currentBuoyancySinkY)) {
+      this.currentBuoyancySinkY = 0;
+    }
+    this.currentElevation = Number.isFinite(y_base - this.currentBuoyancySinkY)
+      ? y_base - this.currentBuoyancySinkY
+      : this.baseY;
     this.group.position.y = this.currentElevation;
 
-    // 3. Tactile Hover Cue: Subtle 1° Cursor Parallax Tilt in Meadow Mode
-    const idleRotX = this.floatingEnabled ? Math.sin(elapsedTime * 0.95) * 0.008 : 0;
-    const idleRotZ = this.floatingEnabled ? Math.cos(elapsedTime * 0.85) * 0.008 : 0;
-    const targetRotX =
-      this.floatingEnabled && (this.isHovered || this.isPressed)
-        ? this.hoverMouseNdc.y * 0.0175
-        : idleRotX;
-    const targetRotZ =
-      this.floatingEnabled && (this.isHovered || this.isPressed)
-        ? -this.hoverMouseNdc.x * 0.0175
-        : idleRotZ;
-    this.group.rotation.x = THREE.MathUtils.lerp(this.group.rotation.x, targetRotX, 0.1);
-    this.group.rotation.z = THREE.MathUtils.lerp(this.group.rotation.z, targetRotZ, 0.1);
+    // 2. Macro Inertial Angular Tilt / Torque Response
+    const tiltDampSpeed = this.isPressed ? 6.5 : 3.8;
+    this.currentTorqueRotX = THREE.MathUtils.damp(
+      Number.isFinite(this.currentTorqueRotX) ? this.currentTorqueRotX : 0,
+      Number.isFinite(this.targetTorqueRotX) ? this.targetTorqueRotX : 0,
+      tiltDampSpeed,
+      dt,
+    );
+    this.currentTorqueRotZ = THREE.MathUtils.damp(
+      Number.isFinite(this.currentTorqueRotZ) ? this.currentTorqueRotZ : 0,
+      Number.isFinite(this.targetTorqueRotZ) ? this.targetTorqueRotZ : 0,
+      tiltDampSpeed,
+      dt,
+    );
 
-    // 4. Smoothly damp mattress size changes (Twin -> Cal King)
-    this.currentScaleX = THREE.MathUtils.damp(this.currentScaleX, this.targetScaleX, 6.5, dt);
-    this.currentScaleZ = THREE.MathUtils.damp(this.currentScaleZ, this.targetScaleZ, 6.5, dt);
-    this.group.scale.set(
-      this.currentScaleX * this.currentPressScaleXZ,
+    const idleRotX = this.floatingEnabled ? Math.sin(safeElapsed * 0.95) * 0.008 : 0;
+    const idleRotZ = this.floatingEnabled ? Math.cos(safeElapsed * 0.85) * 0.008 : 0;
+    const hoverParallaxX =
+      this.isHovered && !this.isPressed && Number.isFinite(this.hoverMouseNdc.y)
+        ? this.hoverMouseNdc.y * 0.012
+        : 0;
+    const hoverParallaxZ =
+      this.isHovered && !this.isPressed && Number.isFinite(this.hoverMouseNdc.x)
+        ? -this.hoverMouseNdc.x * 0.012
+        : 0;
+
+    this.group.rotation.x = idleRotX + hoverParallaxX + this.currentTorqueRotX;
+    this.group.rotation.z = idleRotZ + hoverParallaxZ + this.currentTorqueRotZ;
+
+    // 3. Authentic Tactile Local Dent & Viscoelastic Memory Foam Rebound
+    const foamDampSpeed = this.isPressed ? 12.0 : 3.6;
+    this.currentDentDepth = THREE.MathUtils.damp(
+      Number.isFinite(this.currentDentDepth) ? this.currentDentDepth : 0,
+      Number.isFinite(this.targetDentDepth) ? this.targetDentDepth : 0,
+      foamDampSpeed,
+      dt,
+    );
+
+    if (this.topQuiltGeo && this.topBaseVertices) {
+      const posAttr = this.topQuiltGeo.attributes.position;
+      const count = posAttr.count;
+
+      if (this.currentDentDepth > 0.0004) {
+        this.isDented = true;
+        const twoSigmaSq = 2 * this.dentRadius * this.dentRadius;
+        const hx = this.localHitPoint.x;
+        const hz = this.localHitPoint.z;
+
+        for (let i = 0; i < count; i++) {
+          const vx = this.topBaseVertices[i * 3];
+          const vy = this.topBaseVertices[i * 3 + 1];
+          const vz = this.topBaseVertices[i * 3 + 2];
+
+          const dx = vx - hx;
+          const dz = vz - hz;
+          const distSq = dx * dx + dz * dz;
+
+          // Localized inward dent using Gaussian falloff around the hit coordinate
+          if (distSq < twoSigmaSq * 4.5) {
+            const falloff = Math.exp(-distSq / twoSigmaSq);
+            posAttr.setY(i, vy - this.currentDentDepth * falloff);
+          } else {
+            posAttr.setY(i, vy);
+          }
+        }
+        posAttr.needsUpdate = true;
+        this.topQuiltGeo.computeVertexNormals();
+      } else if (this.isDented) {
+        // Viscoelastic rebound has fully recovered to pristine rest shape
+        for (let i = 0; i < count; i++) {
+          posAttr.setY(i, this.topBaseVertices[i * 3 + 1]);
+        }
+        posAttr.needsUpdate = true;
+        this.topQuiltGeo.computeVertexNormals();
+        this.isDented = false;
+        this.currentDentDepth = 0.0;
+      }
+    }
+
+    // 4. Subtle Volumetric Elastic Cushion Conservation (1% Y cushion compression & lateral expansion)
+    const targetPressScaleY = this.isPressed ? 0.988 : 1.0;
+    const targetPressScaleXZ = this.isPressed ? 1.003 : 1.0;
+    this.currentPressScaleY = THREE.MathUtils.damp(
       this.currentPressScaleY,
-      this.currentScaleZ * this.currentPressScaleXZ,
+      targetPressScaleY,
+      6.0,
+      dt,
+    );
+    this.currentPressScaleXZ = THREE.MathUtils.damp(
+      this.currentPressScaleXZ,
+      targetPressScaleXZ,
+      6.0,
+      dt,
+    );
+    if (!Number.isFinite(this.currentPressScaleY) || this.currentPressScaleY <= 0) {
+      this.currentPressScaleY = 1.0;
+    }
+    if (!Number.isFinite(this.currentPressScaleXZ) || this.currentPressScaleXZ <= 0) {
+      this.currentPressScaleXZ = 1.0;
+    }
+
+    // 5. Smoothly damp mattress size changes (Twin -> Cal King)
+    this.currentScaleX = THREE.MathUtils.damp(
+      this.currentScaleX,
+      Number.isFinite(this.targetScaleX) && this.targetScaleX > 0 ? this.targetScaleX : 1.0,
+      6.5,
+      dt,
+    );
+    this.currentScaleZ = THREE.MathUtils.damp(
+      this.currentScaleZ,
+      Number.isFinite(this.targetScaleZ) && this.targetScaleZ > 0 ? this.targetScaleZ : 1.0,
+      6.5,
+      dt,
+    );
+    this.group.scale.set(
+      Math.max(0.1, this.currentScaleX * this.currentPressScaleXZ),
+      Math.max(0.1, this.currentPressScaleY),
+      Math.max(0.1, this.currentScaleZ * this.currentPressScaleXZ),
     );
 
     // 5. Phase 1 Kinematics: Two-Step "Lift-then-Slide" (0% Side-Wall Clipping)
     for (let i = 0; i < this.layerMeshes.length; i++) {
       const layerObj = this.layerMeshes[i];
       const kin = this.layerKinematics[i];
-      const elapsed = Math.max(0, elapsedTime - kin.startTime);
+      if (!Number.isFinite(this.defaultLayerY[i])) {
+        this.defaultLayerY[i] = this.targetDefaultLayerY[i] ?? 0;
+      }
+      if (!Number.isFinite(kin.defaultY)) {
+        kin.defaultY = this.defaultLayerY[i];
+      }
+      const startTime = Number.isFinite(kin.startTime) ? kin.startTime : safeElapsed;
+      const elapsed = Math.max(0, safeElapsed - startTime);
 
       if (kin.mode === 'lift-then-slide') {
         // STEP A (0.00s -> 0.25s, power2.out): Vertical Clearance Lift above tray rim (y: defaultY + 0.30)
@@ -1186,8 +2019,17 @@ export class FloatingWoolPad {
         kin.currentEmissive = THREE.MathUtils.lerp(kin.fromEmissive, kin.toEmissive, eased);
       }
 
+      if (!Number.isFinite(kin.currentX)) kin.currentX = 0;
+      if (!Number.isFinite(kin.currentY)) kin.currentY = kin.defaultY;
+      if (!Number.isFinite(kin.currentZ)) kin.currentZ = 0;
+      if (!Number.isFinite(kin.currentRotX)) kin.currentRotX = 0;
+      if (!Number.isFinite(kin.currentEmissive)) kin.currentEmissive = 0;
+
       layerObj.position.set(kin.currentX, kin.currentY, kin.currentZ);
       layerObj.rotation.set(kin.currentRotX, 0, 0);
+      if (i < 9 && (!Number.isFinite(layerObj.scale.y) || layerObj.scale.y <= 0)) {
+        layerObj.scale.y = i === 0 ? 1.0 : Math.max(0.001, this.currentLayerScaleY[i] || 1.0);
+      }
 
       const mats = this.layerHighlightMaterials[i];
       for (const mat of mats) {
@@ -1299,6 +2141,11 @@ export class FloatingWoolPad {
       window.clearTimeout(this.autoReleaseTimer);
       this.autoReleaseTimer = null;
     }
+    this.topQuiltMesh = null;
+    this.topQuiltGeo = null;
+    this.topBaseVertices = null;
+    this.handleMeshes = [];
+    this.cornerStrapMeshes = [];
     for (const d of this.disposables) {
       d.dispose();
     }

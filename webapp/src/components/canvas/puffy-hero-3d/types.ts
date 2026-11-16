@@ -1,6 +1,6 @@
 import type * as THREE from 'three';
 
-export type CameraAnglePreset = 'hero45' | 'dollyClose' | 'topDown' | 'exploded';
+export type CameraAnglePreset = 'hero45' | 'dollyClose' | 'topDown';
 
 export type ViewportMode = 'desktop' | 'mobile';
 
