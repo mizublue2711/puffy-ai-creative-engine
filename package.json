@@ -10,6 +10,7 @@
     "ingest:pomelli": "tsx scripts/scrape_pomelli.ts && tsx scripts/sync_github.ts",
     "typecheck": "tsc --noEmit",
     "build": "npm --prefix webapp run build",
+    "prepreview": "npm run build",
     "audit": "bash scripts/deployment-audit.sh"
   },
   "dependencies": {
