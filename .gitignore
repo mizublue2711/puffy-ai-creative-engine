@@ -13,6 +13,7 @@ auth_cookies.json
 webapp/dist/*
 !webapp/dist/.gitkeep
 !webapp/dist/index.html
+!webapp/dist/assets/
 pipelines/remotion/out/
 pipelines/banner_engine/out/
 .agent/last_bundle_hash

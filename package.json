@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "webapp"
+  ],
   "description": "Autonomous creative pipeline, brand design tokens, and Google Pomelli asset ingestion engine for Puffy®",
   "scripts": {
     "scrape:pomelli": "tsx scripts/scrape_pomelli.ts",
