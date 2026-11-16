@@ -216,12 +216,12 @@ const ARCHETYPE_TIMBER_COLORS: Record<string, string> = {
 
 /**
  * 3-Drop Staggered Geometric Bedroom Pendant Light Cluster
- * Suspended from ceiling (y = 3.2m) down to bedside zone (y = 1.0m - 1.6m).
+ * Suspended from ceiling (y = 3.90m) down to bedside zone (y = 1.35m - 1.85m).
  */
 export function createModernPendantCluster(
   options: ModernPendantClusterOptions = {},
 ): ModernPendantClusterInstance {
-  const ceilingY = options.ceilingY ?? 3.2;
+  const ceilingY = options.ceilingY ?? 3.90;
   const castShadow = options.castShadow ?? true;
   const enableAccentLight = options.enableAccentLight ?? true;
   const accentLightIntensity = options.accentLightIntensity ?? 1.8;
@@ -316,11 +316,11 @@ export function createModernPendantCluster(
 
   // ==========================================================================
   // DROP FIXTURE A: Tall Timber Batten + Lower Orb
-  // Position: x = 1.35m, y = 1.25m, z = -0.75m
+  // Position: x = 1.35m, y = 1.55m, z = -0.75m
   // Batten: BoxGeometry(0.04m, 0.42m, 0.04m) Solid Natural Oak / Walnut
   // Attached Orb: SphereGeometry(radius: 0.065m) tangent to lower side
   // ==========================================================================
-  const fixAPos = new THREE.Vector3(1.35 + deltaX, 1.25 - ceilingY, -0.75 + deltaZ);
+  const fixAPos = new THREE.Vector3(1.35 + deltaX, 1.55 - ceilingY, -0.75 + deltaZ);
   const battenAW = 0.04;
   const battenAH = 0.42;
   const battenAD = 0.04;
@@ -355,7 +355,7 @@ export function createModernPendantCluster(
   const orbAGeo = new THREE.SphereGeometry(orbARadius, 36, 28);
   const orbAMesh = new THREE.Mesh(orbAGeo, localGlassMat);
   // Mounted tangent to the inward (-X) face in the lower half of the batten
-  const orbAY = fixAPos.y - battenAH * 0.24; // Lower portion (y ~ 1.15m world)
+  const orbAY = fixAPos.y - battenAH * 0.24; // Lower portion (y ~ 1.45m world)
   const orbAX = fixAPos.x - (battenAW / 2 + orbARadius);
   const orbAZ = fixAPos.z;
   orbAMesh.position.set(orbAX, orbAY, orbAZ);
@@ -380,11 +380,11 @@ export function createModernPendantCluster(
 
   // ==========================================================================
   // DROP FIXTURE B: White Acrylic / Brass Slat + Elevated Orb
-  // Position: x = 1.48m, y = 1.45m, z = -0.70m (staggered slightly forward and higher)
+  // Position: x = 1.48m, y = 1.75m, z = -0.70m (staggered slightly forward and higher)
   // Batten: BoxGeometry(0.035m, 0.36m, 0.035m) with brushed brass mounting collar
   // Attached Orb: SphereGeometry(radius: 0.075m) positioned near upper half
   // ==========================================================================
-  const fixBPos = new THREE.Vector3(1.48 + deltaX, 1.45 - ceilingY, -0.70 + deltaZ);
+  const fixBPos = new THREE.Vector3(1.48 + deltaX, 1.75 - ceilingY, -0.70 + deltaZ);
   const battenBW = 0.035;
   const battenBH = 0.36;
   const battenBD = 0.035;
@@ -419,7 +419,7 @@ export function createModernPendantCluster(
   const orbBGeo = new THREE.SphereGeometry(orbBRadius, 36, 28);
   const orbBMesh = new THREE.Mesh(orbBGeo, localGlassMat);
   // Mounted tangent to the forward (+Z / -X) zone in upper half
-  const orbBY = fixBPos.y + battenBH * 0.22; // Upper portion (y ~ 1.53m world)
+  const orbBY = fixBPos.y + battenBH * 0.22; // Upper portion (y ~ 1.83m world)
   const orbBX = fixBPos.x - (battenBW / 2 + orbBRadius * 0.85);
   const orbBZ = fixBPos.z + orbBRadius * 0.52;
   orbBMesh.position.set(orbBX, orbBY, orbBZ);
@@ -452,11 +452,11 @@ export function createModernPendantCluster(
 
   // ==========================================================================
   // DROP FIXTURE C: Accent Wood Counterweight + Micro Disc/Orb
-  // Position: x = 1.40m, y = 1.10m, z = -0.62m (lowest drop)
+  // Position: x = 1.40m, y = 1.40m, z = -0.62m (lowest drop)
   // Batten: BoxGeometry(0.04m, 0.28m, 0.04m) Solid Natural Oak / Walnut
   // Attached Disc/Orb: Compact frosted sphere radius: 0.05m
   // ==========================================================================
-  const fixCPos = new THREE.Vector3(1.40 + deltaX, 1.10 - ceilingY, -0.62 + deltaZ);
+  const fixCPos = new THREE.Vector3(1.40 + deltaX, 1.40 - ceilingY, -0.62 + deltaZ);
   const battenCW = 0.04;
   const battenCH = 0.28;
   const battenCD = 0.04;
@@ -491,7 +491,7 @@ export function createModernPendantCluster(
   const orbCGeo = new THREE.SphereGeometry(orbCRadius, 32, 24);
   const orbCMesh = new THREE.Mesh(orbCGeo, localGlassMat);
   // Mounted tangent to the lower-front face
-  const orbCY = fixCPos.y - battenCH * 0.18; // y ~ 1.05m world
+  const orbCY = fixCPos.y - battenCH * 0.18; // y ~ 1.35m world
   const orbCX = fixCPos.x - (battenCW / 2 + orbCRadius * 0.8);
   const orbCZ = fixCPos.z + orbCRadius * 0.55;
   orbCMesh.position.set(orbCX, orbCY, orbCZ);
@@ -517,10 +517,10 @@ export function createModernPendantCluster(
   // ==========================================================================
   // III. INTEGRATED LIGHTING RIG (SUBTLE AMBIENCE)
   // Subtle PointLight within central cluster: 0xFFE5C4, 1.8, 2.5, 2.0
-  // Position: (1.42, 1.30, -0.68)
+  // Position: (1.42, 1.60, -0.68)
   // ==========================================================================
   const accentLight = new THREE.PointLight(0xffe5c4, accentLightIntensity, 2.5, 2.0);
-  accentLight.position.set(1.42 + deltaX, 1.30 - ceilingY, -0.68 + deltaZ);
+  accentLight.position.set(1.42 + deltaX, 1.60 - ceilingY, -0.68 + deltaZ);
   accentLight.castShadow = castShadow;
   if (castShadow) {
     accentLight.shadow.bias = -0.0005;
@@ -540,9 +540,9 @@ export function createModernPendantCluster(
     id: 'staggered-pendant-cluster',
     name: 'Staggered Geometric Bedroom Pendant Light Cluster',
     category: 'lighting',
-    dimensions: { width: 0.38, height: 2.2, depth: 0.38 },
+    dimensions: { width: 0.38, height: 2.65, depth: 0.38 },
     defaultTransform: {
-      position: [clusterCenterX, 1.30, clusterCenterZ],
+      position: [clusterCenterX, 1.60, clusterCenterZ],
       rotation: [0, 0, 0],
       scale: [1, 1, 1],
     },
