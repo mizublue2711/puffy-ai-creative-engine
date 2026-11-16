@@ -139,6 +139,10 @@ Use this skill whenever the user asks to generate raised 3D embroidery materials
    * Cast assets must be orthographic front-facing with clean, delit albedo (no baked shadows), allowing:
      * **3D Engine (Three.js)**: Real-time dynamic lighting, specular sheen, and contact shadow calculation at 60 FPS.
      * **2D Automation (Python)**: Artifact-free placement, arbitrary rotation, and dynamic contact shadow rendering on marketing banners.
+4. **RULE: STRICT PBR ALBEDO SAFETY RANGE (NO PURE #FFFFFF)**:
+   * Strictly ban pure `#FFFFFF` for any white fabric, quilt surface, or `baseColor` maps.
+   * The maximum allowable brightness for white fabric must be clamped to 80%–85% reflectance (Hex range: `#DCE4EC` to `#EDF2F7`).
+   * In Three.js materials, set `color: new THREE.Color('#E2E8F0')` and ensure `renderer.toneMapping = THREE.ACESFilmicToneMapping` with `toneMappingExposure = 1.0`.
 
 ### 2. Standard Output Artifact Package (6-File Contract)
 Every component cast into `shared_assets/lego/components/<component_id>/` (and mirrored to `webapp/public/textures/badge/` for WebGL) must output **exactly these 6 standard files**:

@@ -140,6 +140,287 @@
           "sha256": "7555c34faa085c7cf741188bbb84f43b0acb03c7fd51d963d0bc16b40e3dc402"
         }
       }
+    },
+    "top_quilt_cloud_diamond_v1": {
+      "id": "top_quilt_cloud_diamond_v1",
+      "version": "1.0.0",
+      "component_type": "tileable_unit",
+      "native_aspect_ratio": "1:1",
+      "physical_dimensions_meters": {
+        "width": 0.4,
+        "height": 0.4,
+        "repeat_on_mattress": [
+          4,
+          5
+        ],
+        "mattress_coverage_meters": [
+          1.6,
+          2.0
+        ]
+      },
+      "craft_sources": {
+        "height_generator": "scripts/generate_top_quilt_height.py",
+        "materialcraft_mcmat": "assets/lego/top_quilt/top_quilt_cloud_diamond.mcmat",
+        "materialcraft_mcraft": "assets/lego/top_quilt/top_quilt_cloud_diamond.mcraft",
+        "texturecraft_tcraft": "assets/lego/top_quilt/top_quilt_cloud_diamond.tcraft"
+      },
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "material_slot": "mat_top_cover",
+        "material": "THREE.MeshPhysicalMaterial",
+        "wrap": "THREE.RepeatWrapping",
+        "repeat": [
+          4,
+          5
+        ],
+        "normal_scale": [
+          3.0,
+          3.0
+        ],
+        "roughness": 0.82,
+        "sheen": 1.0,
+        "sheen_roughness": 0.5,
+        "sheen_color": "#F8FAFC",
+        "color": "#E2E8F0",
+        "ao_map_intensity": 2.5
+      },
+      "artifacts": {
+        "01_baseColor.png": {
+          "path": "shared_assets/lego/components/top_quilt_cloud_diamond_v1/01_baseColor.png",
+          "webapp_mirror": "webapp/public/textures/top_quilt/01_baseColor.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "sRGB",
+          "role": "albedo",
+          "description": "Clamped white microfiber fabric delit albedo (#E2E8F0, 80-85% reflectance safety range)",
+          "bytes": 167804,
+          "sha256": "24b31798e4e727af0aaf8993a74ec2ddaf2633bb49db031b3fdcf9848e46f442"
+        },
+        "02_normal.png": {
+          "path": "shared_assets/lego/components/top_quilt_cloud_diamond_v1/02_normal.png",
+          "webapp_mirror": "webapp/public/textures/top_quilt/02_normal.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "normal_opengl",
+          "description": "OpenGL tangent-space normal map (+Y green up) with +1.5mm diamond quilt, +3.5mm cloud pillows, and micro-ribbed horizontal fabric grain",
+          "bytes": 22945389,
+          "sha256": "3f29f21080641343ed888edb8c31ca19b36afbb9b575150d776b97eebf837184"
+        },
+        "03_roughness.png": {
+          "path": "shared_assets/lego/components/top_quilt_cloud_diamond_v1/03_roughness.png",
+          "webapp_mirror": "webapp/public/textures/top_quilt/03_roughness.png",
+          "format": "PNG-24",
+          "mode": "I;16",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "roughness",
+          "description": "Matte microfiber fabric roughness (0.85)",
+          "bytes": 45176,
+          "sha256": "205ab186e49ddc14dec31f738f7361475ad5f897cb0057145765965cc1afe307"
+        },
+        "04_height.png": {
+          "path": "shared_assets/lego/components/top_quilt_cloud_diamond_v1/04_height.png",
+          "webapp_mirror": "webapp/public/textures/top_quilt/04_height.png",
+          "format": "PNG-24",
+          "mode": "I;16",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "height",
+          "description": "Seamless 1:1 composite height map (+1.5mm diamond cells, +3.5mm staggered cloud pillows, debossed perimeter crease)",
+          "bytes": 3182524,
+          "sha256": "9310769a1a9d76ae01d1d94db12922f3b146be6d5865ee07b0414c1c24d28ab7"
+        },
+        "05_ambientOcclusion.png": {
+          "path": "shared_assets/lego/components/top_quilt_cloud_diamond_v1/05_ambientOcclusion.png",
+          "webapp_mirror": "webapp/public/textures/top_quilt/05_ambientOcclusion.png",
+          "format": "PNG-24",
+          "mode": "I;16",
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "Linear",
+          "role": "ambient_occlusion",
+          "description": "Contact ambient occlusion in diamond stitch seams and cloud perimeter creases",
+          "bytes": 5643910,
+          "sha256": "60ca1adec3662d492b669ddd760844361de7a515cad9ffb08dfb6207ee59f9aa"
+        },
+        "06_beauty_render_4k.png": {
+          "path": "shared_assets/lego/components/top_quilt_cloud_diamond_v1/06_beauty_render_4k.png",
+          "webapp_mirror": "webapp/public/textures/top_quilt/06_beauty_render_4k.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            4096,
+            4096
+          ],
+          "aspect_ratio": 1.0,
+          "color_space": "sRGB",
+          "role": "beauty_render_4k",
+          "description": "4K 1:1 orthographic studio render of tileable hybrid cloud-diamond quilt",
+          "bytes": 8586645,
+          "sha256": "8f49690a4ae97b9aa7a5bd1b985f4867ad55690465d18f050e936f6879ee14f9"
+        }
+      }
+    },
+    "sidewall_strip_v1": {
+      "id": "sidewall_strip_v1",
+      "version": "1.0.0",
+      "component_type": "tileable_strip",
+      "native_aspect_ratio": "2:1",
+      "physical_dimensions_meters": {
+        "height": 0.35,
+        "repeat_horizontal_u": 10,
+        "wrap_s": "RepeatWrapping",
+        "wrap_t": "ClampToEdgeWrapping"
+      },
+      "craft_sources": {
+        "generator_script": "scripts/generate_sidewall_strip.py",
+        "materialcraft_mcmat": "assets/lego/sidewall/sidewall_strip.mcmat",
+        "materialcraft_mcraft": "assets/lego/sidewall/sidewall_strip.mcraft",
+        "texturecraft_tcraft": "assets/lego/sidewall/sidewall_strip.tcraft"
+      },
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "material_slot": "mat_sidewall_strip",
+        "material": "THREE.MeshPhysicalMaterial",
+        "wrap_s": "THREE.RepeatWrapping",
+        "wrap_t": "THREE.ClampToEdgeWrapping",
+        "repeat": [
+          10,
+          1
+        ],
+        "normal_scale": [
+          2.0,
+          2.0
+        ],
+        "roughness": 0.85,
+        "metalness": 0.0,
+        "clearcoat": 0.0,
+        "sheen": 1.5,
+        "sheen_roughness": 0.4,
+        "sheen_color": "#FFFFFF",
+        "ao_map_intensity": 1.4,
+        "sheen_color_map": "webapp/public/textures/sidewall/07_sheenColor.png"
+      },
+      "artifacts": {
+        "01_baseColor.png": {
+          "path": "shared_assets/lego/components/sidewall_strip_v1/01_baseColor.png",
+          "webapp_mirror": "webapp/public/textures/sidewall/01_baseColor.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "albedo",
+          "description": "Delit 4-tier sidewall albedo (#3E4249 piping, #1B2A4A navy suede, #2B2F36 matte charcoal diamonds)",
+          "bytes": 1197378,
+          "sha256": "0a0ed2497791c64acdd0b1b2a597e7afac2bb39e78e3ec8c2724d735ed34fa95"
+        },
+        "02_normal.png": {
+          "path": "shared_assets/lego/components/sidewall_strip_v1/02_normal.png",
+          "webapp_mirror": "webapp/public/textures/sidewall/02_normal.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "normal_opengl",
+          "description": "OpenGL tangent-space normal map (+Y up), 100% horizontally seamless in U",
+          "bytes": 3481628,
+          "sha256": "15b194782c62c02345f3e2bd60b1ff48e0fe8be7419243ca81423e5261597cb0"
+        },
+        "03_roughness.png": {
+          "path": "shared_assets/lego/components/sidewall_strip_v1/03_roughness.png",
+          "webapp_mirror": "webapp/public/textures/sidewall/03_roughness.png",
+          "format": "PNG-24",
+          "mode": "I;16",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "roughness",
+          "description": "Matte textile roughness (0.90 piping, 0.85 navy suede, 0.80 charcoal diamonds, 0.92 stitch grooves)",
+          "bytes": 3184555,
+          "sha256": "996abfd1af0edcd77bda5f85967ad5be96bcfe3e90d436ad7477b376d1379761"
+        },
+        "04_height.png": {
+          "path": "shared_assets/lego/components/sidewall_strip_v1/04_height.png",
+          "webapp_mirror": "webapp/public/textures/sidewall/04_height.png",
+          "format": "PNG-24",
+          "mode": "I;16",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "height",
+          "description": "4-tier displacement/bump heightfield (+3.0mm beveled diamonds, dual-seam valleys, vertical flutes, braided cord)",
+          "bytes": 3441284,
+          "sha256": "a5710cae4d73e60d2206a7cf757fca43d96c661d34f62a11a6203ed7031c6345"
+        },
+        "05_ambientOcclusion.png": {
+          "path": "shared_assets/lego/components/sidewall_strip_v1/05_ambientOcclusion.png",
+          "webapp_mirror": "webapp/public/textures/sidewall/05_ambientOcclusion.png",
+          "format": "PNG-24",
+          "mode": "I;16",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "ambient_occlusion",
+          "description": "Deep recessed AO in stitch crevices, dual-seam valleys, flute grooves, and piping tuck seams",
+          "bytes": 141090,
+          "sha256": "d8656bbeef2ca0f386aa70eedb6ca291217ad2b570c4abdd3e400edf4eebbb0d"
+        },
+        "06_beauty_render_4k.png": {
+          "path": "shared_assets/lego/components/sidewall_strip_v1/06_beauty_render_4k.png",
+          "webapp_mirror": "webapp/public/textures/sidewall/06_beauty_render_4k.png",
+          "format": "PNG-32",
+          "mode": "RGBA",
+          "dimensions": [
+            4096,
+            2048
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "beauty_render_4k",
+          "description": "4K (4096x2048) TextureCraft path-traced studio QA render",
+          "bytes": 2589085,
+          "sha256": "466fe5874cb8145a5c1e9dce39ae872cc116284a8beaeb3c950691b74a92f613"
+        }
+      }
     }
   }
 }

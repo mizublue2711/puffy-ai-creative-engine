@@ -1,0 +1,124 @@
+{
+  "open": "assets/lego/sidewall/sidewall_strip.sbs",
+  "steps": [
+    {
+      "id": "file.importBitmap",
+      "params": {
+        "path": "assets/lego/sidewall/masks/sidewall_basecolor_2048x1024.png",
+        "name": "sidewall_basecolor"
+      }
+    },
+    {
+      "id": "file.importBitmap",
+      "params": {
+        "path": "assets/lego/sidewall/masks/sidewall_height_2048x1024.png",
+        "name": "sidewall_height"
+      }
+    },
+    {
+      "id": "file.importBitmap",
+      "params": {
+        "path": "assets/lego/sidewall/masks/sidewall_roughness_2048x1024.png",
+        "name": "sidewall_roughness"
+      }
+    },
+    {
+      "id": "file.importBitmap",
+      "params": {
+        "path": "assets/lego/sidewall/masks/sidewall_ao_2048x1024.png",
+        "name": "sidewall_ao"
+      }
+    },
+    {
+      "id": "graph.node.add",
+      "params": {
+        "def": "bitmap",
+        "at": [-300, 0],
+        "params": {
+          "resource": "sidewall_basecolor",
+          "colour_space": 0,
+          "color_mode": true
+        }
+      }
+    },
+    {
+      "id": "graph.node.add",
+      "params": {
+        "def": "bitmap",
+        "at": [-300, 600],
+        "params": {
+          "resource": "sidewall_height",
+          "colour_space": 1,
+          "color_mode": false
+        }
+      }
+    },
+    {
+      "id": "graph.node.add",
+      "params": {
+        "def": "bitmap",
+        "at": [-300, 350],
+        "params": {
+          "resource": "sidewall_roughness",
+          "colour_space": 1,
+          "color_mode": false
+        }
+      }
+    },
+    {
+      "id": "graph.node.add",
+      "params": {
+        "def": "bitmap",
+        "at": [-300, 900],
+        "params": {
+          "resource": "sidewall_ao",
+          "colour_space": 1,
+          "color_mode": false
+        }
+      }
+    },
+    {
+      "id": "graph.node.add",
+      "params": {
+        "def": "normal",
+        "at": [0, 200],
+        "params": {
+          "intensity": 6.5,
+          "opengl": true
+        }
+      }
+    },
+    {
+      "id": "graph.connect",
+      "params": { "from": 13, "fromPort": "output", "to": 2, "toPort": "input" }
+    },
+    {
+      "id": "graph.connect",
+      "params": { "from": 14, "fromPort": "output", "to": 17, "toPort": "input" }
+    },
+    {
+      "id": "graph.connect",
+      "params": { "from": 17, "fromPort": "output", "to": 4, "toPort": "input" }
+    },
+    {
+      "id": "graph.connect",
+      "params": { "from": 14, "fromPort": "output", "to": 10, "toPort": "input" }
+    },
+    {
+      "id": "graph.connect",
+      "params": { "from": 15, "fromPort": "output", "to": 6, "toPort": "input" }
+    },
+    {
+      "id": "graph.connect",
+      "params": { "from": 16, "fromPort": "output", "to": 12, "toPort": "input" }
+    },
+    {
+      "id": "file.exportMaterial",
+      "params": {
+        "path": "assets/lego/sidewall/sidewall_strip.mcmat",
+        "size": 2048
+      }
+    }
+  ],
+  "save": "assets/lego/sidewall/sidewall_strip.mcraft"
+}

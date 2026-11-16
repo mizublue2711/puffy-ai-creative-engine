@@ -84,6 +84,7 @@ export function PuffyFloatingHero3D({
 }: PuffyFloatingHero3DProps) {
   const mountContainerRef = useRef<HTMLDivElement | null>(null);
   const sceneModuleRef = useRef<WoolMeadowSceneModule | null>(null);
+  const craftTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const telemetryCallbackRef = useRef(onTelemetryUpdate);
   const layerSelectCallbackRef = useRef(onLayerSelect);
 
@@ -135,7 +136,7 @@ export function PuffyFloatingHero3D({
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.0;
     renderer.setPixelRatio(
       isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2)
     );
@@ -285,6 +286,17 @@ export function PuffyFloatingHero3D({
   useEffect(() => {
     sceneModuleRef.current?.switchMattressModel(activeModelKey);
   }, [activeModelKey]);
+
+  // Keep active horizontal layer tab centered in the Craft & Specs Lab strip
+  useEffect(() => {
+    if (!isCraftLabVisible) return;
+    const activeTab = craftTabRefs.current[activeLayerIndex];
+    activeTab?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [activeLayerIndex, isCraftLabVisible]);
 
   // Sync Desktop/Mobile Viewport Switcher resize
   useEffect(() => {
@@ -498,6 +510,62 @@ export function PuffyFloatingHero3D({
           </div>
         </div>
 
+        {/* Horizontal 10-Layer Tab Bar */}
+        <div className="craft-10layer-tabs-row">
+          <button
+            type="button"
+            className="craft-tab-arrow-btn"
+            aria-label="Previous Layer"
+            onClick={() =>
+              handleSelectLayerIn3D(
+                (activeLayerIndex - 1 + PUFFY_10_LAYERS.length) %
+                  PUFFY_10_LAYERS.length,
+                false
+              )
+            }
+          >
+            &#8249;
+          </button>
+
+          <div className="craft-10layer-tabs-scroll" role="tablist" aria-label="10 Mattress Layers">
+            {PUFFY_10_LAYERS.map((layer, idx) => (
+              <button
+                key={layer.id}
+                ref={(el) => {
+                  craftTabRefs.current[idx] = el;
+                }}
+                type="button"
+                role="tab"
+                aria-selected={idx === activeLayerIndex}
+                className="craft-10layer-tab-pill"
+                data-active={idx === activeLayerIndex ? "true" : "false"}
+                onClick={() => handleSelectLayerIn3D(idx, false)}
+              >
+                <span className="craft-tab-num-circle tabular-nums">
+                  {layer.id}
+                </span>
+                <span className="craft-tab-short-name">
+                  {layer.shortTabLabel}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="craft-tab-arrow-btn"
+            aria-label="Next Layer"
+            onClick={() =>
+              handleSelectLayerIn3D(
+                (activeLayerIndex + 1) % PUFFY_10_LAYERS.length,
+                false
+              )
+            }
+          >
+            &#8250;
+          </button>
+        </div>
+
         <div className="craft-lab-body-grid">
           <div className="craft-cutaway-stage">
             <div className="craft-cutaway-img-wrap">
@@ -523,6 +591,21 @@ export function PuffyFloatingHero3D({
               <div className="craft-tooltip-tagline">{activeLayer.tagline}</div>
               <div className="craft-tooltip-desc">
                 {activeLayer.description}
+              </div>
+
+              <div className="craft-structured-specs-wrap">
+                <div className="craft-spec-detail-block">
+                  <div className="craft-spec-detail-label">What it is</div>
+                  <p className="craft-spec-detail-text">
+                    {activeLayer.whatItIs}
+                  </p>
+                </div>
+                <div className="craft-spec-detail-block">
+                  <div className="craft-spec-detail-label">How it works</div>
+                  <p className="craft-spec-detail-text">
+                    {activeLayer.howItWorks}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
