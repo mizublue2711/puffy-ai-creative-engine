@@ -14,6 +14,13 @@ import type {MattressModelId} from './MattressAnatomy.ts';
 import {resolvePuffyModelKey, type PuffyModelKey} from './puffyLayersData.ts';
 import {MeadowTerrain} from './MeadowTerrain.ts';
 import {SheepFlockEngine} from './SheepFlockEngine.ts';
+import {HeroCloudletGuide} from './HeroCloudletGuide.ts';
+import {
+  IntroSequence,
+  FLIGHT_SPLINE,
+  type IntroPhase1Stage,
+  type IntroState,
+} from './IntroSequence.ts';
 import {
   createBedroomSanctuaryScene,
   type BedroomSanctuaryInstance,
@@ -21,6 +28,8 @@ import {
 import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
 
 export type SanctuaryEnvironmentMode = 'bedroom' | 'meadow' | 'studio';
+export {FLIGHT_SPLINE, FLIGHT_SPLINE as CINEMATIC_FLIGHT_SPLINE};
+export type {IntroPhase1Stage, IntroState};
 
 /**
  * Strict Resource Disposal Protocol to guarantee 0 VRAM leaks across scene transitions.
@@ -81,6 +90,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private meadowTerrain: MeadowTerrain | null = null;
   private floatingWoolPad: FloatingWoolPad | null = null;
   private sheepFlock: SheepFlockEngine | null = null;
+  private heroCloudlet: HeroCloudletGuide | null = null;
   private bedroomGroup: THREE.Group | null = null;
   private bedroomSanctuary: BedroomSanctuaryInstance | null = null;
   private bedroomStyle: BedroomStyle = 'nordic-coastal';
@@ -115,7 +125,13 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private onTelemetryCallback: ((readout: TelemetryReadout) => void) | null = null;
   private onLayerSelectCallback: ((layerIndex: number) => void) | null = null;
   private onCameraPositionChangeCallback: ((pos: THREE.Vector3) => void) | null = null;
+  private onIntroFlightCompleteCallback: (() => void) | null = null;
+  private onIntroStateChangeCallback: ((state: IntroState) => void) | null = null;
+  private onIntroPhase1StageChangeCallback: ((stage: IntroPhase1Stage) => void) | null = null;
   private lastTelemetryEmit = 0;
+
+  // Cohesive Cinematic Intro Controller
+  private introSequence: IntroSequence | null = null;
 
   // Bound event listeners for deterministic removal in dispose()
   private boundPointerDown: ((e: PointerEvent) => void) | null = null;
@@ -236,6 +252,35 @@ export class WoolMeadowSceneModule implements ISceneModule {
     this.sheepFlock = new SheepFlockEngine(8);
     scene.add(this.sheepFlock.group);
 
+    this.heroCloudlet = new HeroCloudletGuide();
+    scene.add(this.heroCloudlet.group);
+
+    this.introSequence = new IntroSequence({
+      scene,
+      camera,
+      getControls: () => this.controls,
+      getCloudlet: () => this.heroCloudlet,
+      getMattressGroup: () => this.floatingWoolPad?.group ?? null,
+      getMattressTopY: () => (this.floatingWoolPad?.getCurrentElevation() ?? 0.52) + 0.35,
+      isSoftwareGl,
+      onStateChange: (state) => {
+        this.onIntroStateChangeCallback?.(state);
+      },
+      onPhase1StageChange: (stage) => {
+        this.onIntroPhase1StageChangeCallback?.(stage);
+      },
+      onCameraPositionChange: (pos) => {
+        this.cameraPosition.copy(pos);
+        this.onCameraPositionChangeCallback?.(pos);
+      },
+      onFlightComplete: () => {
+        this.onIntroFlightCompleteCallback?.();
+      },
+      onSheepIntroPose: (active) => {
+        this.sheepFlock?.setHeroSheepIntroPose(active);
+      },
+    });
+
     if (typeof window !== 'undefined' && window.location.search.includes('audit=exploded')) {
       this.setEnvironmentMode('studio');
       this.floatingWoolPad.setFloatingEnabled(false, 0.25);
@@ -252,8 +297,12 @@ export class WoolMeadowSceneModule implements ISceneModule {
       }
       camera.lookAt(auditTarget);
       this.isTransitioningCamera = false;
+      this.introSequence.forceExploring();
+    } else {
+      this.introSequence.enterIdleStage();
     }
 
+    // Warm up all shaders during Phase 1 IDLE state
     if (!isSoftwareGl) {
       renderer.compile(scene, camera);
     }
@@ -635,7 +684,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   }
 
   private handlePointerDown(event: PointerEvent): void {
-    if (!this.context || !this.floatingWoolPad || this.isLabPaused) return;
+    if (!this.context || !this.floatingWoolPad || this.isLabPaused || this.getIntroState() !== 'EXPLORING') return;
 
     this.pointerDownScreenX = event.clientX;
     this.pointerDownScreenY = event.clientY;
@@ -735,7 +784,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   }
 
   private handleWheelDolly(event: WheelEvent): void {
-    if (this.isLabPaused) return;
+    if (this.isLabPaused || this.getIntroState() !== 'EXPLORING') return;
     event.preventDefault();
     const delta = Math.sign(event.deltaY) * -0.14;
     this.dollyProgress = THREE.MathUtils.clamp(this.dollyProgress + delta, 0, 1);
@@ -799,6 +848,36 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
   public onCameraPositionChange(cb: (pos: THREE.Vector3) => void): void {
     this.onCameraPositionChangeCallback = cb;
+  }
+
+  public onIntroFlightComplete(cb: () => void): void {
+    this.onIntroFlightCompleteCallback = cb;
+  }
+
+  public onIntroStateChange(cb: (state: IntroState) => void): void {
+    this.onIntroStateChangeCallback = cb;
+  }
+
+  public onIntroPhase1StageChange(cb: (stage: IntroPhase1Stage) => void): void {
+    this.onIntroPhase1StageChangeCallback = cb;
+  }
+
+  public getIntroState(): IntroState {
+    return this.introSequence?.getState() ?? 'IDLE';
+  }
+
+  public getIntroPhase1Stage(): IntroPhase1Stage {
+    return this.introSequence?.getPhase1Stage() ?? 'void';
+  }
+
+  public startIntroFlight(): void {
+    this.isTransitioningCamera = false;
+    this.introSequence?.startFlight();
+  }
+
+  public skipIntroFlight(): void {
+    this.isTransitioningCamera = false;
+    this.introSequence?.skipFlight();
   }
 
   /**
@@ -915,8 +994,10 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
     this.sanitizeCameraAndControls();
 
-    // 1. Smoothly lerp Camera Dolly & Preset transitions with 0.05 damping factor
-    if (this.isTransitioningCamera && this.controls) {
+    // 1. Cohesive Intro Sequence (IDLE breathing, FLYING chase cam, or EXPLORING preset lerp)
+    this.introSequence?.update(safeElapsed);
+
+    if (this.getIntroState() === 'EXPLORING' && this.isTransitioningCamera && this.controls) {
       const cam = this.context.camera;
       cam.position.lerp(this.targetCameraPos, 0.05);
       this.controls.target.lerp(this.targetLookAt, 0.05);
@@ -929,10 +1010,13 @@ export class WoolMeadowSceneModule implements ISceneModule {
       }
     }
 
-    this.controls?.update();
+    if (this.controls && this.controls.enabled) {
+      this.controls.update();
+    }
     this.sanitizeCameraAndControls();
 
     // 2. Update Floating / Bed-Resting Mattress & Memory-Foam Compression Physics
+
     if (this.floatingWoolPad) {
       this.floatingWoolPad.update(safeElapsed, dt);
       if (this.currentEnvironment === 'bedroom' && this.bedroomSanctuary) {
@@ -978,6 +1062,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
   }
 
   public dispose(): void {
+    this.introSequence?.dispose();
+    this.introSequence = null;
+
     if (this.context) {
       const {container, scene} = this.context;
       if (this.boundPointerDown) {
@@ -1018,6 +1105,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
 
     this.sheepFlock?.dispose();
     this.sheepFlock = null;
+
+    this.heroCloudlet?.dispose();
+    this.heroCloudlet = null;
 
     this.envTexture?.dispose();
     this.envTexture = null;

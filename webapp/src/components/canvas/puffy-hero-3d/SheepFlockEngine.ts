@@ -27,6 +27,7 @@ export class SheepFlockEngine {
   public readonly group: THREE.Group;
   private agents: SheepAgent[] = [];
   private disposables: Array<{dispose(): void}> = [];
+  private heroIntroLocked = false;
 
   constructor(count = 8) {
     this.group = new THREE.Group();
@@ -322,6 +323,18 @@ export class SheepFlockEngine {
     return this.agents.length;
   }
 
+  public setHeroSheepIntroPose(locked: boolean): void {
+    this.heroIntroLocked = locked;
+  }
+
+  public getHeroSheepHeadWorldPosition(out: THREE.Vector3): boolean {
+    if (this.agents.length === 0) return false;
+    const heroIdx = Math.min(7, this.agents.length - 1);
+    const agent = this.agents[heroIdx];
+    agent.headGroup.getWorldPosition(out);
+    return true;
+  }
+
   public update(
     elapsedTime: number,
     deltaTime: number,
@@ -334,6 +347,16 @@ export class SheepFlockEngine {
 
     for (let i = 0; i < this.agents.length; i++) {
       const agent = this.agents[i];
+      if (this.heroIntroLocked && i === Math.min(7, this.agents.length - 1)) {
+        // Hold hero sheep gently facing the incoming slalom camera for the close-up
+        const lookAngle = Math.atan2(-0.5, 1.0);
+        agent.targetQuaternion.setFromAxisAngle(_upAxis, lookAngle);
+        agent.root.quaternion.slerp(agent.targetQuaternion, Math.min(1, dt * 6));
+        agent.headGroup.rotation.x = THREE.MathUtils.lerp(agent.headGroup.rotation.x, -0.08, Math.min(1, dt * 6));
+        agent.ears[0].rotation.z = 0.62 + Math.sin(elapsedTime * 3.0) * 0.04;
+        agent.ears[1].rotation.z = -0.62 - Math.sin(elapsedTime * 3.0) * 0.04;
+        continue;
+      }
       agent.stateTimer -= dt;
 
       const distFromPadCenter = Math.hypot(agent.position.x, agent.position.z);
