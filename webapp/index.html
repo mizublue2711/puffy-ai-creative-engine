@@ -12,6 +12,18 @@
     />
   </head>
   <body>
+    <div id="boot-telemetry" style="position:fixed;top:0;left:0;background:#05050A;color:#00FF66;font-family:monospace;font-size:12px;padding:4px 8px;z-index:999999;">
+      [SYSTEM_BOOT: COMMIT_702DB72]
+    </div>
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('[BOOT] DOMContentLoaded fired');
+        setTimeout(() => {
+          const banner = document.getElementById('boot-telemetry');
+          if (banner) banner.style.display = 'none';
+        }, 3000);
+      });
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
