@@ -16,6 +16,11 @@ import {
   WoolMeadowSceneModule,
   type SanctuaryEnvironmentMode,
 } from "./WoolMeadowSceneModule.ts";
+import {
+  BEDROOM_STYLE_ORDER,
+  BEDROOM_STYLE_PRESETS,
+  type BedroomStyle,
+} from "../bedroom/BedroomRegistry.ts";
 import "./PuffyFloatingHero3D.css";
 
 export interface ActiveTrustOverlay {
@@ -88,6 +93,8 @@ export function PuffyFloatingHero3D({
   const [activePreset, setActivePreset] = useState<CameraAnglePreset>("hero45");
   const [environmentMode, setEnvironmentMode] =
     useState<SanctuaryEnvironmentMode>("meadow");
+  const [bedroomStyle, setBedroomStyle] =
+    useState<BedroomStyle>("nordic-coastal");
   const [activeLayerIndex, setActiveLayerIndex] = useState<number>(0);
   const [isCraftLabVisible, setIsCraftLabVisible] = useState<boolean>(false);
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
@@ -348,6 +355,11 @@ export function PuffyFloatingHero3D({
     sceneModuleRef.current?.switchMattressModel(modelKey);
   };
 
+  const handleSelectBedroomStyle = (style: BedroomStyle) => {
+    setBedroomStyle(style);
+    sceneModuleRef.current?.setBedroomStyle(style);
+  };
+
   // Top badge copy based on active mode
   let badgeKicker = "CURVED HORIZON · CLAYMATION MEADOW SANCTUARY";
   let badgeTitle = `${currentModelCfg.displayName} — 14" 10-Layer Profile`;
@@ -358,9 +370,10 @@ export function PuffyFloatingHero3D({
     badgeTitle = `Layer ${activeLayer.id}: ${activeLayer.name} (${activeLayer.badgeLabel})`;
     badgeSub = `${activeLayer.tagline} · Click any 3D layer or L1–L10 pill below`;
   } else if (environmentMode === "bedroom") {
-    badgeKicker = "SANCTUARY BEDROOM · STATIC WALNUT BED FRAME";
+    const activeStyleCfg = BEDROOM_STYLE_PRESETS[bedroomStyle];
+    badgeKicker = `SANCTUARY BEDROOM · ${activeStyleCfg.label.toUpperCase()}`;
     badgeTitle = `${currentModelCfg.displayName} — Indoor Bedroom Placement`;
-    badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Resting on Walnut Bed Frame · Click pad to test rebound`;
+    badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Puffy Platform Bed · Click pad to test rebound`;
   }
 
   return (
@@ -368,7 +381,7 @@ export function PuffyFloatingHero3D({
       className={`puffy-floating-hero-3d w-full h-full ${isMobile ? "mobile" : "desktop"}`}
       style={{ touchAction: "pan-y" }}
     >
-      {/* 1. Minimal Top-Left Spec Badge + PBR Flagship Switcher */}
+      {/* 1. Minimal Top-Left Spec Badge + PBR Flagship Switcher + 4-Archetype Bedroom Switcher */}
       <div className="canvas-top-badge">
         <span className="canvas-top-badge-kicker">{badgeKicker}</span>
         <span className="canvas-top-badge-title">{badgeTitle}</span>
@@ -397,6 +410,35 @@ export function PuffyFloatingHero3D({
                     aria-hidden="true"
                   />
                   <span>{cfg.displayName}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {environmentMode === "bedroom" && (
+          <div
+            className="puffy-model-switcher-pills"
+            role="group"
+            aria-label="Bedroom Interior Archetype"
+          >
+            {BEDROOM_STYLE_ORDER.map((styleId) => {
+              const styleCfg = BEDROOM_STYLE_PRESETS[styleId];
+              const isSelected = styleId === bedroomStyle;
+              return (
+                <button
+                  key={styleId}
+                  type="button"
+                  className="puffy-model-pill"
+                  data-selected={isSelected ? "true" : "false"}
+                  onClick={() => handleSelectBedroomStyle(styleId)}
+                >
+                  <span
+                    className="puffy-model-swatch"
+                    style={{ backgroundColor: styleCfg.throwBlanket.color }}
+                    aria-hidden="true"
+                  />
+                  <span>{styleCfg.label}</span>
                 </button>
               );
             })}
