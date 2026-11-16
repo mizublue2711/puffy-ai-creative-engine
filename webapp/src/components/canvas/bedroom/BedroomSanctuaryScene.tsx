@@ -21,9 +21,10 @@ import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
 import { createFramedCanvasArt } from './components/FramedCanvasArt.tsx';
 import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
 import { createPuffyCloudCeilingLight } from './components/PuffyCloudCeilingLight.tsx';
-import { createCourtyardTerrace } from './components/courtyard/CourtyardTerrace.tsx';
 import { createCourtyardWall } from './components/courtyard/CourtyardWall.tsx';
-import { createTropicalPlanterRig } from './components/courtyard/TropicalPlanterRig.tsx';
+import { createKaresansuiSandBed } from './components/courtyard/KaresansuiSandBed.tsx';
+import { createFlushZenGardenRig } from './components/courtyard/FlushZenGardenRig.tsx';
+import { createZenMoonMirror } from './components/courtyard/ZenMoonMirror.tsx';
 import { createTrailingVinesRig } from './components/courtyard/TrailingVinesRig.tsx';
 import { FloatingWoolPad } from '../puffy-hero-3d/FloatingWoolPad.ts';
 import type { SheepFlockEngine } from '../puffy-hero-3d/SheepFlockEngine.ts';
@@ -185,35 +186,42 @@ export function createBedroomSanctuaryScene(
   });
   group.add(bedsideBook.group);
 
-  // 8b. Outdoor Zen Courtyard & Biophilic Planter Zone (outside curtain wall x = -3.80m)
+  // 8b. Outdoor Karesansui Zen Courtyard & Moon Mirror (outside curtain wall x = -3.80m)
   const courtyardZone = new THREE.Group();
   courtyardZone.name = 'CourtyardSanctuaryZone';
-  const courtyardTerrace = createCourtyardTerrace();
   const courtyardWall = createCourtyardWall();
-  const tropicalPlanterRig = createTropicalPlanterRig();
-  courtyardZone.add(courtyardTerrace.group);
   courtyardZone.add(courtyardWall.group);
-  courtyardZone.add(tropicalPlanterRig.group);
+
+  const zenCourtyardSanctuary = new THREE.Group();
+  zenCourtyardSanctuary.name = 'ZenCourtyardSanctuary';
+  const karesansuiSandBed = createKaresansuiSandBed();
+  const flushZenGardenRig = createFlushZenGardenRig();
+  const zenMoonMirror = createZenMoonMirror();
+  zenCourtyardSanctuary.add(karesansuiSandBed.group);
+  zenCourtyardSanctuary.add(flushZenGardenRig.group);
+  zenCourtyardSanctuary.add(zenMoonMirror.group);
+  courtyardZone.add(zenCourtyardSanctuary);
+
   // Trailing Pothos Vines softening the courtyard wall lips & curtain pocket corner
   const trailingVinesRig = createTrailingVinesRig();
   courtyardZone.add(trailingVinesRig.group);
   group.add(courtyardZone);
 
-  // 9. Soft Sanctuary Daylight Rig (4000K Grazing Window Sun + Cool/Warm Hemisphere Fill)
+  // 9. Soft Sanctuary Daylight Rig (4000K Low-Angle Grazing Window Sun + Cool/Warm Hemisphere Fill)
   const sunLightIntensity = options.sunLightIntensity ?? 2.0;
   const sunLight = new THREE.DirectionalLight(0xfff4e5, sunLightIntensity);
-  sunLight.position.set(-7.5, 5.2, 2.5);
+  sunLight.position.set(-6.0, 3.8, 2.0);
   sunLight.target.position.set(0, 0.4, 0);
   sunLight.castShadow = castShadow;
   if (castShadow) {
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
     sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 18;
-    sunLight.shadow.camera.left = -5.0;
-    sunLight.shadow.camera.right = 5.0;
-    sunLight.shadow.camera.top = 5.0;
-    sunLight.shadow.camera.bottom = -5.0;
+    sunLight.shadow.camera.far = 22;
+    sunLight.shadow.camera.left = -7.5;
+    sunLight.shadow.camera.right = 5.5;
+    sunLight.shadow.camera.top = 6.0;
+    sunLight.shadow.camera.bottom = -6.0;
     sunLight.shadow.bias = -0.0001;
     sunLight.shadow.radius = 4;
   }
@@ -307,12 +315,11 @@ export function createBedroomSanctuaryScene(
     disposeComponent('puffy-pillow-pair');
     disposeComponent('framed-canvas-art');
     disposeComponent('bedside-art-book');
-    disposeComponent('courtyard-terrace');
-    courtyardTerrace.dispose();
     disposeComponent('courtyard-wall');
     courtyardWall.dispose();
-    disposeComponent('tropical-planter-rig');
-    tropicalPlanterRig.dispose();
+    karesansuiSandBed.dispose();
+    flushZenGardenRig.dispose();
+    zenMoonMirror.dispose();
     trailingVinesRig.dispose();
     disposeAllBedroomComponents();
 
