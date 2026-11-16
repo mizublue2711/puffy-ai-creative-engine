@@ -1,183 +1,114 @@
-import { useState } from "react";
-import brandTokens from "@config/brand_tokens.json";
-import pdpJson from "./data/mock_pdp_puffy_lux.json";
-import puffyLogo from "@assets/logos/Puffy_Logo_0.svg";
-import badgeCnnFirm from "@assets/catalog/trust-badges/awards/badge_cnn-best-firm-2025_vector.svg";
-import badgeAdCooling from "@assets/catalog/trust-badges/awards/badge_ad-best-cooling-2026_vector.svg";
-import badgeConsumerLuxury from "@assets/catalog/trust-badges/awards/badge_consumer-mattress-luxury-2027_vector.svg";
-import badgeEcoTrial from "@assets/catalog/trust-badges/awards/badge_theroundup-eco-mattress-2026_vector.svg";
-import badgeAdHybrid from "@assets/catalog/trust-badges/awards/badge_ad-best-hybrid-2025_vector.svg";
-import { AnnouncementBar } from "./components/AnnouncementBar";
+import { useEffect, useState } from "react";
 import { HeroSplitSection } from "./components/sections/HeroSplitSection";
-import { TrustProofRibbon } from "./components/TrustProofRibbon";
-import { MattressLayersAccordion } from "./components/MattressLayersAccordion";
-import { StickyMobileCTA } from "./components/StickyMobileCTA";
-import type { PdpData, PdpVariant, ViewportMode } from "./types/pdp";
-
-const pdpData = pdpJson as PdpData;
-
-const BADGE_ASSET_MAP: Record<string, string> = {
-  cnn_best_firm_2025: badgeCnnFirm,
-  ad_best_cooling_2026: badgeAdCooling,
-  consumer_mattress_luxury_2027: badgeConsumerLuxury,
-  theroundup_eco_mattress_2026: badgeEcoTrial,
-  ad_best_hybrid_2025: badgeAdHybrid,
-};
-
-const VIEWPORT_WIDTHS: Record<ViewportMode, number> = {
-  desktop: 1440,
-  mobile: 390,
-};
+import {
+  ShowroomHeader,
+  type ShowroomViewMode,
+} from "./components/showroom/ShowroomHeader";
+import { ShowroomGallery2D } from "./components/showroom/ShowroomGallery2D";
 
 export function App() {
-  const [viewport, setViewport] = useState<ViewportMode>("desktop");
-  const defaultVariant =
-    pdpData.variants.find((v) => v.is_default) ?? pdpData.variants[0];
-  const [selectedVariant, setSelectedVariant] =
-    useState<PdpVariant>(defaultVariant);
-  const [selectedBadgeId, setSelectedBadgeId] = useState<string>(
-    pdpData.trust_badges[0]?.id ?? "cnn-firm"
-  );
-  const [addedToCart, setAddedToCart] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<ShowroomViewMode>("3d");
+  const [isDocsOpen, setIsDocsOpen] = useState<boolean>(false);
 
-  const activeBadgeData =
-    pdpData.trust_badges.find((b) => b.id === selectedBadgeId) ??
-    pdpData.trust_badges[0];
-
-  const activeBadgeOverlay = activeBadgeData
-    ? {
-        label: activeBadgeData.label,
-        source: activeBadgeData.source,
-        src: BADGE_ASSET_MAP[activeBadgeData.asset_key] ?? badgeAdCooling,
-      }
-    : undefined;
-
-  const isMobile = viewport === "mobile";
-  const frameWidth = VIEWPORT_WIDTHS[viewport];
-  const { logo_geometry: logoGeo, value_propositions: brandValueProps } =
-    brandTokens;
-
-  const handleSelectVariant = (variant: PdpVariant) => {
-    setSelectedVariant(variant);
-    setAddedToCart(false);
-  };
-
-  const handleAddToCart = () => {
-    setAddedToCart(true);
-  };
+  useEffect(() => {
+    if (!isDocsOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsDocsOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isDocsOpen]);
 
   return (
-    <div className="sandbox-shell">
-      <header className="sandbox-toolbar">
-        <div className="toolbar-group">
-          <h1 className="toolbar-title">
-            {brandTokens.brand} Creative Engine — Interactive Sandbox
-          </h1>
-          <span className="drift-pill">
-            Zero Product Drift · Mock Cutout Active
-          </span>
-        </div>
+    <div className="showroom-shell">
+      <ShowroomHeader
+        activeView={activeView}
+        onChangeView={setActiveView}
+        onOpenDocs={() => setIsDocsOpen(true)}
+      />
 
-        <div className="toolbar-group">
-          <div
-            className="viewport-switcher"
-            role="group"
-            aria-label="Viewport Switcher"
-          >
-            <button
-              type="button"
-              className={`viewport-btn ${viewport === "desktop" ? "active" : ""}`}
-              onClick={() => setViewport("desktop")}
-            >
-              Desktop 1440px
-            </button>
-            <button
-              type="button"
-              className={`viewport-btn ${viewport === "mobile" ? "active" : ""}`}
-              onClick={() => setViewport("mobile")}
-            >
-              Mobile 390px
-            </button>
-          </div>
-
-          <select
-            aria-label="Trust Badge Overlay"
-            className="badge-select"
-            value={selectedBadgeId}
-            onChange={(e) => setSelectedBadgeId(e.target.value)}
-          >
-            {pdpData.trust_badges.map((badge) => (
-              <option key={badge.id} value={badge.id}>
-                {badge.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </header>
-
-      <main className="stage-outer">
+      <main className="showroom-stage">
         <div
-          className={`viewport-frame ${isMobile ? "mobile" : "desktop"}`}
-          style={{ width: `${frameWidth}px` }}
-          data-viewport={viewport}
+          key={activeView}
+          className="showroom-view-panel"
+          data-view={activeView}
         >
-          <AnnouncementBar
-            announcement={pdpData.announcement}
-            viewport={viewport}
-          />
-
-          <header className={`pdp-header ${isMobile ? "mobile" : "desktop"}`}>
-            <div
-              className="logo-clearspace"
-              title={logoGeo.clear_space_rule}
-              style={{ padding: `${logoGeo.minimum_clear_space_px}px` }}
-            >
-              <img
-                src={puffyLogo}
-                alt={brandTokens.brand}
-                className="pdp-logo"
-                style={{ minWidth: `${logoGeo.minimum_size.width_px}px` }}
-              />
-            </div>
-
-            {!isMobile && (
-              <div className="pdp-nav-meta">
-                <span>{brandValueProps.sleep_trial}</span>
-                <span aria-hidden="true">·</span>
-                <span>{brandValueProps.warranty}</span>
-              </div>
-            )}
-          </header>
-
-          <HeroSplitSection
-            data={pdpData}
-            selectedVariant={selectedVariant}
-            onSelectVariant={handleSelectVariant}
-            onAddToCart={handleAddToCart}
-            addedToCart={addedToCart}
-            viewport={viewport}
-            activeBadge={activeBadgeOverlay}
-          />
-
-          <TrustProofRibbon
-            badges={pdpData.trust_badges}
-            viewport={viewport}
-          />
-
-          <MattressLayersAccordion
-            layers={pdpData.layers}
-            viewport={viewport}
-          />
-
-          <StickyMobileCTA
-            viewport={viewport}
-            selectedVariant={selectedVariant}
-            checkoutLabel={pdpData.cta.checkout_label}
-            addedToCart={addedToCart}
-            onCheckout={handleAddToCart}
-          />
+          {activeView === "3d" ? (
+            <HeroSplitSection />
+          ) : (
+            <ShowroomGallery2D />
+          )}
         </div>
       </main>
+
+      {isDocsOpen && (
+        <div
+          className="showroom-docs-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Showroom Documentation"
+          onClick={() => setIsDocsOpen(false)}
+        >
+          <div
+            className="showroom-docs-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="showroom-docs-header">
+              <div>
+                <p className="showroom-docs-kicker">CREATIVE LAB ARCHITECTURE</p>
+                <h2 className="showroom-docs-title">
+                  Puffy® Virtual Showroom Spec
+                </h2>
+              </div>
+              <button
+                type="button"
+                className="showroom-docs-close"
+                onClick={() => setIsDocsOpen(false)}
+                aria-label="Close documentation"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="showroom-docs-body">
+              <section className="showroom-docs-block">
+                <h3>3D Interactive Mattress Canvas</h3>
+                <p>
+                  Built on Three.js WebGL2 with ACES Filmic tone mapping,
+                  procedural HDR studio environment lighting, and 4K PBR maps
+                  (BaseColor, Normal, Roughness, Height, AO, and anisotropic
+                  Sheen) synthesized via MaterialCraft.
+                </p>
+                <ul>
+                  <li>
+                    <strong>Explode Layers:</strong> Separates all 10 internal
+                    mattress layers for cutaway inspection.
+                  </li>
+                  <li>
+                    <strong>Layer Spec Tooltips:</strong> Opens the interactive
+                    10-layer engineering breakdown.
+                  </li>
+                  <li>
+                    <strong>View in Bedroom (XR):</strong> Transitions from the
+                    curved-horizon Wool Meadow into a full indoor Bedroom
+                    Sanctuary.
+                  </li>
+                </ul>
+              </section>
+
+              <section className="showroom-docs-block">
+                <h3>2D Campaign Banner Engine</h3>
+                <p>
+                  Multi-format editorial renders generated from{" "}
+                  <code>pipelines/banner_engine/render.mjs</code> using
+                  zero-drift shadowed cutouts across Desktop (1440×900), Square
+                  (1080×1080), and Story (1080×1920) viewports.
+                </p>
+              </section>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
