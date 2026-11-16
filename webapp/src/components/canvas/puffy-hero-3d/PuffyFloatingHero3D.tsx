@@ -42,7 +42,6 @@ const CAMERA_PRESETS: Array<{ id: CameraAnglePreset; label: string }> = [
   { id: "hero45", label: "Tiny Planet 60°" },
   { id: "dollyClose", label: "Dolly Close-Up" },
   { id: "topDown", label: "Top-Down Cloud" },
-  { id: "exploded", label: "10-Layer Cutaway" },
 ];
 
 const CRAFT_LAB_BADGES = [
@@ -328,6 +327,22 @@ export function PuffyFloatingHero3D({
       setEnvironmentMode("meadow");
     }
     sceneModuleRef.current?.setCameraPreset(preset);
+  };
+
+  const handleToggleExplode = () => {
+    const nextPreset: CameraAnglePreset =
+      activePreset === "exploded" ? "hero45" : "exploded";
+    handleSetCameraPreset(nextPreset);
+  };
+
+  const handleResetCamera = () => {
+    if (isCraftLabVisible) {
+      handleToggleCraftLab(false);
+    }
+    setActivePreset("hero45");
+    setEnvironmentMode("meadow");
+    sceneModuleRef.current?.setEnvironmentMode("meadow");
+    sceneModuleRef.current?.setCameraPreset("hero45");
   };
 
   const handleSelectLayerIn3D = (layerIdx: number, focusCamera = true) => {
@@ -689,6 +704,34 @@ export function PuffyFloatingHero3D({
         </button>
 
         <div className="canvas-bottom-dock">
+          <button
+            type="button"
+            className="dock-btn"
+            data-active={activePreset === "exploded" ? "true" : "false"}
+            onClick={handleToggleExplode}
+          >
+            {activePreset === "exploded" ? "Collapse Layers" : "Explode Layers"}
+          </button>
+
+          <button
+            type="button"
+            className="dock-btn"
+            onClick={handleResetCamera}
+          >
+            Reset Camera
+          </button>
+
+          <button
+            type="button"
+            className="dock-btn"
+            data-active={isCraftLabVisible ? "true" : "false"}
+            onClick={() => handleToggleCraftLab(!isCraftLabVisible)}
+          >
+            Layer Spec Tooltips
+          </button>
+
+          <div className="dock-divider" aria-hidden="true" />
+
           {CAMERA_PRESETS.map((preset) => (
             <button
               key={preset.id}
@@ -709,15 +752,6 @@ export function PuffyFloatingHero3D({
             onClick={handlePressWoolPad}
           >
             Press Wool Pad
-          </button>
-
-          <button
-            type="button"
-            className="dock-btn"
-            data-active={isCraftLabVisible ? "true" : "false"}
-            onClick={() => handleToggleCraftLab(!isCraftLabVisible)}
-          >
-            Craft &amp; Specs Lab
           </button>
 
           <button
