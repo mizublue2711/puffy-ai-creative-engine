@@ -45,6 +45,7 @@ export interface BedroomSanctuaryInstance {
   registry: typeof BEDROOM_REGISTRY;
   setStyle: (style: BedroomStyle, duration?: number) => void;
   setBedDecorVisible: (visible: boolean) => void;
+  syncMattressHeight: (heightDeltaMeters: number) => void;
   dockMattress: (mattressGroup: THREE.Object3D) => void;
   runSmokeTest: (dockedMattressGroup?: THREE.Object3D) => void;
   dispose: () => void;
@@ -194,8 +195,18 @@ export function createBedroomSanctuaryScene(
     targetGroup.rotation.set(0, 0, 0);
   };
 
+  const syncMattressHeight = (heightDeltaMeters: number) => {
+    const safeDelta = Number.isFinite(heightDeltaMeters) ? heightDeltaMeters : 0;
+    // Both PuffyPillowPair and BedThrowBlanket groups start at local Y=0 with their child meshes
+    // already positioned at mattressTopY (with PuffyPillowPair applying SINK_DEPTH = 0.025m),
+    // so shifting group.position.y by the relative delta from 14" Royal keeps exact contact.
+    puffyPillowPair.group.position.y = safeDelta;
+    throwBlanket.group.position.y = safeDelta;
+  };
+
   if (options.floatingWoolPad) {
     options.floatingWoolPad.setFloatingEnabled(false, 0.36);
+    syncMattressHeight(options.floatingWoolPad.getHeightDeltaFromRoyal());
   } else if (options.mattressGroup) {
     dockMattress(options.mattressGroup);
   }
@@ -268,6 +279,7 @@ export function createBedroomSanctuaryScene(
     registry: BEDROOM_REGISTRY,
     setStyle,
     setBedDecorVisible,
+    syncMattressHeight,
     dockMattress,
     runSmokeTest,
     dispose,

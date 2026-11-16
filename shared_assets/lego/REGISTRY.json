@@ -552,6 +552,137 @@
           "sha256": "5515887d0926614f36cf3299b699967a1ac14342f77494494c6c2de1a83e0884"
         }
       }
+    },
+    "badge_lux_embroidered_v1": {
+      "id": "badge_lux_embroidered_v1",
+      "version": "1.0.0",
+      "source_svg": "assets/logos/Puffy_Logo_0.svg",
+      "native_aspect_ratio": "2:1",
+      "physical_dimensions_meters": {
+        "width": 0.12,
+        "height": 0.06,
+        "surface_offset": 0.001
+      },
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
+        "material_slot": "mat_brand_badge_lux",
+        "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
+        "material": "THREE.MeshPhysicalMaterial",
+        "normal_scale": [1.0, 1.0],
+        "sheen": 1.0,
+        "sheen_roughness": 0.4,
+        "sheen_color": "#FFFFFF"
+      }
+    },
+    "badge_cloud_embroidered_v1": {
+      "id": "badge_cloud_embroidered_v1",
+      "version": "1.0.0",
+      "source_svg": "assets/logos/Puffy_Logo_0.svg",
+      "native_aspect_ratio": "2:1",
+      "physical_dimensions_meters": {
+        "width": 0.12,
+        "height": 0.06,
+        "surface_offset": 0.001
+      },
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
+        "material_slot": "mat_brand_badge_cloud",
+        "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
+        "material": "THREE.MeshPhysicalMaterial",
+        "normal_scale": [1.0, 1.0],
+        "sheen": 1.0,
+        "sheen_roughness": 0.4,
+        "sheen_color": "#FFFFFF"
+      }
+    },
+    "sidewall_lux_v1": {
+      "id": "sidewall_lux_v1",
+      "version": "1.0.0",
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
+        "material_slot": "mat_sidewall_lux",
+        "material": "THREE.MeshPhysicalMaterial",
+        "upper_band_hex": "#43332B",
+        "lower_diamond_hex": "#31343A",
+        "wrap_s": "THREE.RepeatWrapping",
+        "wrap_t": "THREE.ClampToEdgeWrapping"
+      }
+    },
+    "sidewall_cloud_front_v1": {
+      "id": "sidewall_cloud_front_v1",
+      "version": "1.0.0",
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
+        "material_slot": "mat_sidewall_cloud_front",
+        "material": "THREE.MeshPhysicalMaterial",
+        "diamond_hex": "#31343A",
+        "piping_hex": "#F2F2F0",
+        "wrap_s": "THREE.RepeatWrapping",
+        "wrap_t": "THREE.ClampToEdgeWrapping"
+      }
+    },
+    "cloud_side_knit_embossed": {
+      "id": "cloud_side_knit_embossed",
+      "version": "1.0.0",
+      "source_svg": "assets/logos/Puffy_Logo_0.svg",
+      "description": "Puffy Cloud 10-inch 3-side off-white Jacquard knit wrap featuring 5 vertically-oriented embossed Puffy cloud motifs per lateral flank",
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
+        "material_slot": "mat_sidewall_cloud_wrap",
+        "material": "THREE.MeshPhysicalMaterial",
+        "albedo_hex": "#F6F6F4",
+        "relief_hex": "#F8FAFC",
+        "clouds_per_flank": 5,
+        "perimeter_cycles": 19,
+        "normal_scale": [1.2, 1.2],
+        "sheen": 1.2,
+        "sheen_roughness": 0.45,
+        "sheen_color": "#FFFFFF",
+        "ao_map_intensity": 1.25
+      }
+    }
+  },
+  "ecosystem_modules": {
+    "puffyLayersData": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/puffyLayersData.ts",
+      "role": "Multi-model mattress metadata dictionary (Cloud 10\", Lux 12\", Royal 14\") & master 10-layer definitions"
+    },
+    "mattressPresets": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/mattressPresets.ts",
+      "role": "Model key normalization and backward-compatible flagship preset mappings"
+    },
+    "types": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/types.ts",
+      "role": "Shared 3D scene, layer, and model-switcher TypeScript interfaces"
+    },
+    "MattressAnatomy": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+      "role": "Procedural & SVG-stamped PBR material factory, model-specific badges, sidewalls, and UV adapters"
+    },
+    "FloatingWoolPad": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
+      "role": "Modular LEGO mattress assembly, dynamic layer stacking, height morphing, and model-conditional sidewall/badge switching"
+    },
+    "LayerCutawayPreview3D": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/LayerCutawayPreview3D.tsx",
+      "role": "Interactive 3D cutaway spec tooltip viewport synced to active model & layer"
+    },
+    "WoolMeadowSceneModule": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/WoolMeadowSceneModule.ts",
+      "role": "Floating Sheep Hero 3D scene controller and model hot-swap orchestrator"
+    },
+    "PuffyFloatingHero3D": {
+      "path": "webapp/src/components/canvas/puffy-hero-3d/PuffyFloatingHero3D.tsx",
+      "role": "Showroom UI shell, 3-step firmness/model switcher, and layer inspector"
+    },
+    "BedroomSanctuaryScene": {
+      "path": "webapp/src/components/canvas/bedroom/BedroomSanctuaryScene.tsx",
+      "role": "Bedroom Sanctuary 3D viewport with height-synced mattress, pillows, and throw blanket"
     }
   }
 }

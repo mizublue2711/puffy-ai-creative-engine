@@ -1,3 +1,7 @@
+/**
+ * Flagship textile/surface finish presets for `MattressAnatomy` (`puffy-royal` | `puffy-monarch`).
+ * For the 3-model profile/layer ecosystem (`cloud` | `lux` | `royal`), see `puffyLayersData.ts`.
+ */
 export type MattressModelId = 'puffy-royal' | 'puffy-monarch';
 
 export interface MattressModelConfig {
