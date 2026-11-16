@@ -10,12 +10,14 @@ auth_cookies.json
 .env.*.local
 
 # Build & Cache Artifacts
-webapp/dist/
+webapp/dist/*
+!webapp/dist/.gitkeep
+!webapp/dist/index.html
 pipelines/remotion/out/
 pipelines/banner_engine/out/
 .agent/last_bundle_hash
 .vite/
-dist/
+/dist/
 *.tsbuildinfo
 
 # OS & Editor
