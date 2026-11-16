@@ -421,6 +421,137 @@
           "sha256": "466fe5874cb8145a5c1e9dce39ae872cc116284a8beaeb3c950691b74a92f613"
         }
       }
+    },
+    "sidewall_strip": {
+      "id": "sidewall_strip",
+      "version": "1.1.0",
+      "protocol_class": "Class B: Longitudinal Bands & Borders",
+      "component_type": "tileable_strip",
+      "native_aspect_ratio": "2:1",
+      "physical_unit_meters": [
+        0.7,
+        0.35
+      ],
+      "physical_dimensions_meters": {
+        "width": 0.7,
+        "height": 0.35,
+        "repeat_horizontal_u": 10,
+        "wrap_s": "RepeatWrapping",
+        "wrap_t": "ClampToEdgeWrapping"
+      },
+      "craft_sources": {
+        "generator_script": "scripts/generate_sidewall_strip.py",
+        "materialcraft_mcmat": "assets/lego/sidewall/sidewall_strip.mcmat",
+        "materialcraft_mcmat_bytes": 4214596,
+        "materialcraft_mcraft": "assets/lego/sidewall/sidewall_strip.mcraft",
+        "materialcraft_mcraft_bytes": 766640,
+        "texturecraft_tcraft": "assets/lego/sidewall/sidewall_strip.tcraft"
+      },
+      "threejs_binding": {
+        "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
+        "material_slot": "mat_sidewall_strip",
+        "material": "THREE.MeshPhysicalMaterial",
+        "wrap_s": "THREE.RepeatWrapping",
+        "wrap_t": "THREE.ClampToEdgeWrapping",
+        "repeat": [
+          10,
+          1
+        ],
+        "normal_scale": [
+          2.0,
+          2.0
+        ],
+        "roughness": 0.85,
+        "metalness": 0.0,
+        "clearcoat": 0.0,
+        "sheen": 1.5,
+        "sheen_roughness": 0.4,
+        "sheen_color": "#FFFFFF",
+        "sheen_color_map": "webapp/public/textures/sidewall/07_sheenColor.webp",
+        "ao_map_intensity": 1.4
+      },
+      "artifacts": {
+        "01_baseColor.webp": {
+          "path": "shared_assets/lego/components/sidewall_strip/01_baseColor.webp",
+          "webapp_mirror": "webapp/public/textures/sidewall/01_baseColor.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "albedo",
+          "description": "Class B 2:1 delit albedo (#4B515D piping, #18243B navy velvet, #2E323A matte charcoal diamonds)",
+          "bytes": 26764,
+          "sha256": "423f040c40deb0372558c33edb33c5ccba1d3b463e7d26823219df8ab90ba1fd"
+        },
+        "02_normal.webp": {
+          "path": "shared_assets/lego/components/sidewall_strip/02_normal.webp",
+          "webapp_mirror": "webapp/public/textures/sidewall/02_normal.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "normal_opengl",
+          "description": "OpenGL tangent-space normal map (+Y up), 100% horizontally seamless in U",
+          "bytes": 374416,
+          "sha256": "29bce01c099981bef5e56ec386d94d24d12b96c1c6d509c25c93434058e5f234"
+        },
+        "03_roughness.webp": {
+          "path": "shared_assets/lego/components/sidewall_strip/03_roughness.webp",
+          "webapp_mirror": "webapp/public/textures/sidewall/03_roughness.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "roughness",
+          "description": "Matte textile roughness (0.90 piping, 0.85 navy velvet, 0.80 charcoal diamonds, 0.92 stitch grooves)",
+          "bytes": 50146,
+          "sha256": "5db2ace0f727351ee10eb7a92ec028bc4b1f2ff1cbfcd6852b5cb2b8105d9659"
+        },
+        "05_ambientOcclusion.webp": {
+          "path": "shared_assets/lego/components/sidewall_strip/05_ambientOcclusion.webp",
+          "webapp_mirror": "webapp/public/textures/sidewall/05_ambientOcclusion.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "Linear",
+          "role": "ambient_occlusion",
+          "description": "Deep recessed AO in stitch crevices, dual-seam valleys, flute grooves, and piping seams",
+          "bytes": 182102,
+          "sha256": "18887db527bc73cb3b5f8e7fc96d5c3d77b1233bdf42304977b4055f0edf8914"
+        },
+        "07_sheenColor.webp": {
+          "path": "shared_assets/lego/components/sidewall_strip/07_sheenColor.webp",
+          "webapp_mirror": "webapp/public/textures/sidewall/07_sheenColor.webp",
+          "format": "WEBP",
+          "mode": "RGB",
+          "dimensions": [
+            2048,
+            1024
+          ],
+          "aspect_ratio": 2.0,
+          "color_space": "sRGB",
+          "role": "sheen_color",
+          "description": "Per-tier sheen mask (#5A7FA8 navy velvet vs neutral grey piping/charcoal)",
+          "bytes": 4658,
+          "sha256": "5515887d0926614f36cf3299b699967a1ac14342f77494494c6c2de1a83e0884"
+        }
+      }
     }
   }
 }
