@@ -17,7 +17,7 @@ import { createHardwoodFloor } from './components/HardwoodFloor.tsx';
 import { createRoomBoundary } from './components/RoomBoundary.tsx';
 import { createWindowCurtainWall } from './components/WindowCurtainWall.tsx';
 import { createBedThrowBlanket } from './components/BedThrowBlanket.tsx';
-import { createAccentPillows } from './components/AccentPillows.tsx';
+import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
 import { createFramedCanvasArt } from './components/FramedCanvasArt.tsx';
 import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
 import { FloatingWoolPad } from '../puffy-hero-3d/FloatingWoolPad.ts';
@@ -145,12 +145,12 @@ export function createBedroomSanctuaryScene(
   });
   group.add(throwBlanket.group);
 
-  const accentPillows = createAccentPillows({
-    mattressWidth: mattressW,
+  const puffyPillowPair = createPuffyPillowPair({
     surfaceY: mattressTopY,
-    headZ: headboardAnchorZ + 0.28,
+    headZ: headboardAnchorZ + 0.25,
+    offsetX: Math.min(0.42, mattressW * 0.23),
   });
-  group.add(accentPillows.group);
+  group.add(puffyPillowPair.group);
 
   const framedArt = createFramedCanvasArt({
     wallZ: backWallZ,
@@ -206,7 +206,6 @@ export function createBedroomSanctuaryScene(
     floor.applyStyle(preset, duration);
     rug.applyStyle(preset, duration);
     throwBlanket.applyStyle(preset, duration);
-    accentPillows.applyStyle(preset, duration);
     framedArt.applyStyle(preset, duration);
     bedsideBook.applyStyle(preset, duration);
   };
@@ -216,7 +215,7 @@ export function createBedroomSanctuaryScene(
 
   const setBedDecorVisible = (visible: boolean) => {
     throwBlanket.group.visible = visible;
-    accentPillows.group.visible = visible;
+    puffyPillowPair.group.visible = visible;
   };
 
   const runSmokeTest = (dockedMattressGroup?: THREE.Object3D) => {
@@ -256,7 +255,7 @@ export function createBedroomSanctuaryScene(
     disposeComponent('window-curtain-wall');
     disposeComponent('sconces-pair');
     disposeComponent('bed-throw-blanket');
-    disposeComponent('accent-pillows');
+    disposeComponent('puffy-pillow-pair');
     disposeComponent('framed-canvas-art');
     disposeComponent('bedside-art-book');
     disposeAllBedroomComponents();
