@@ -52,6 +52,7 @@ export class IntroSequence {
   private curtainTween: gsap.core.Tween | null = null;
   private ascendTween: gsap.core.Tween | null = null;
   private ascendFadeTween: gsap.core.Tween | null = null;
+  private failsafeTimer: number | null = null;
 
   private readonly flightProgress = {t: 0};
   private readonly desiredChaseCamPos = new THREE.Vector3();
@@ -103,6 +104,10 @@ export class IntroSequence {
   }
 
   private killAllTweens(): void {
+    if (this.failsafeTimer !== null && typeof window !== 'undefined') {
+      window.clearTimeout(this.failsafeTimer);
+      this.failsafeTimer = null;
+    }
     this.phase1Timer?.kill();
     this.phase1Timer = null;
     this.flightTimeline?.kill();
@@ -169,6 +174,25 @@ export class IntroSequence {
         this.setPhase1Stage('ready');
       }
     });
+
+    // Safety fallback: if intro or 3D cloudlet fails after 4s, clear blocking overlay automatically
+    if (typeof window !== 'undefined') {
+      this.failsafeTimer = window.setTimeout(() => {
+        this.failsafeTimer = null;
+        if (typeof document !== 'undefined') {
+          const curtain = document.getElementById('intro-curtain');
+          if (curtain && curtain.style.opacity !== '0') {
+            curtain.style.pointerEvents = 'none';
+            curtain.style.opacity = '0';
+          }
+        }
+        const activeCloudlet = this.cfg.getCloudlet();
+        const cloudletFailed = !activeCloudlet || !activeCloudlet.group.visible;
+        if (this.introState === 'IDLE' && (cloudletFailed || this.phase1Stage !== 'ready')) {
+          this.forceExploring();
+        }
+      }, 4000);
+    }
   }
 
   private applyFlightFrame(t: number, snapCamera = false): void {
