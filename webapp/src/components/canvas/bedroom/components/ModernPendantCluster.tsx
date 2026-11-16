@@ -206,7 +206,7 @@ export interface ModernPendantClusterInstance extends BedroomAssetInstance {
 const ARCHETYPE_TIMBER_COLORS: Record<string, string> = {
   japandi: '#9B7348',          // Honey Oak / Warm Teak
   'nordic-coastal': '#9B7348', // Warm Scandinavian Honey Oak
-  'mid-century': '#5C3C28',    // American Walnut
+  'mid-century': '#8E7558',    // Warm Sand Walnut / Muted Honey Teak
   'urban-loft': '#443D37',     // Smoked Espresso Oak
 };
 
