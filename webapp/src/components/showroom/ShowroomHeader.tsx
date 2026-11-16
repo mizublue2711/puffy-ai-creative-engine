@@ -3,7 +3,7 @@ import { BrandLogo } from "../../brand/components/BrandLogo";
 import { BRAND_COLORS } from "../../brand/tokens/colors";
 import { BRAND_TYPOGRAPHY } from "../../brand/tokens/typography";
 
-export type ShowroomViewMode = "3d" | "2d";
+export type ShowroomViewMode = "3d" | "2d" | "studio";
 
 interface ShowroomHeaderProps {
   activeView: ShowroomViewMode;
@@ -53,6 +53,17 @@ export function ShowroomHeader({
         >
           <span aria-hidden="true">🖼️</span>
           <span>2D Campaign Renders</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeView === "studio"}
+          className={`showroom-segment-btn ${activeView === "studio" ? "is-active" : ""}`}
+          onClick={() => onChangeView("studio")}
+        >
+          <span aria-hidden="true">🎨</span>
+          <span>Banner Studio</span>
         </button>
       </nav>
 

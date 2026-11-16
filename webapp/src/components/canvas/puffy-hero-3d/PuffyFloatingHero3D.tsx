@@ -30,6 +30,10 @@ import {
   type BedroomStyle,
 } from "../bedroom/BedroomRegistry.ts";
 import { BedroomConfiguratorDock } from "../../ui/BedroomConfiguratorDock.tsx";
+import { useBannerStore } from "../../../store/useBannerStore.ts";
+import { useShowroomViewStore } from "../../../store/useShowroomViewStore.ts";
+import { useSceneCapture, downloadSnapshotUrl } from "../../../hooks/useSceneCapture.ts";
+import { SceneCaptureDock } from "../../ui/SceneCaptureDock.tsx";
 import "./PuffyFloatingHero3D.css";
 
 export interface ActiveTrustOverlay {
@@ -229,6 +233,11 @@ export function PuffyFloatingHero3D({
 }: PuffyFloatingHero3DProps) {
   const mountContainerRef = useRef<HTMLDivElement | null>(null);
   const sceneModuleRef = useRef<WoolMeadowSceneModule | null>(null);
+  const [captureCtx, setCaptureCtx] = useState<{
+    renderer: THREE.WebGLRenderer;
+    scene: THREE.Scene;
+    camera: THREE.Camera;
+  } | null>(null);
   const craftTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const telemetryCallbackRef = useRef(onTelemetryUpdate);
   const layerSelectCallbackRef = useRef(onLayerSelect);
@@ -361,6 +370,7 @@ export function PuffyFloatingHero3D({
 
     const sceneModule = new WoolMeadowSceneModule();
     sceneModuleRef.current = sceneModule;
+    setCaptureCtx({ renderer, scene, camera });
 
     const handleContextLost = (event: Event) => {
       event.preventDefault();
@@ -727,6 +737,21 @@ export function PuffyFloatingHero3D({
     badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Scroll to dolly · Click pad to test rebound`;
   }
 
+  const [pendingSnapshot, setPendingSnapshot] = useState<string | null>(null);
+  const capture = useSceneCapture({
+    renderer: captureCtx?.renderer ?? null,
+    scene: captureCtx?.scene ?? null,
+    camera: captureCtx?.camera ?? null,
+    onSnapshotReady: setPendingSnapshot,
+  });
+
+  const handleRecordTour = () =>
+    capture.recordCinematicTour((onProgress, onComplete) => {
+      const mod = sceneModuleRef.current;
+      if (!mod) return onComplete();
+      mod.startCinematicFlight(8, onProgress, onComplete);
+    });
+
   return (
     <div
       className={`puffy-floating-hero-3d w-full h-full ${isMobile ? "mobile" : "desktop"}`}
@@ -734,6 +759,28 @@ export function PuffyFloatingHero3D({
       data-intro-phase1-stage={introPhase1Stage}
       style={{ touchAction: "pan-y" }}
     >
+      {introState !== "IDLE" && (
+        <SceneCaptureDock
+          isRecording={capture.isRecording}
+          recordingProgress={capture.recordingProgress}
+          onSnapshot={capture.takeSnapshot}
+          onRecord={handleRecordTour}
+          pendingSnapshot={pendingSnapshot}
+          onDownloadSnapshot={() => {
+            if (pendingSnapshot) downloadSnapshotUrl(pendingSnapshot);
+            setPendingSnapshot(null);
+          }}
+          onOpenInStudio={() => {
+            if (pendingSnapshot) {
+              useBannerStore.getState().setBackgroundImage(pendingSnapshot);
+              useShowroomViewStore.getState().setActiveView("studio");
+            }
+            setPendingSnapshot(null);
+          }}
+          onDismissSnapshot={() => setPendingSnapshot(null)}
+        />
+      )}
+
       {/* Phase 1 (IDLE): Warm Linen Backdrop Overlay (#F6F4EE, z-index: 10, pointer-events: auto) */}
       <div
         className="intro-linen-backdrop"

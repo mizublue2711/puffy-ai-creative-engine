@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
@@ -71,6 +72,29 @@ const CAMERA_PRESETS: Record<CameraAnglePreset, CameraPose> = {
     target: new THREE.Vector3(0.0, 0.45, 0.0),
   },
 };
+
+// Room-aware cinematic flight splines.
+// Meadow: outdoor 360° orbit (sunrise angle at (0, 3.5, -9)).
+const MEADOW_SPLINE = [
+  new THREE.Vector3(0, 2.5, 9),
+  new THREE.Vector3(7, 3.2, 5),
+  new THREE.Vector3(8, 2.8, -4),
+  new THREE.Vector3(0, 3.5, -9),
+  new THREE.Vector3(-7, 2.5, -4),
+  new THREE.Vector3(-6, 2.2, 6),
+  new THREE.Vector3(0, 2.5, 9),
+];
+const MEADOW_TARGET = new THREE.Vector3(0.0, 0.15, 0.0);
+
+// Bedroom: interior dolly arc. Every point stays well inside the room walls.
+const BEDROOM_SPLINE = [
+  new THREE.Vector3(-1.6, 1.4, 1.8),
+  new THREE.Vector3(-0.8, 1.25, 1.5),
+  new THREE.Vector3(0.0, 1.15, 1.2),
+  new THREE.Vector3(1.1, 1.3, 0.8),
+  new THREE.Vector3(1.4, 1.45, 1.4),
+];
+const BEDROOM_TARGET = new THREE.Vector3(0, 0.75, -0.2);
 
 const BEDROOM_CAMERA_POSE: CameraPose = {
   position: new THREE.Vector3(2.75, 1.56, 3.25),
@@ -1009,6 +1033,100 @@ export class WoolMeadowSceneModule implements ISceneModule {
     this.onTelemetryCallback = cb;
   }
 
+  private cinematicTween: gsap.core.Tween | null = null;
+  private cinematicFlight: {
+    startElapsed: number | null;
+    durationSec: number;
+    startOffset: THREE.Vector3;
+    target: THREE.Vector3;
+    onProgress: (p: number) => void;
+    onComplete: () => void;
+  } | null = null;
+
+  public getCamera(): THREE.Camera | null {
+    return this.context?.camera ?? null;
+  }
+
+  /**
+   * Eased 360° orbit with a gentle rise/dip around the current OrbitControls target.
+   * Progress is driven from update(), so it is frame-locked to the recorded canvas.
+   */
+  public startCinematicFlight(
+    durationSec: number,
+    onProgress: (p: number) => void,
+    onComplete: () => void
+  ): void {
+    if (!this.context || !this.controls) {
+      onComplete();
+      return;
+    }
+    const target = this.controls.target.clone();
+    this.isTransitioningCamera = false;
+
+    const env = this.currentEnvironment;
+    if (env === 'meadow' || env === 'bedroom') {
+      const isBedroom = env === 'bedroom';
+      const curve = new THREE.CatmullRomCurve3(
+        (isBedroom ? BEDROOM_SPLINE : MEADOW_SPLINE).map((v) => v.clone()),
+        false,
+        'catmullrom',
+        0.5
+      );
+      const lookAt = (isBedroom ? BEDROOM_TARGET : MEADOW_TARGET).clone();
+      const controls = this.controls;
+      const cam = this.context.camera;
+      const prevEnabled = controls.enabled;
+      controls.enabled = false;
+      this.cinematicTween?.kill();
+      const state = { t: 0 };
+      this.cinematicTween = gsap.to(state, {
+        t: 1,
+        duration: durationSec,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          cam.position.copy(curve.getPointAt(state.t));
+          controls.target.copy(lookAt);
+          cam.lookAt(lookAt);
+          onProgress(state.t);
+        },
+        onComplete: () => {
+          controls.enabled = prevEnabled;
+          controls.update();
+          this.cinematicTween = null;
+          onComplete();
+        },
+      });
+      return;
+    }
+    this.cinematicFlight = {
+      startElapsed: null,
+      durationSec,
+      startOffset: this.context.camera.position.clone().sub(target),
+      target,
+      onProgress,
+      onComplete,
+    };
+  }
+
+  private advanceCinematicFlight(elapsed: number): void {
+    const f = this.cinematicFlight;
+    if (!f || !this.context) return;
+    if (f.startElapsed === null) f.startElapsed = elapsed;
+    const p = THREE.MathUtils.clamp((elapsed - f.startElapsed) / f.durationSec, 0, 1);
+    const eased = p * p * (3 - 2 * p);
+    const angle = eased * Math.PI * 2;
+    const offset = f.startOffset.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), angle);
+    offset.y = Math.max(0.3, f.startOffset.y + Math.sin(p * Math.PI) * 0.6);
+    const cam = this.context.camera;
+    cam.position.copy(f.target).add(offset);
+    cam.lookAt(f.target);
+    f.onProgress(p);
+    if (p >= 1) {
+      this.cinematicFlight = null;
+      f.onComplete();
+    }
+  }
+
   public update(elapsedTime: number, deltaTime: number): void {
     if (!this.context) return;
     // Background CPU Throttling: pause procedural simulation when inspecting the Craft & Specs Lab
@@ -1036,6 +1154,8 @@ export class WoolMeadowSceneModule implements ISceneModule {
         this.isTransitioningCamera = false;
       }
     }
+
+    this.advanceCinematicFlight(safeElapsed);
 
     if (this.controls && this.controls.enabled) {
       this.controls.update();

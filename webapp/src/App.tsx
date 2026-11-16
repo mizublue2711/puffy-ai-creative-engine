@@ -5,9 +5,12 @@ import {
   type ShowroomViewMode,
 } from "./components/showroom/ShowroomHeader";
 import { ShowroomGallery2D } from "./components/showroom/ShowroomGallery2D";
+import { BannerStudio } from "./components/banner/BannerStudio";
+import { useShowroomViewStore } from "./store/useShowroomViewStore";
 
 export function App() {
-  const [activeView, setActiveView] = useState<ShowroomViewMode>("3d");
+  const activeView: ShowroomViewMode = useShowroomViewStore((st) => st.activeView);
+  const setActiveView = useShowroomViewStore((st) => st.setActiveView);
   const [isDocsOpen, setIsDocsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -48,6 +51,8 @@ export function App() {
         >
           {activeView === "3d" ? (
             <HeroSplitSection />
+          ) : activeView === "studio" ? (
+            <BannerStudio />
           ) : (
             <ShowroomGallery2D />
           )}
