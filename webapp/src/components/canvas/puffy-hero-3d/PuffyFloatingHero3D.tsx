@@ -773,7 +773,7 @@ export function PuffyFloatingHero3D({
           onOpenInStudio={() => {
             if (pendingSnapshot) {
               useBannerStore.getState().setBackgroundImage(pendingSnapshot);
-              useShowroomViewStore.getState().setActiveView("studio");
+              useShowroomViewStore.getState().setActiveView("banner-studio");
             }
             setPendingSnapshot(null);
           }}

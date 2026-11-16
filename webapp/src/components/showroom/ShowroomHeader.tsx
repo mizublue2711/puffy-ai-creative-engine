@@ -3,23 +3,41 @@ import { BrandLogo } from "../../brand/components/BrandLogo";
 import { BRAND_COLORS } from "../../brand/tokens/colors";
 import { BRAND_TYPOGRAPHY } from "../../brand/tokens/typography";
 
-export type ShowroomViewMode = "3d" | "2d" | "studio";
+export type ShowroomTab = "interactive" | "campaign-renders" | "banner-studio";
+export type ShowroomViewMode = ShowroomTab;
+
+interface NavItem {
+  id: ShowroomTab;
+  label: string;
+  icon: string;
+  badge?: string;
+}
+
+const NAV_TABS: NavItem[] = [
+  { id: "interactive", label: "3D Interactive", icon: "☁️" },
+  { id: "campaign-renders", label: "2D Campaign Renders", icon: "🖼️" },
+  { id: "banner-studio", label: "Banner Studio", icon: "🎨", badge: "NEW" },
+];
 
 interface ShowroomHeaderProps {
-  activeView: ShowroomViewMode;
-  onChangeView: (view: ShowroomViewMode) => void;
+  activeTab: ShowroomTab;
+  onTabChange: (tab: ShowroomTab) => void;
   onOpenDocs: () => void;
 }
 
 export function ShowroomHeader({
-  activeView,
-  onChangeView,
+  activeTab,
+  onTabChange,
   onOpenDocs,
 }: ShowroomHeaderProps) {
   return (
     <header
       className="showroom-navbar"
-      style={{ backgroundColor: BRAND_COLORS.navyInk, fontFamily: BRAND_TYPOGRAPHY.fonts.functional, overflow: "hidden" }}
+      style={{
+        backgroundColor: BRAND_COLORS.navyInk,
+        fontFamily: BRAND_TYPOGRAPHY.fonts.functional,
+        overflow: "hidden",
+      }}
     >
       <div className="showroom-brand">
         <BrandLogo width={80} variant="light" className="showroom-brand-logo" />
@@ -29,42 +47,24 @@ export function ShowroomHeader({
       </div>
 
       <nav
-        className="showroom-segmented-control"
+        className="showroom-nav-tabs"
         role="tablist"
         aria-label="Showroom View Mode"
       >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeView === "3d"}
-          className={`showroom-segment-btn ${activeView === "3d" ? "is-active" : ""}`}
-          onClick={() => onChangeView("3d")}
-        >
-          <span aria-hidden="true">☁️</span>
-          <span>3D Interactive</span>
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeView === "2d"}
-          className={`showroom-segment-btn ${activeView === "2d" ? "is-active" : ""}`}
-          onClick={() => onChangeView("2d")}
-        >
-          <span aria-hidden="true">🖼️</span>
-          <span>2D Campaign Renders</span>
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeView === "studio"}
-          className={`showroom-segment-btn ${activeView === "studio" ? "is-active" : ""}`}
-          onClick={() => onChangeView("studio")}
-        >
-          <span aria-hidden="true">🎨</span>
-          <span>Banner Studio</span>
-        </button>
+        {NAV_TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            className={`nav-tab-btn ${activeTab === tab.id ? "active" : ""}`}
+            onClick={() => onTabChange(tab.id)}
+          >
+            <span aria-hidden="true">{tab.icon}</span>
+            <span className="tab-label">{tab.label}</span>
+            {tab.badge && <span className="tab-pill-badge">{tab.badge}</span>}
+          </button>
+        ))}
       </nav>
 
       <div className="showroom-nav-links">

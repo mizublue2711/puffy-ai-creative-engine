@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { HeroSplitSection } from "./components/sections/HeroSplitSection";
 import {
   ShowroomHeader,
-  type ShowroomViewMode,
+  type ShowroomTab,
 } from "./components/showroom/ShowroomHeader";
 import { ShowroomGallery2D } from "./components/showroom/ShowroomGallery2D";
 import { BannerStudio } from "./components/banner/BannerStudio";
 import { useShowroomViewStore } from "./store/useShowroomViewStore";
 
 export function App() {
-  const activeView: ShowroomViewMode = useShowroomViewStore((st) => st.activeView);
-  const setActiveView = useShowroomViewStore((st) => st.setActiveView);
+  const activeTab: ShowroomTab = useShowroomViewStore((st) => st.activeView);
+  const setActiveTab = useShowroomViewStore((st) => st.setActiveView);
   const [isDocsOpen, setIsDocsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,20 +38,20 @@ export function App() {
   return (
     <div className="showroom-shell">
       <ShowroomHeader
-        activeView={activeView}
-        onChangeView={setActiveView}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         onOpenDocs={() => setIsDocsOpen(true)}
       />
 
       <main className="showroom-stage">
         <div
-          key={activeView}
+          key={activeTab}
           className="showroom-view-panel"
-          data-view={activeView}
+          data-view={activeTab}
         >
-          {activeView === "3d" ? (
+          {activeTab === "interactive" ? (
             <HeroSplitSection />
-          ) : activeView === "studio" ? (
+          ) : activeTab === "banner-studio" ? (
             <BannerStudio />
           ) : (
             <ShowroomGallery2D />
