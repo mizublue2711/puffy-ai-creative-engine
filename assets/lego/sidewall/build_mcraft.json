@@ -4,28 +4,28 @@
     {
       "id": "file.importBitmap",
       "params": {
-        "path": "assets/lego/sidewall/masks/sidewall_basecolor_2048x1024.png",
+        "path": "assets/lego/sidewall/masks_lite/sidewall_basecolor_lite.png",
         "name": "sidewall_basecolor"
       }
     },
     {
       "id": "file.importBitmap",
       "params": {
-        "path": "assets/lego/sidewall/masks/sidewall_height_2048x1024.png",
+        "path": "assets/lego/sidewall/masks_lite/sidewall_height_lite.png",
         "name": "sidewall_height"
       }
     },
     {
       "id": "file.importBitmap",
       "params": {
-        "path": "assets/lego/sidewall/masks/sidewall_roughness_2048x1024.png",
+        "path": "assets/lego/sidewall/masks_lite/sidewall_roughness_lite.png",
         "name": "sidewall_roughness"
       }
     },
     {
       "id": "file.importBitmap",
       "params": {
-        "path": "assets/lego/sidewall/masks/sidewall_ao_2048x1024.png",
+        "path": "assets/lego/sidewall/masks_lite/sidewall_ao_lite.png",
         "name": "sidewall_ao"
       }
     },
@@ -116,7 +116,7 @@
       "id": "file.exportMaterial",
       "params": {
         "path": "assets/lego/sidewall/sidewall_strip.mcmat",
-        "size": 2048
+        "size": 512
       }
     }
   ],

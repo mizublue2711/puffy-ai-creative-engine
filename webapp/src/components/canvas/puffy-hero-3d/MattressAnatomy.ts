@@ -431,20 +431,20 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   materials.set('mat_side_border', matSideBorder);
   disposables.push(matSideBorder);
 
-  // 2B. Unified 4-Tier Composite Sidewall Strip (`mat_sidewall_strip` — CAVP-v1.0 `sidewall_strip_v1`)
-  const sideWallBaseColor = textureLoader.load('/textures/sidewall/01_baseColor.png');
+  // 2B. Unified 5-Tier Composite Sidewall Strip (`mat_sidewall_strip` — Protocol v1.1 Class B `sidewall_strip`)
+  const sideWallBaseColor = textureLoader.load('/textures/sidewall/01_baseColor.webp');
   sideWallBaseColor.colorSpace = THREE.SRGBColorSpace;
 
-  const sideWallNormal = textureLoader.load('/textures/sidewall/02_normal.png');
+  const sideWallNormal = textureLoader.load('/textures/sidewall/02_normal.webp');
   sideWallNormal.colorSpace = THREE.NoColorSpace;
 
-  const sideWallRoughness = textureLoader.load('/textures/sidewall/03_roughness.png');
+  const sideWallRoughness = textureLoader.load('/textures/sidewall/03_roughness.webp');
   sideWallRoughness.colorSpace = THREE.NoColorSpace;
 
-  const sideWallAO = textureLoader.load('/textures/sidewall/05_ambientOcclusion.png');
+  const sideWallAO = textureLoader.load('/textures/sidewall/05_ambientOcclusion.webp');
   sideWallAO.colorSpace = THREE.NoColorSpace;
 
-  const sideWallSheenColor = textureLoader.load('/textures/sidewall/07_sheenColor.png');
+  const sideWallSheenColor = textureLoader.load('/textures/sidewall/07_sheenColor.webp');
   sideWallSheenColor.colorSpace = THREE.SRGBColorSpace;
 
   [sideWallBaseColor, sideWallNormal, sideWallRoughness, sideWallAO, sideWallSheenColor].forEach((sideWallTexture) => {
