@@ -22,7 +22,7 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     assetsDir: "assets",
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         entryFileNames: `assets/[name]-[hash]-${BUILD_TIMESTAMP}.js`,
