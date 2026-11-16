@@ -11,6 +11,19 @@ export function App() {
   const [isDocsOpen, setIsDocsOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    const failsafeTimer = window.setTimeout(() => {
+      const curtain = document.getElementById("intro-curtain");
+      if (curtain && curtain.style.pointerEvents !== "none") {
+        console.warn("[Failsafe] Intro sequence timed out. Disabling overlay.");
+        curtain.style.pointerEvents = "none";
+        curtain.style.opacity = "0";
+      }
+    }, 4000);
+
+    return () => window.clearTimeout(failsafeTimer);
+  }, []);
+
+  useEffect(() => {
     if (!isDocsOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsDocsOpen(false);
