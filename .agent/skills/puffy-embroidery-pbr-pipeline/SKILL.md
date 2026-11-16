@@ -214,3 +214,37 @@ Before registering any component into `shared_assets/lego/REGISTRY.json`, verify
 * **Alpha Integrity**: `06_beauty_render_4k.png` has a fully transparent background outside component boundaries.
 * **Registry Entry**: Component ID, source SVG path, physical scale (meters), and artifact paths are committed to `shared_assets/lego/REGISTRY.json`.
 * **Build Gate**: `npx tsc --noEmit` (root and `webapp/tsconfig.json`) returns `0` errors.
+
+---
+
+## ADDENDUM: TEXTURE BUDGET QUOTA & SEAMLESS TILING PROTOCOL (CAVP-ADDENDUM-v1.1)
+
+### 1. The Core Principle: "Bake Atomic Tile — Multiply at Runtime"
+To prevent repository bloat, eliminate Git LFS threshold warnings (< 50 MB), and avoid GPU VRAM exhaustion on client browsers, **no asset shall ever be baked as a monolithic, full-scale continuous canvas** (e.g., entire mattress walls, full floors, or room-spanning wall plaster).
+All repeating patterns, textile weaves, quilting, and wood grains must be authored as **compact, seamless tiling unit cells** in MaterialCraft / TextureCraft and tiled dynamically in Three.js via `THREE.RepeatWrapping`.
+
+### 2. Standardized Aspect Ratios & Quota Limits by Component Class
+| Component Class | Target Ratio | Master Resolution | Max Disk Size (.mcmat) | Max Packed Maps (WebP/KTX2) | Mandatory Registry Metadata |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Class A: Micro-Weave & Tiling Fill** | **1:1 (Square)** | `512 x 512` or `1024 x 1024` | `< 2.5 MB` | `< 500 KB / map` | `physical_unit_meters: [w, h]` |
+| **Class B: Longitudinal Bands & Borders**| **4:1 or 2:1 (Strip)** | `2048 x 512` or `2048 x 1024` | `< 6.0 MB` | `< 1.0 MB / map` | `physical_unit_meters: [w, h]` |
+| **Class C: Decal Badges & Brand Patches** | **2:1 (Bounded)** | `2048 x 1024` (Non-repeating) | `< 8.0 MB` | `< 1.5 MB / map` | `anchor_point`, `decal_scale` |
+| **Class D: Straps & Vertical Handles** | **1:4 (Vertical)** | `512 x 2048` | `< 4.0 MB` | `< 800 KB / map` | `physical_unit_meters: [w, h]` |
+
+> **Strict Quota Gate:** Any single `.mcmat` file exceeding **10.0 MB** or individual texture map exceeding **2.0 MB** will be rejected automatically by CI/CD pre-commit hooks.
+
+### 3. Dynamic Runtime Metric Calculation (Prevent Squashing)
+Do not hardcode arbitrary integers into `repeat.set()`. Always compute texture repeat factors dynamically from physical metric dimensions:
+```typescript
+// Metric Calculation Standard:
+const repeatX = meshPhysicalWidth / componentMetadata.physical_unit_meters[0];
+const repeatY = meshPhysicalHeight / componentMetadata.physical_unit_meters[1];
+
+texture.wrapS = THREE.RepeatWrapping;
+texture.wrapT = componentMetadata.is_strip ? THREE.ClampToEdgeWrapping : THREE.RepeatWrapping;
+texture.repeat.set(repeatX, repeatY);
+```
+
+### 4. Immediate Remediation & Pre-Bake Safety Gate
+- **Pre-Bake Sanity Check**: If a target surface exceeds `1.0m x 1.0m` in 3D space, it is strictly illegal to bake as one canvas. It must be decomposed into a Class A or Class B modular tile.
+- **Purge Monolithic Commits**: Any uncompressed `.mcmat` or texture exceeding 50 MB must be stripped from Git history using `git rm --cached` before rebaking.
