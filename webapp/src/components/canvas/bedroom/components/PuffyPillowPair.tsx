@@ -13,6 +13,12 @@ export interface PuffyPillowPairOptions {
   headZ?: number;
   /** Symmetric X offset from bed center (default: 0.42m) */
   offsetX?: number;
+  /** Backward tilt angle in radians (default: -0.28) */
+  rotX?: number;
+  /** Uniform scale multiplier for pillow pair (default: 1.0) */
+  scale?: number;
+  /** Optional registry ID override for multi-tier pillow assemblies */
+  registryId?: string;
 }
 
 const PILLOW_WIDTH = 0.65; // Standard pillow width (65cm)
@@ -104,10 +110,16 @@ function computeRotatedBottomOffsetY(
   return (-minY - SINK_DEPTH) / Math.cos(rotX);
 }
 
+export const pillowFabricMaterial = new THREE.MeshStandardMaterial({
+  color: new THREE.Color('#FAF8F5'), // Pristine organic white fabric
+  roughness: 0.88,                   // High roughness, zero specular metallic reflection
+  metalness: 0.0,
+});
+
 /**
  * LEGO Component: Puffy Signature Pillow Pair
  * Symmetric pair of zero-seam clamshell plush pillows with cosine dome loft,
- * weighted mattress sink, and PBR slots.
+ * weighted mattress sink, and matte organic white fabric material.
  */
 export function createPuffyPillowPair(
   options: PuffyPillowPairOptions = {},
@@ -115,31 +127,14 @@ export function createPuffyPillowPair(
   const surfaceY = options.surfaceY ?? 0.58;
   const headZ = options.headZ ?? -0.75;
   const offsetX = options.offsetX ?? 0.42;
+  const rotX = options.rotX ?? TILT_X_RAD;
+  const scale = options.scale ?? 1.0;
+  const registryId = options.registryId ?? 'puffy-pillow-pair';
 
   const group = new THREE.Group();
-  group.name = 'PuffyPillowPair';
+  group.name = registryId === 'puffy-pillow-pair' ? 'PuffyPillowPair' : `PuffyPillowPair_${registryId}`;
 
-  const textureLoader = new THREE.TextureLoader();
-  const pillowBaseColor = textureLoader.load('/shared_assets/bedding/puffy_pillow/01_baseColor.webp');
-  pillowBaseColor.colorSpace = THREE.SRGBColorSpace;
-  const pillowNormal = textureLoader.load('/shared_assets/bedding/puffy_pillow/02_normal.webp');
-  const pillowRoughness = textureLoader.load('/shared_assets/bedding/puffy_pillow/03_roughness.webp');
-  const pillowAo = textureLoader.load('/shared_assets/bedding/puffy_pillow/04_ao.webp');
-
-  const pillowMaterial = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color('#FFFFFF'),
-    map: pillowBaseColor,
-    normalMap: pillowNormal,
-    normalScale: new THREE.Vector2(0.8, 0.8),
-    roughnessMap: pillowRoughness,
-    roughness: 0.88,
-    aoMap: pillowAo,
-    aoMapIntensity: 0.65,
-    metalness: 0.0,
-    sheen: 1.0,
-    sheenRoughness: 0.5,
-    sheenColor: new THREE.Color('#FFFFFF'),
-  });
+  const pillowMaterial = pillowFabricMaterial.clone();
 
   const pillowGeometry = createOrganicPlushPillow();
 
@@ -158,7 +153,7 @@ export function createPuffyPillowPair(
       x: -offsetX,
       y: surfaceY,
       z: headZ,
-      rotX: TILT_X_RAD,
+      rotX,
       rotY: YAW_Y_RAD,
     },
     {
@@ -166,7 +161,7 @@ export function createPuffyPillowPair(
       x: offsetX,
       y: surfaceY,
       z: headZ,
-      rotX: TILT_X_RAD,
+      rotX,
       rotY: -YAW_Y_RAD,
     },
   ];
@@ -176,6 +171,7 @@ export function createPuffyPillowPair(
     pillowAnchor.name = `PuffyPillow_${spec.side}`;
     pillowAnchor.position.set(spec.x, spec.y, spec.z);
     pillowAnchor.rotation.set(spec.rotX, spec.rotY, 0);
+    pillowAnchor.scale.setScalar(scale);
 
     const localOffsetY = computeRotatedBottomOffsetY(pillowGeometry, spec.rotX, spec.rotY);
 
@@ -192,18 +188,24 @@ export function createPuffyPillowPair(
   }
 
   registerBedroomComponent({
-    id: 'puffy-pillow-pair',
+    id: registryId,
     name: 'Puffy Signature Pillow Pair',
     category: 'decor',
+    dockCategory: 'bedding',
+    shortLabel: 'Pillows',
+    isToggleable: registryId === 'puffy-pillow-pair',
+    variantKey: registryId === 'puffy-pillow-pair' ? 'pillowCount' : undefined,
+    options: registryId === 'puffy-pillow-pair' ? [0, 2, 4] : undefined,
+    defaultState: registryId === 'puffy-pillow-pair' ? 2 : undefined,
     dimensions: {
-      width: offsetX * 2 + PILLOW_WIDTH,
-      height: PILLOW_HEIGHT,
-      depth: PILLOW_DEPTH,
+      width: offsetX * 2 + PILLOW_WIDTH * scale,
+      height: PILLOW_HEIGHT * scale,
+      depth: PILLOW_DEPTH * scale,
     },
     defaultTransform: {
       position: [0, surfaceY, headZ],
-      rotation: [TILT_X_RAD, 0, 0],
-      scale: [1, 1, 1],
+      rotation: [rotX, 0, 0],
+      scale: [scale, scale, scale],
     },
     materialSlots: ['puffy-pillow-body'],
     disposableMeshes: meshes,
@@ -212,7 +214,7 @@ export function createPuffyPillowPair(
   return {
     group,
     meshes,
-    dispose: () => disposeComponent('puffy-pillow-pair'),
+    dispose: () => disposeComponent(registryId),
   };
 }
 

@@ -28,6 +28,11 @@ import { createZenMoonMirror } from './components/courtyard/ZenMoonMirror.tsx';
 import { createTrailingVinesRig } from './components/courtyard/TrailingVinesRig.tsx';
 import { FloatingWoolPad } from '../puffy-hero-3d/FloatingWoolPad.ts';
 import type { SheepFlockEngine } from '../puffy-hero-3d/SheepFlockEngine.ts';
+import {
+  useBedroomConfigStore,
+  type PillowCountOption,
+} from '../../../store/useBedroomConfigStore.ts';
+import { BedroomConfiguratorDock } from '../../ui/BedroomConfiguratorDock.tsx';
 
 export interface BedroomSanctuarySceneOptions {
   /** Optional existing FloatingWoolPad whose encasementTrayGroup will be docked onto the bed slats */
@@ -136,44 +141,150 @@ export function createBedroomSanctuaryScene(
   });
   group.add(windowCurtain.group);
 
+  // Track active style, mattress height delta, and bed decor visibility for dynamic remounts
+  let currentStyle: BedroomStyle = initialStyle;
+  let currentHeightDelta = 0;
+  let bedDecorVisible = true;
+
+  const mattressTopY = isFloatingPadAttached ? 0.79 : 0.58;
+  const pillowSurfaceY = isFloatingPadAttached ? 0.77 : 0.58;
+
   // 7. Staggered Geometric Bedroom Pendant Light Cluster (Suspended from y = 3.90m down to 1.35m)
-  const pendantCluster = createModernPendantCluster({
-    ceilingY: 3.90,
-    castShadow,
-    enableAccentLight: true,
-  });
-  group.add(pendantCluster.group);
+  let pendantCluster: ReturnType<typeof createModernPendantCluster> | null = null;
+  const mountPendantCluster = () => {
+    if (pendantCluster) return;
+    pendantCluster = createModernPendantCluster({
+      ceilingY: 3.90,
+      castShadow,
+      enableAccentLight: true,
+    });
+    const preset = BEDROOM_STYLE_PRESETS[currentStyle] ?? BEDROOM_STYLE_PRESETS['nordic-coastal'];
+    pendantCluster.applyStyle(preset, 0);
+    group.add(pendantCluster.group);
+  };
+  const unmountPendantCluster = () => {
+    if (!pendantCluster) return;
+    group.remove(pendantCluster.group);
+    disposeComponent('staggered-pendant-cluster');
+    pendantCluster.dispose();
+    pendantCluster = null;
+  };
 
   // 7b. Puffy Cloud Architectural Ceiling Light (Centered at [0.0, 3.885, 0.70], 1.80m x 1.20m)
-  const puffyCloudCeilingLight = createPuffyCloudCeilingLight({
-    ceilingY: 3.90,
-    positionX: 0.0,
-    positionZ: 0.70,
-    enableAmbientLight: true,
-    ambientLightIntensity: 1.4,
-  });
-  group.add(puffyCloudCeilingLight.group);
+  let puffyCloudCeilingLight: ReturnType<typeof createPuffyCloudCeilingLight> | null = null;
+  const mountCloudCeilingLight = () => {
+    if (puffyCloudCeilingLight) return;
+    puffyCloudCeilingLight = createPuffyCloudCeilingLight({
+      ceilingY: 3.90,
+      positionX: 0.0,
+      positionZ: 0.70,
+      enableAmbientLight: true,
+      ambientLightIntensity: 1.4,
+    });
+    group.add(puffyCloudCeilingLight.group);
+  };
+  const unmountCloudCeilingLight = () => {
+    if (!puffyCloudCeilingLight) return;
+    group.remove(puffyCloudCeilingLight.group);
+    disposeComponent('puffy-cloud-ceiling-light');
+    puffyCloudCeilingLight.dispose();
+    puffyCloudCeilingLight = null;
+  };
 
-  // 8. 4-Archetype Decor Props (Throw Blanket, Accent Pillows, Framed Art, Bedside Artbook)
-  // Top surface of FloatingWoolPad in local BedroomSanctuaryScene coordinates is ~0.79m when docked at -0.20,
-  // or 0.58m when standalone mattress is docked at y=0.35m.
-  const mattressTopY = isFloatingPadAttached ? 0.79 : 0.58;
-  const throwBlanket = createBedThrowBlanket({
-    mattressWidth: mattressW,
-    surfaceY: mattressTopY,
-    footZ: mattressL * 0.28,
-    drapeDrop: 0.22,
-    runnerDepth: 0.60,
-  });
-  group.add(throwBlanket.group);
+  // 8. 4-Archetype Decor Props (Bed Runner, Accent Pillows, Framed Art, Bedside Artbook)
+  let throwBlanket: ReturnType<typeof createBedThrowBlanket> | null = null;
+  const mountBedRunner = () => {
+    if (throwBlanket) return;
+    throwBlanket = createBedThrowBlanket({
+      mattressWidth: mattressW,
+      surfaceY: mattressTopY,
+      footZ: mattressL * 0.28,
+      drapeDrop: 0.22,
+      runnerDepth: 0.60,
+    });
+    const preset = BEDROOM_STYLE_PRESETS[currentStyle] ?? BEDROOM_STYLE_PRESETS['nordic-coastal'];
+    throwBlanket.applyStyle(preset, 0);
+    throwBlanket.group.position.y = currentHeightDelta;
+    throwBlanket.group.visible = bedDecorVisible;
+    group.add(throwBlanket.group);
+  };
+  const unmountBedRunner = () => {
+    if (!throwBlanket) return;
+    group.remove(throwBlanket.group);
+    throwBlanket.dispose();
+    throwBlanket = null;
+  };
 
-  const pillowSurfaceY = isFloatingPadAttached ? 0.77 : 0.58;
-  const puffyPillowPair = createPuffyPillowPair({
-    surfaceY: pillowSurfaceY,
-    headZ: headboardAnchorZ + 0.18,
-    offsetX: Math.min(0.42, mattressW * 0.23),
-  });
-  group.add(puffyPillowPair.group);
+  // Pillow Assembly (0 | 2 | 4)
+  let pillowRootGroup: THREE.Group | null = null;
+  let pillowInstances: Array<ReturnType<typeof createPuffyPillowPair>> = [];
+  let mountedPillowCount: PillowCountOption | null = null;
+
+  const unmountPillows = () => {
+    if (pillowRootGroup) {
+      group.remove(pillowRootGroup);
+      pillowRootGroup.clear();
+      pillowRootGroup = null;
+    }
+    for (const inst of pillowInstances) {
+      inst.dispose();
+    }
+    pillowInstances = [];
+    mountedPillowCount = null;
+  };
+
+  const mountPillows = (count: PillowCountOption) => {
+    if (mountedPillowCount === count) return;
+    unmountPillows();
+    if (count === 0) {
+      mountedPillowCount = 0;
+      return;
+    }
+
+    const root = new THREE.Group();
+    root.name = count === 4 ? 'FourPillowAssembly' : 'TwoPillowAssembly';
+    root.position.y = currentHeightDelta;
+    root.visible = bedDecorVisible;
+
+    if (count === 2) {
+      const pair = createPuffyPillowPair({
+        surfaceY: pillowSurfaceY,
+        headZ: headboardAnchorZ + 0.18,
+        offsetX: Math.min(0.42, mattressW * 0.23),
+        rotX: -0.28,
+        scale: 1.0,
+        registryId: 'puffy-pillow-pair',
+      });
+      root.add(pair.group);
+      pillowInstances.push(pair);
+    } else if (count === 4) {
+      // Back Tier: 2 King Pillows standing upright against headboard
+      const backTier = createPuffyPillowPair({
+        surfaceY: pillowSurfaceY,
+        headZ: headboardAnchorZ + 0.14,
+        offsetX: Math.min(0.44, mattressW * 0.24),
+        rotX: -0.20,
+        scale: 1.05,
+        registryId: 'puffy-pillow-pair-back',
+      });
+      // Front Tier: 2 Standard Pillows resting angled forward
+      const frontTier = createPuffyPillowPair({
+        surfaceY: pillowSurfaceY,
+        headZ: headboardAnchorZ + 0.34,
+        offsetX: Math.min(0.40, mattressW * 0.22),
+        rotX: -0.42,
+        scale: 0.95,
+        registryId: 'puffy-pillow-pair-front',
+      });
+      root.add(backTier.group);
+      root.add(frontTier.group);
+      pillowInstances.push(backTier, frontTier);
+    }
+
+    pillowRootGroup = root;
+    mountedPillowCount = count;
+    group.add(root);
+  };
 
   const framedArt = createFramedCanvasArt({
     wallZ: backWallZ,
@@ -194,20 +305,76 @@ export function createBedroomSanctuaryScene(
   const courtyardWall = createCourtyardWall();
   courtyardZone.add(courtyardWall.group);
 
-  const zenCourtyardSanctuary = new THREE.Group();
-  zenCourtyardSanctuary.name = 'ZenCourtyardSanctuary';
-  const karesansuiSandBed = createKaresansuiSandBed();
-  const flushZenGardenRig = createFlushZenGardenRig();
-  const zenMoonMirror = createZenMoonMirror();
-  zenCourtyardSanctuary.add(karesansuiSandBed.group);
-  zenCourtyardSanctuary.add(flushZenGardenRig.group);
-  zenCourtyardSanctuary.add(zenMoonMirror.group);
-  courtyardZone.add(zenCourtyardSanctuary);
+  let zenCourtyardGroup: THREE.Group | null = null;
+  let karesansuiSandBed: ReturnType<typeof createKaresansuiSandBed> | null = null;
+  let flushZenGardenRig: ReturnType<typeof createFlushZenGardenRig> | null = null;
+  let zenMoonMirror: ReturnType<typeof createZenMoonMirror> | null = null;
+
+  const mountZenCourtyard = () => {
+    if (zenCourtyardGroup) return;
+    zenCourtyardGroup = new THREE.Group();
+    zenCourtyardGroup.name = 'ZenCourtyardSanctuary';
+    karesansuiSandBed = createKaresansuiSandBed();
+    flushZenGardenRig = createFlushZenGardenRig();
+    zenMoonMirror = createZenMoonMirror();
+    zenCourtyardGroup.add(karesansuiSandBed.group);
+    zenCourtyardGroup.add(flushZenGardenRig.group);
+    zenCourtyardGroup.add(zenMoonMirror.group);
+    courtyardZone.add(zenCourtyardGroup);
+  };
+  const unmountZenCourtyard = () => {
+    if (!zenCourtyardGroup) return;
+    courtyardZone.remove(zenCourtyardGroup);
+    zenCourtyardGroup.clear();
+    karesansuiSandBed?.dispose();
+    flushZenGardenRig?.dispose();
+    zenMoonMirror?.dispose();
+    karesansuiSandBed = null;
+    flushZenGardenRig = null;
+    zenMoonMirror = null;
+    zenCourtyardGroup = null;
+  };
 
   // Trailing Pothos Vines softening the courtyard wall lips & curtain pocket corner
   const trailingVinesRig = createTrailingVinesRig();
   courtyardZone.add(trailingVinesRig.group);
   group.add(courtyardZone);
+
+  // Initial state sync + reactive subscription to useBedroomConfigStore
+  const syncFromConfigStore = () => {
+    const { activeItems, pillowCount } = useBedroomConfigStore.getState();
+
+    if (activeItems['puffy-bed-runner'] ?? true) {
+      mountBedRunner();
+    } else {
+      unmountBedRunner();
+    }
+
+    const effectivePillowCount: PillowCountOption =
+      activeItems['puffy-pillow-pair'] === false ? 0 : pillowCount;
+    mountPillows(effectivePillowCount);
+
+    if (activeItems['staggered-pendant-cluster'] ?? true) {
+      mountPendantCluster();
+    } else {
+      unmountPendantCluster();
+    }
+
+    if (activeItems['puffy-cloud-ceiling-light'] ?? true) {
+      mountCloudCeilingLight();
+    } else {
+      unmountCloudCeilingLight();
+    }
+
+    if (activeItems['zen-courtyard-sanctuary'] ?? true) {
+      mountZenCourtyard();
+    } else {
+      unmountZenCourtyard();
+    }
+  };
+
+  syncFromConfigStore();
+  const unsubscribeStore = useBedroomConfigStore.subscribe(syncFromConfigStore);
 
   // 9. Soft Sanctuary Daylight Rig (Morning Sun from left panoramic window + Hemisphere Fill)
   const sunLightIntensity = options.sunLightIntensity ?? 2.6;
@@ -247,11 +414,13 @@ export function createBedroomSanctuaryScene(
 
   const syncMattressHeight = (heightDeltaMeters: number) => {
     const safeDelta = Number.isFinite(heightDeltaMeters) ? heightDeltaMeters : 0;
-    // Both PuffyPillowPair and BedThrowBlanket groups start at local Y=0 with their child meshes
-    // already positioned at mattressTopY (with PuffyPillowPair applying SINK_DEPTH = 0.025m),
-    // so shifting group.position.y by the relative delta from 14" Royal keeps exact contact.
-    puffyPillowPair.group.position.y = safeDelta;
-    throwBlanket.group.position.y = safeDelta;
+    currentHeightDelta = safeDelta;
+    if (pillowRootGroup) {
+      pillowRootGroup.position.y = safeDelta;
+    }
+    if (throwBlanket) {
+      throwBlanket.group.position.y = safeDelta;
+    }
   };
 
   if (options.floatingWoolPad) {
@@ -262,22 +431,28 @@ export function createBedroomSanctuaryScene(
   }
 
   const setStyle = (style: BedroomStyle, duration = 0.5) => {
+    currentStyle = style;
     const preset = BEDROOM_STYLE_PRESETS[style] ?? BEDROOM_STYLE_PRESETS['nordic-coastal'];
     roomBoundary.applyStyle(preset, duration);
     floor.applyStyle(preset, duration);
     rug.applyStyle(preset, duration);
-    throwBlanket.applyStyle(preset, duration);
+    throwBlanket?.applyStyle(preset, duration);
     framedArt.applyStyle(preset, duration);
     bedsideBook.applyStyle(preset, duration);
-    pendantCluster.applyStyle(preset, duration);
+    pendantCluster?.applyStyle(preset, duration);
   };
 
   // Apply initial style immediately (duration = 0)
   setStyle(initialStyle, 0);
 
   const setBedDecorVisible = (visible: boolean) => {
-    throwBlanket.group.visible = visible;
-    puffyPillowPair.group.visible = visible;
+    bedDecorVisible = visible;
+    if (throwBlanket) {
+      throwBlanket.group.visible = visible;
+    }
+    if (pillowRootGroup) {
+      pillowRootGroup.visible = visible;
+    }
   };
 
   const runSmokeTest = (dockedMattressGroup?: THREE.Object3D) => {
@@ -309,25 +484,22 @@ export function createBedroomSanctuaryScene(
   };
 
   const dispose = () => {
+    unsubscribeStore();
     disposeComponent('hardwood-floor');
     disposeComponent('plush-wool-rug');
     disposeComponent('puffy-platform-frame');
     disposeComponent('puffy-headboard');
     disposeComponent('room-boundary');
     disposeComponent('window-curtain-wall');
-    disposeComponent('staggered-pendant-cluster');
-    pendantCluster.dispose();
-    disposeComponent('puffy-cloud-ceiling-light');
-    puffyCloudCeilingLight.dispose();
-    disposeComponent('bed-throw-blanket');
-    disposeComponent('puffy-pillow-pair');
+    unmountPendantCluster();
+    unmountCloudCeilingLight();
+    unmountBedRunner();
+    unmountPillows();
     disposeComponent('framed-canvas-art');
     disposeComponent('bedside-art-book');
     disposeComponent('courtyard-wall');
     courtyardWall.dispose();
-    karesansuiSandBed.dispose();
-    flushZenGardenRig.dispose();
-    zenMoonMirror.dispose();
+    unmountZenCourtyard();
     trailingVinesRig.dispose();
     disposeAllBedroomComponents();
 
@@ -421,11 +593,14 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     mattressDockGroup.add(woolPad.group);
 
     const sanctuary = createBedroomSanctuaryScene({
+      floatingWoolPad: woolPad,
       mattressWidth: 2.15,
       mattressLength: 2.55,
       castShadow: true,
     });
+    woolPad.setFloatingEnabled(false, 0.238);
     sanctuary.dockMattress(mattressDockGroup);
+    sanctuary.syncMattressHeight(0.024);
     scene.add(sanctuary.group);
     scene.add(mattressDockGroup);
 
@@ -465,5 +640,9 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     };
   }, [externalScene]);
 
-  return <div ref={mountRef} className="w-full h-full relative" style={{ minHeight: '640px' }} />;
+  return (
+    <div ref={mountRef} className="w-full h-full relative" style={{ minHeight: '640px' }}>
+      {!externalScene && <BedroomConfiguratorDock bottomOffset={24} />}
+    </div>
+  );
 };
