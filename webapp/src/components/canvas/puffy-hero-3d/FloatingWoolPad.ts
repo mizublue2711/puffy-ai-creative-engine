@@ -42,7 +42,7 @@ interface LayerLiftSlideTween {
   fromEmissive: number;
   toEmissive: number;
   currentEmissive: number;
-  mode: 'lift-then-slide' | 'upper-clearance' | 'reset';
+  mode: 'lift-then-slide' | 'upper-clearance' | 'tray-slide' | 'reset';
 }
 
 // power2.out
@@ -391,13 +391,20 @@ export class FloatingWoolPad {
       kin.fromRotX = kin.currentRotX;
       kin.fromEmissive = kin.currentEmissive;
 
-      // Layer 10 (index 9) is `encasementTrayGroup` anchored at (0,0,0)
+      // Layer 10 (index 9) is `encasementTrayGroup`: slide forward & drop slightly without mutating or green-tinting casing color
       if (i === 9) {
-        kin.mode = 'reset';
-        kin.liftTargetY = kin.defaultY;
-        kin.slideTargetZ = 0;
-        kin.targetRotX = 0;
-        kin.toEmissive = normalized === 9 ? 0.22 : 0.0;
+        if (normalized === 9) {
+          kin.mode = 'tray-slide';
+          kin.liftTargetY = -0.05;
+          kin.slideTargetZ = 0.25;
+          kin.targetRotX = 0;
+        } else {
+          kin.mode = 'reset';
+          kin.liftTargetY = kin.defaultY;
+          kin.slideTargetZ = 0;
+          kin.targetRotX = 0;
+        }
+        kin.toEmissive = 0.0;
         continue;
       }
 
@@ -583,13 +590,21 @@ export class FloatingWoolPad {
     maxAnisotropy: number,
   ): THREE.MeshStandardMaterial[] {
     const matGripBase = this.materials.get('mat_grip_base')!;
-    const matSideBorder = this.materials.get('mat_side_border')!;
-    const matAccentStrip = this.materials.get('mat_accent_strip')!;
+    const matSidewallStrip =
+      this.materials.get('mat_sidewall_strip') ?? this.materials.get('mat_side_border')!;
     const matPipingCord = this.materials.get('mat_piping_cord')!;
     const matBrandBadge = this.materials.get('mat_brand_badge')!;
 
-    // 1. Bottom Grip Base Plate (Layer 10 foundation floor of the open-top tray)
-    const gripBaseGeo = new THREE.BoxGeometry(width, 0.032, length);
+    // 1. Bottom Grip Base Plate (Layer 10 foundation floor of the open-top tray, 5cm rounded corners)
+    const cornerRadius = 0.05; // 5cm continuous rounded corner radius
+    const cornerSegments = 12;
+    const gripBaseGeo = this.createRoundedRectSlabGeometry(
+      width,
+      length,
+      0.032,
+      cornerRadius,
+      cornerSegments,
+    );
     preparePBRGeometry(gripBaseGeo);
     const gripBaseMesh = new THREE.Mesh(gripBaseGeo, matGripBase);
     gripBaseMesh.position.set(0, -0.222, 0);
@@ -598,52 +613,28 @@ export class FloatingWoolPad {
     this.encasementTrayGroup.add(gripBaseMesh);
     this.disposables.push(gripBaseGeo);
 
-    // 2. Four Outer Border Walls of the Open-Top Tray (Back -Z, Front +Z, Left -X, Right +X)
-    // Continuous overlapping vertical heights from y = -0.206 up to casingWallTopY = +0.188 (zero gaps)
-    const charcoalHeight = 0.264; // y: -0.206 to +0.058
+    // 2. Continuous Smooth Rounded-Corner Perimeter Sidewall (`sidewall_strip_v1`)
+    // Spans y = -0.206 up to casingWallTopY = +0.188 with 12-segment 5cm rounded corners and continuous arc-length UVs
+    const charcoalHeight = 0.264; // Reference height for lower badge/handle placement
     const charcoalY = -0.074;
-    const lowerPipingY = 0.057;
-    const casingWallTopY = 0.188;
-    const navyHeight = 0.134; // y: +0.054 to +0.188 (4mm overlap with charcoal wall behind lower piping)
-    const navyY = 0.121;
+    const sidewallHeight = 0.394; // y: -0.206 to +0.188
+    const sidewallY = -0.009;
 
-    const addTrayWall = (segW: number, segL: number, posX: number, posZ: number) => {
-      const charGeo = new THREE.BoxGeometry(segW, charcoalHeight, segL);
-      preparePBRGeometry(charGeo);
-      const charMesh = new THREE.Mesh(charGeo, matSideBorder);
-      charMesh.position.set(posX, charcoalY, posZ);
-      charMesh.castShadow = true;
-      charMesh.receiveShadow = true;
-      this.encasementTrayGroup.add(charMesh);
-
-      const navyGeo = new THREE.BoxGeometry(segW, navyHeight, segL);
-      preparePBRGeometry(navyGeo);
-      const navyMesh = new THREE.Mesh(navyGeo, matAccentStrip);
-      navyMesh.position.set(posX, navyY, posZ);
-      navyMesh.castShadow = true;
-      navyMesh.receiveShadow = true;
-      this.encasementTrayGroup.add(navyMesh);
-
-      this.disposables.push(charGeo, navyGeo);
-    };
-
-    // Back Wall (-Z), Front Wall (+Z), Left Wall (-X), Right Wall (+X)
-    addTrayWall(width, wallThick, 0, -length / 2 + wallThick / 2);
-    addTrayWall(width, wallThick, 0, length / 2 - wallThick / 2);
-    addTrayWall(wallThick, length - wallThick * 2, -width / 2 + wallThick / 2, 0);
-    addTrayWall(wallThick, length - wallThick * 2, width / 2 - wallThick / 2, 0);
-
-    // Lower Welt Piping Bead (`CylinderGeometry` perimeter frame at lowerPipingY = 0.057, scale 1.01)
-    const lowerPipingMesh = this.createPerimeterPipingBead(width, length, 0.0065, matPipingCord);
-    lowerPipingMesh.position.y = lowerPipingY;
-    lowerPipingMesh.scale.set(1.01, 1.01, 1.01);
-    this.encasementTrayGroup.add(lowerPipingMesh);
-
-    // Upper Rim Welt Piping Bead (`CylinderGeometry` perimeter frame anchored directly at casingWallTopY = 0.188, scale 1.01)
-    const upperTrayPipingMesh = this.createPerimeterPipingBead(width, length, 0.0075, matPipingCord);
-    upperTrayPipingMesh.position.y = casingWallTopY;
-    upperTrayPipingMesh.scale.set(1.01, 1.01, 1.01);
-    this.encasementTrayGroup.add(upperTrayPipingMesh);
+    const sidewallGeo = this.createRoundedPerimeterSidewallGeometry(
+      width,
+      length,
+      sidewallHeight,
+      cornerRadius,
+      cornerSegments,
+      4.4, // 4.4 * repeat.x(10) = 44 exact integer tile repeats around ~9.31m perimeter (~5.29cm per diamond)
+    );
+    preparePBRGeometry(sidewallGeo);
+    const sidewallMesh = new THREE.Mesh(sidewallGeo, matSidewallStrip);
+    sidewallMesh.position.set(0, sidewallY, 0);
+    sidewallMesh.castShadow = true;
+    sidewallMesh.receiveShadow = true;
+    this.encasementTrayGroup.add(sidewallMesh);
+    this.disposables.push(sidewallGeo);
 
     // 3. Centered "Puffy ROYAL / MONARCH" Embroidered Patch (`mat_brand_badge`) flush on front wall (0.001m offset)
     const badgeGeo = new THREE.PlaneGeometry(0.12, 0.06);
@@ -697,13 +688,129 @@ export class FloatingWoolPad {
       hybridTagMat,
     );
 
-    return [matGripBase, matSideBorder, matAccentStrip];
+    return [matGripBase, matSidewallStrip];
   }
 
   /**
    * Builds a 4-sided tubular perimeter piping bead (`CylinderGeometry` + corner joints)
    * that sits over casing junctions with `scale.set(1.01, 1.01, 1.01)` to seal light leaks.
    */
+  private createRoundedRectSlabGeometry(
+    width: number,
+    length: number,
+    height: number,
+    radius: number,
+    curveSegments = 12,
+  ): THREE.BufferGeometry {
+    const hw = width * 0.5;
+    const hl = length * 0.5;
+    const r = Math.min(radius, hw * 0.45, hl * 0.45);
+    const shape = new THREE.Shape();
+    shape.moveTo(-hw + r, -hl);
+    shape.lineTo(hw - r, -hl);
+    shape.quadraticCurveTo(hw, -hl, hw, -hl + r);
+    shape.lineTo(hw, hl - r);
+    shape.quadraticCurveTo(hw, hl, hw - r, hl);
+    shape.lineTo(-hw + r, hl);
+    shape.quadraticCurveTo(-hw, hl, -hw, hl - r);
+    shape.lineTo(-hw, -hl + r);
+    shape.quadraticCurveTo(-hw, -hl, -hw + r, -hl);
+
+    const geo = new THREE.ExtrudeGeometry(shape, {
+      depth: height,
+      bevelEnabled: false,
+      curveSegments,
+    });
+    geo.rotateX(Math.PI * 0.5);
+    geo.translate(0, height * 0.5, 0);
+    return geo;
+  }
+
+  /**
+   * Builds a continuous smooth rounded-corner perimeter sidewall ribbon with
+   * arc-length UVs so textures wrap seamlessly around all 4 corners with zero facets.
+   */
+  private createRoundedPerimeterSidewallGeometry(
+    width: number,
+    length: number,
+    height: number,
+    radius: number,
+    cornerSegments: number,
+    uvCyclesPerPerimeter: number,
+  ): THREE.BufferGeometry {
+    const hw = width * 0.5;
+    const hl = length * 0.5;
+    const r = Math.min(radius, hw * 0.45, hl * 0.45);
+    const pts: Array<{x: number; z: number; nx: number; nz: number}> = [];
+
+    // 4 corner arc centers in clockwise order starting at front-right (+X, +Z)
+    const corners: Array<{cx: number; cz: number; startAngle: number}> = [
+      {cx: hw - r, cz: hl - r, startAngle: 0},
+      {cx: -hw + r, cz: hl - r, startAngle: Math.PI * 0.5},
+      {cx: -hw + r, cz: -hl + r, startAngle: Math.PI},
+      {cx: hw - r, cz: -hl + r, startAngle: Math.PI * 1.5},
+    ];
+
+    for (const c of corners) {
+      for (let i = 0; i <= cornerSegments; i++) {
+        const a = c.startAngle + (i / cornerSegments) * (Math.PI * 0.5);
+        const nx = Math.cos(a);
+        const nz = Math.sin(a);
+        pts.push({
+          x: c.cx + r * nx,
+          z: c.cz + r * nz,
+          nx,
+          nz,
+        });
+      }
+    }
+    // Close the loop explicitly at the first point
+    pts.push({...pts[0]});
+
+    const arcLengths = new Float32Array(pts.length);
+    for (let i = 1; i < pts.length; i++) {
+      const dx = pts[i].x - pts[i - 1].x;
+      const dz = pts[i].z - pts[i - 1].z;
+      arcLengths[i] = arcLengths[i - 1] + Math.hypot(dx, dz);
+    }
+    const totalPerimeter = arcLengths[pts.length - 1] || 1;
+
+    const positions: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
+    const indices: number[] = [];
+    const halfH = height * 0.5;
+
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      const u = (arcLengths[i] / totalPerimeter) * uvCyclesPerPerimeter;
+      // Bottom vertex (v = 0)
+      positions.push(p.x, -halfH, p.z);
+      normals.push(p.nx, 0, p.nz);
+      uvs.push(u, 0);
+      // Top vertex (v = 1)
+      positions.push(p.x, halfH, p.z);
+      normals.push(p.nx, 0, p.nz);
+      uvs.push(u, 1);
+
+      if (i < pts.length - 1) {
+        const b0 = i * 2;
+        const t0 = i * 2 + 1;
+        const b1 = (i + 1) * 2;
+        const t1 = (i + 1) * 2 + 1;
+        indices.push(b0, t0, b1);
+        indices.push(b1, t0, t1);
+      }
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    geo.setIndex(indices);
+    return geo;
+  }
+
   private createPerimeterPipingBead(
     width: number,
     length: number,
@@ -770,11 +877,16 @@ export class FloatingWoolPad {
     _coreLength: number,
   ): THREE.MeshStandardMaterial[] {
     const matTopCover = this.materials.get('mat_top_cover')!;
-    const matPipingCord = this.materials.get('mat_piping_cord')!;
 
-    // 1. Full-Width Underside Collar Slab (`mat_top_cover`) that tucks 18mm inside the outer border wall
-    // so zero empty air space exists between `topCover` and `encasementTrayGroup`
-    const underSlabGeo = new THREE.BoxGeometry(outerWidth * 0.996, 0.032, outerLength * 0.996);
+    // 1. Full-Width Underside Collar Slab (`mat_top_cover`) with matching 5cm rounded corners
+    // so zero empty air space or sharp corner overhangs exist between `topCover` and `encasementTrayGroup`
+    const underSlabGeo = this.createRoundedRectSlabGeometry(
+      outerWidth * 0.994,
+      outerLength * 0.994,
+      0.032,
+      0.048,
+      12,
+    );
     preparePBRGeometry(underSlabGeo);
     const underSlabMesh = new THREE.Mesh(underSlabGeo, matTopCover);
     underSlabMesh.position.y = -0.002; // spans -0.018m (tucked inside tray wall) to +0.014m
@@ -782,24 +894,35 @@ export class FloatingWoolPad {
     underSlabMesh.receiveShadow = true;
     this.layer1TopCoverGroup.add(underSlabMesh);
 
-    // 2. Piping Welt Anchorage (`CylinderGeometry` perimeter bead directly at casingWallTopY junction, scale 1.01)
-    const pipingMesh = this.createPerimeterPipingBead(outerWidth, outerLength, 0.0085, matPipingCord);
-    pipingMesh.position.y = 0.0; // local 0.0 == casingWallTopY (0.188)
-    pipingMesh.scale.set(1.01, 1.01, 1.01); // Overlaps both surfaces by 1% to seal light leaks
-    this.layer1TopCoverGroup.add(pipingMesh);
-
-    // 3. Sculpted Quilted Cloud Top Sleeping Surface (`topCoverMesh`) with 0.015m downward perimeter overlap lip
-    const topGeo = new THREE.PlaneGeometry(outerWidth * 0.998, outerLength * 0.998, 52, 52);
+    // 2. Sculpted Quilted Cloud Top Sleeping Surface (`topCoverMesh`) with 0.015m downward perimeter overlap lip
+    // 64x64 grid enables physical displacementMap relief (15mm) when viewed from grazing angles
+    const topGeo = new THREE.PlaneGeometry(outerWidth * 0.996, outerLength * 0.996, 64, 64);
     topGeo.rotateX(-Math.PI / 2);
 
     const posAttr = topGeo.attributes.position;
-    const halfW = (outerWidth * 0.998) / 2;
-    const halfL = (outerLength * 0.998) / 2;
+    const halfW = (outerWidth * 0.996) / 2;
+    const halfL = (outerLength * 0.996) / 2;
+    const cornerR = 0.048;
     const seamOverlapLipDepth = -0.015; // 0.015m downward curvature/bevel that tucks inside the outer border
 
     for (let i = 0; i < posAttr.count; i++) {
-      const x = posAttr.getX(i);
-      const z = posAttr.getZ(i);
+      let x = posAttr.getX(i);
+      let z = posAttr.getZ(i);
+      // Clamp corners onto 4.8cm rounded rectangle so top cover matches sidewall rounded corners
+      const ix = halfW - cornerR;
+      const iz = halfL - cornerR;
+      if (Math.abs(x) > ix && Math.abs(z) > iz) {
+        const dx = Math.abs(x) - ix;
+        const dz = Math.abs(z) - iz;
+        const dist = Math.hypot(dx, dz);
+        if (dist > cornerR) {
+          const scale = cornerR / dist;
+          x = Math.sign(x) * (ix + dx * scale);
+          z = Math.sign(z) * (iz + dz * scale);
+          posAttr.setX(i, x);
+          posAttr.setZ(i, z);
+        }
+      }
       const nx = x / halfW;
       const nz = z / halfL;
       const edgeDrop = Math.pow(Math.max(0, 1 - nx * nx) * Math.max(0, 1 - nz * nz), 0.28);
@@ -1036,6 +1159,15 @@ export class FloatingWoolPad {
         kin.currentRotX = THREE.MathUtils.lerp(kin.fromRotX, 0, eased);
         kin.currentY = THREE.MathUtils.lerp(kin.fromY, kin.liftTargetY, eased);
         kin.currentEmissive = THREE.MathUtils.lerp(kin.fromEmissive, 0, eased);
+      } else if (kin.mode === 'tray-slide') {
+        // Layer 10 encasement tray slides forward (z: 0.25, y: -0.05) over 0.35s with zero color/emissive green tint
+        const t = THREE.MathUtils.clamp(elapsed / 0.35, 0, 1);
+        const eased = easeOutQuad(t);
+        kin.currentX = THREE.MathUtils.lerp(kin.fromX, 0, eased);
+        kin.currentY = THREE.MathUtils.lerp(kin.fromY, kin.liftTargetY, eased);
+        kin.currentZ = THREE.MathUtils.lerp(kin.fromZ, kin.slideTargetZ, eased);
+        kin.currentRotX = THREE.MathUtils.lerp(kin.fromRotX, 0, eased);
+        kin.currentEmissive = 0;
       } else {
         // Reset inactive layers back to resting position (duration: 0.3s, ease: "power2.inOut")
         // If returning from a forward slide (fromZ > 0.02), retract Z first so it never clips the front wall
@@ -1054,14 +1186,8 @@ export class FloatingWoolPad {
         kin.currentEmissive = THREE.MathUtils.lerp(kin.fromEmissive, kin.toEmissive, eased);
       }
 
-      if (i < 9) {
-        layerObj.position.set(kin.currentX, kin.currentY, kin.currentZ);
-        layerObj.rotation.set(kin.currentRotX, 0, 0);
-      } else {
-        // `encasementTrayGroup` stays anchored at (0, 0, 0)
-        layerObj.position.set(0, 0, 0);
-        layerObj.rotation.set(0, 0, 0);
-      }
+      layerObj.position.set(kin.currentX, kin.currentY, kin.currentZ);
+      layerObj.rotation.set(kin.currentRotX, 0, 0);
 
       const mats = this.layerHighlightMaterials[i];
       for (const mat of mats) {

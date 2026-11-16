@@ -17,8 +17,8 @@ export interface LoadedAssets {
     slotMap: Map<string, THREE.MeshStandardMaterial>;
   };
   textures: {
-    cloudPuffNormal: THREE.CanvasTexture;
-    cloudPuffAO: THREE.CanvasTexture;
+    cloudPuffNormal: THREE.Texture;
+    cloudPuffAO: THREE.Texture;
     diamondQuiltNormal: THREE.CanvasTexture;
     diamondQuiltAO: THREE.CanvasTexture;
     verticalFlutesNormal: THREE.CanvasTexture;
@@ -92,7 +92,7 @@ export function switchMattressModel(modelKey: MattressModelId, assets: LoadedAss
   assets.materials.brandBadge.needsUpdate = true;
 
   // 4. Enforce Shared Static Components invariance
-  assets.materials.topCover.color.set('#FFFFFF');
+  assets.materials.topCover.color.set('#f7f7f7');
   assets.materials.lowerBorder.color.set(config.lowerBorder.color); // #3B3E46
   assets.materials.pipingCord.color.set('#1A1A1A');
   const pocketCoilsMat = assets.materials.slotMap.get('mat_pocket_coils');
@@ -317,55 +317,48 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   const materials = new Map<string, THREE.MeshStandardMaterial>();
   const disposables: Array<{dispose(): void}> = [];
 
-  // 1. C. Top Cloud Sleep Surface (`mat_top_cover` — MeshPhysicalMaterial with Cloud-White Sheen)
-  const cloudHeightCanvas = document.createElement('canvas');
-  cloudHeightCanvas.width = 256;
-  cloudHeightCanvas.height = 256;
-  const chCtx = cloudHeightCanvas.getContext('2d');
-  if (chCtx) {
-    chCtx.fillStyle = '#B0B0B0';
-    chCtx.fillRect(0, 0, 256, 256);
-    const cells = 4;
-    const step = 256 / cells;
-    for (let row = 0; row <= cells; row++) {
-      for (let col = 0; col <= cells; col++) {
-        const cx = col * step + (row % 2 === 0 ? 0 : step * 0.5);
-        const cy = row * step;
-        const grad = chCtx.createRadialGradient(cx, cy, 2, cx, cy, step * 0.62);
-        grad.addColorStop(0, '#FFFFFF');
-        grad.addColorStop(0.76, '#E2E2E2');
-        grad.addColorStop(1, '#484848');
-        chCtx.fillStyle = grad;
-        chCtx.beginPath();
-        chCtx.arc(cx, cy, step * 0.62, 0, Math.PI * 2);
-        chCtx.fill();
-      }
-    }
-  }
-  const cloudMaps = generatePBRMapsFromHeightCanvas(
-    cloudHeightCanvas,
-    3.6,
-    0.9,
-    0.12,
-    3.5,
-    4.0,
-    maxAnisotropy,
-  );
-  disposables.push(cloudMaps.normalMap, cloudMaps.roughnessMap, cloudMaps.aoMap);
+  // 1. C. Top Cloud Sleep Surface (`mat_top_cover` — CAVP-v1.0 `top_quilt_cloud_diamond_v1`)
+  const textureLoader = new THREE.TextureLoader();
+
+  const quiltBaseColor = textureLoader.load('/textures/quilt/01_baseColor.png');
+  quiltBaseColor.colorSpace = THREE.SRGBColorSpace; // Eliminate muddy gamma gray
+
+  const quiltNormal = textureLoader.load('/textures/quilt/02_normal.png');
+  quiltNormal.colorSpace = THREE.NoColorSpace;
+
+  const quiltHeight = textureLoader.load('/textures/quilt/04_height.png');
+  quiltHeight.colorSpace = THREE.NoColorSpace;
+
+  const quiltAO = textureLoader.load('/textures/quilt/05_ambientOcclusion.png');
+  quiltAO.colorSpace = THREE.NoColorSpace;
+
+  const repeatX = 4; // 1.6m / 0.4m = 4 repeats along width
+  const repeatY = 5; // 2.0m / 0.4m = 5 repeats along length
+
+  [quiltBaseColor, quiltNormal, quiltHeight, quiltAO].forEach((tex) => {
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(repeatX, repeatY);
+    tex.anisotropy = maxAnisotropy;
+  });
+  disposables.push(quiltBaseColor, quiltNormal, quiltHeight, quiltAO);
 
   const matTopCover = new THREE.MeshPhysicalMaterial({
     name: 'mat_top_cover',
-    map: null,
-    color: new THREE.Color('#FFFFFF'),
-    roughness: 0.9,
-    metalness: 0.0,
-    sheen: 0.8,
-    sheenRoughness: 0.7,
-    sheenColor: new THREE.Color('#E8EDF2'), // Cloud-white sheen
-    normalMap: cloudMaps.normalMap,
-    normalScale: new THREE.Vector2(1.4, 1.4),
-    aoMap: cloudMaps.aoMap,
-    aoMapIntensity: 0.9,
+    color: new THREE.Color('#f7f7f7'), // Pure cotton white
+    map: quiltBaseColor,
+    normalMap: quiltNormal,
+    normalScale: new THREE.Vector2(1.2, 1.2),
+    aoMap: quiltAO,
+    aoMapIntensity: 0.8, // Balanced groove shadow
+    roughness: 0.85,     // Matte woven cotton, zero plastic glare
+    metalness: 0.0,      // Strictly 0 for fabric
+    sheen: 1.0,          // Microfiber cotton sheen scattering
+    sheenRoughness: 0.5,
+    sheenColor: new THREE.Color('#f7f7f7'),
+    displacementMap: quiltHeight,
+    displacementScale: 0.015, // 15mm physical quilt puff relief
+    clearcoat: 0.0,
   });
   materials.set('mat_top_cover', matTopCover);
   disposables.push(matTopCover);
@@ -426,6 +419,7 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
     color: new THREE.Color('#3B3E46'), // Charcoal Slate Base
     roughness: 0.85, // High roughness kills plastic specular shine
     metalness: 0.0, // Strict zero metallic for organic textile
+    clearcoat: 0.0,
     sheen: 1.0, // Full micro-fiber retro-reflection
     sheenRoughness: 0.65, // Soft dispersed fabric halo at glancing angles
     sheenColor: new THREE.Color('#7A808C'), // Subtle light tint catching the rim light
@@ -436,6 +430,50 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   });
   materials.set('mat_side_border', matSideBorder);
   disposables.push(matSideBorder);
+
+  // 2B. Unified 4-Tier Composite Sidewall Strip (`mat_sidewall_strip` — CAVP-v1.0 `sidewall_strip_v1`)
+  const sideWallBaseColor = textureLoader.load('/textures/sidewall/01_baseColor.png');
+  sideWallBaseColor.colorSpace = THREE.SRGBColorSpace;
+
+  const sideWallNormal = textureLoader.load('/textures/sidewall/02_normal.png');
+  sideWallNormal.colorSpace = THREE.NoColorSpace;
+
+  const sideWallRoughness = textureLoader.load('/textures/sidewall/03_roughness.png');
+  sideWallRoughness.colorSpace = THREE.NoColorSpace;
+
+  const sideWallAO = textureLoader.load('/textures/sidewall/05_ambientOcclusion.png');
+  sideWallAO.colorSpace = THREE.NoColorSpace;
+
+  const sideWallSheenColor = textureLoader.load('/textures/sidewall/07_sheenColor.png');
+  sideWallSheenColor.colorSpace = THREE.SRGBColorSpace;
+
+  [sideWallBaseColor, sideWallNormal, sideWallRoughness, sideWallAO, sideWallSheenColor].forEach((sideWallTexture) => {
+    sideWallTexture.wrapS = THREE.RepeatWrapping;
+    sideWallTexture.wrapT = THREE.ClampToEdgeWrapping;
+    sideWallTexture.repeat.set(10, 1); // Equilateral ~5.3cm x 5.25cm diamonds around perimeter
+    sideWallTexture.anisotropy = maxAnisotropy;
+  });
+  disposables.push(sideWallBaseColor, sideWallNormal, sideWallRoughness, sideWallAO, sideWallSheenColor);
+
+  const sideWallMaterial = new THREE.MeshPhysicalMaterial({
+    name: 'mat_sidewall_strip',
+    color: new THREE.Color(0xffffff), // Neutral multiplier so baseColor (#18243B navy, #2E323A charcoal) is never tinted
+    map: sideWallBaseColor,
+    normalMap: sideWallNormal,
+    normalScale: new THREE.Vector2(2.0, 2.0),
+    roughnessMap: sideWallRoughness,
+    roughness: 0.85,
+    metalness: 0.0,
+    clearcoat: 0.0,
+    sheen: 1.5,
+    sheenRoughness: 0.4,
+    sheenColor: new THREE.Color(0xffffff),
+    sheenColorMap: sideWallSheenColor, // Blue sheen ONLY on navy band; neutral grey on piping & charcoal diamonds
+    aoMap: sideWallAO,
+    aoMapIntensity: 1.4,
+  });
+  materials.set('mat_sidewall_strip', sideWallMaterial);
+  disposables.push(sideWallMaterial);
 
   // 3. Braided Welt Piping (`mat_piping_cord`, Shared #1A1A1A Black Woven Edge Cord)
   const pipingHeightCanvas = document.createElement('canvas');
@@ -469,8 +507,9 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
     name: 'mat_piping_cord',
     map: null,
     color: new THREE.Color('#1A1A1A'),
-    roughness: 0.82,
+    roughness: 0.90,
     metalness: 0.0,
+    clearcoat: 0.0,
     sheen: 0.75,
     sheenRoughness: 0.65,
     sheenColor: new THREE.Color('#3F434D'),
@@ -786,8 +825,8 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
       slotMap: materials,
     },
     textures: {
-      cloudPuffNormal: cloudMaps.normalMap,
-      cloudPuffAO: cloudMaps.aoMap,
+      cloudPuffNormal: quiltNormal,
+      cloudPuffAO: quiltAO,
       diamondQuiltNormal: diamondMaps.normalMap,
       diamondQuiltAO: diamondMaps.aoMap,
       verticalFlutesNormal: verticalFlutesMaps.normalMap,

@@ -353,6 +353,133 @@
   font-size: 11.5px;
 }
 
+.puffy-floating-hero-3d .craft-10layer-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.puffy-floating-hero-3d .craft-tab-arrow-btn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9999px;
+  border: 1px solid #e5e3df;
+  background-color: var(--puffy3d-pure-white);
+  color: #2b2f44;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-tab-arrow-btn:hover {
+  border-color: #067a57;
+  color: #067a57;
+  background-color: rgba(6, 122, 87, 0.06);
+}
+
+.puffy-floating-hero-3d .craft-10layer-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.puffy-floating-hero-3d .craft-10layer-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.puffy-floating-hero-3d .craft-10layer-tab-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 6px;
+  border-radius: 9999px;
+  border: 1px solid #e5e3df;
+  background-color: var(--puffy3d-pure-white);
+  color: #2b2f44;
+  font-family: var(--puffy3d-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.puffy-floating-hero-3d .craft-10layer-tab-pill:hover {
+  border-color: rgba(6, 122, 87, 0.45);
+}
+
+.puffy-floating-hero-3d .craft-10layer-tab-pill[data-active="true"] {
+  background-color: #2b2f44;
+  border-color: #067a57;
+  color: var(--puffy3d-pure-white);
+}
+
+.puffy-floating-hero-3d .craft-tab-num-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: #e5e3df;
+  color: #2b2f44;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.puffy-floating-hero-3d .craft-10layer-tab-pill[data-active="true"] .craft-tab-num-circle {
+  background-color: #067a57;
+  color: var(--puffy3d-pure-white);
+}
+
+.puffy-floating-hero-3d .craft-structured-specs-wrap {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(229, 227, 223, 0.22);
+}
+
+.puffy-floating-hero-3d.mobile .craft-structured-specs-wrap {
+  grid-template-columns: 1fr;
+}
+
+.puffy-floating-hero-3d .craft-spec-detail-block {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(229, 227, 223, 0.16);
+  border-radius: 8px;
+  padding: 7px 9px;
+}
+
+.puffy-floating-hero-3d .craft-spec-detail-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #e5e3df;
+  margin-bottom: 3px;
+}
+
+.puffy-floating-hero-3d .craft-spec-detail-text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+}
+
 .puffy-floating-hero-3d .craft-layer-list {
   display: flex;
   flex-direction: column;

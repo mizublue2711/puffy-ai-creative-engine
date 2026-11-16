@@ -1,0 +1,42 @@
+{
+  "open": "assets/lego/sidewall/sidewall_strip.tcraft",
+  "steps": [
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/sidewall/masks/sidewall_basecolor_2048x1024.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/sidewall/masks/sidewall_normal_2048x1024.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/sidewall/masks/sidewall_roughness_2048x1024.png" }
+    },
+    {
+      "id": "resource.import",
+      "params": { "path": "assets/lego/sidewall/masks/sidewall_height_2048x1024.png" }
+    },
+    {
+      "id": "layer.add.fill",
+      "params": { "name": "Sidewall_4Tier_Composite", "metallic": 0.0, "roughness": 0.85 }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "baseColor", "image": "sidewall_basecolor_2048x1024.png" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "normal", "image": "sidewall_normal_2048x1024.png", "normalFormat": "openGl" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "roughness", "image": "sidewall_roughness_2048x1024.png" }
+    },
+    {
+      "id": "layer.fill.set",
+      "params": { "channel": "height", "image": "sidewall_height_2048x1024.png" }
+    }
+  ],
+  "save": "assets/lego/sidewall/sidewall_strip.tcraft"
+}
