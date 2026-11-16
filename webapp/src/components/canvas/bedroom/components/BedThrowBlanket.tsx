@@ -54,7 +54,8 @@ function createThrowWeaveNormalMap(): THREE.CanvasTexture {
 /**
  * LEGO Decor Prop: Bed Throw Blanket / Runner
  * Draped naturally across the foot of the Puffy mattress at y = 0.58m (configurable),
- * with smooth rounded edges draping 0.15m down both left and right sides.
+ * curving smoothly over the mattress crown and draping 0.18m down both left and right sides
+ * with soft rounded corners and subtle fabric fold ripples.
  */
 export function createBedThrowBlanket(
   options: BedThrowBlanketOptions = {},
@@ -62,7 +63,7 @@ export function createBedThrowBlanket(
   const mattressW = options.mattressWidth ?? 2.15;
   const surfaceY = options.surfaceY ?? 0.58;
   const footZ = options.footZ ?? 0.68;
-  const drapeDrop = options.drapeDrop ?? 0.15;
+  const drapeDrop = options.drapeDrop ?? 0.18;
   const runnerDepth = options.runnerDepth ?? 0.68;
 
   const group = new THREE.Group();
@@ -82,39 +83,116 @@ export function createBedThrowBlanket(
     side: THREE.DoubleSide,
   });
 
-  // Build draped U-profile curve hugging the mattress top and dropping 0.15m on both sides
+  // Build draped U-profile curve hugging the mattress crown and dropping 0.18m on both sides
   const halfW = mattressW / 2 + 0.015;
-  const thickness = 0.016;
-  const segsX = 48;
-  const segsZ = 16;
+  const halfZ = runnerDepth / 2;
+  const totalHalfSpan = halfW + drapeDrop;
+  const thickness = 0.014;
+  const segsX = 72;
+  const segsY = 2;
+  const segsZ = 28;
 
-  const geo = new THREE.BoxGeometry(halfW * 2 + drapeDrop * 2, thickness, runnerDepth, segsX, 1, segsZ);
+  const geo = new THREE.BoxGeometry(
+    totalHalfSpan * 2,
+    thickness,
+    runnerDepth,
+    segsX,
+    segsY,
+    segsZ,
+  );
   const pos = geo.attributes.position;
 
+  const shoulderRadius = 0.045;
+  const shoulderArcLen = (Math.PI / 2) * shoulderRadius;
+  const crownHeight = 0.014;
+  const cornerRadius = 0.07;
+
   for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
-    const z = pos.getZ(i);
+    const rawX = pos.getX(i);
+    const rawY = pos.getY(i);
+    const rawZ = pos.getZ(i);
 
-    const absX = Math.abs(x);
-    let newX = x;
-    let newY = y;
+    const signX = rawX >= 0 ? 1 : -1;
+    const signZ = rawZ >= 0 ? 1 : -1;
 
-    if (absX > halfW) {
-      const over = absX - halfW;
-      const t = THREE.MathUtils.clamp(over / drapeDrop, 0, 1);
-      // Smooth 90-degree rounded fold over the mattress shoulder
-      const angle = t * (Math.PI / 2);
-      const radius = 0.03;
-      const sign = Math.sign(x);
-      newX = sign * (halfW + Math.sin(angle) * radius);
-      newY = y - over * 0.92 - (1 - Math.cos(angle)) * 0.015;
-    } else {
-      // Subtle organic fabric ripple across the quilted top
-      newY = y + Math.sin(x * 7.5 + z * 4.0) * 0.003;
+    // Soften X-Z perimeter corners into rounded fabric corners
+    const innerX = totalHalfSpan - cornerRadius;
+    const innerZ = halfZ - cornerRadius;
+    const dxCorner = Math.max(0, Math.abs(rawX) - innerX);
+    const dzCorner = Math.max(0, Math.abs(rawZ) - innerZ);
+
+    let x = rawX;
+    let z = rawZ;
+    if (dxCorner > 0 && dzCorner > 0) {
+      const dist = Math.hypot(dxCorner, dzCorner);
+      if (dist > cornerRadius) {
+        const scale = cornerRadius / dist;
+        x = signX * (innerX + dxCorner * scale);
+        z = signZ * (innerZ + dzCorner * scale);
+      }
     }
 
-    pos.setXYZ(i, newX, newY, z);
+    // Soft hem taper near the perimeter edges so it reads as folded textile, not a rigid board
+    const edgeFactorX = THREE.MathUtils.clamp((Math.abs(x) - (totalHalfSpan - 0.025)) / 0.025, 0, 1);
+    const edgeFactorZ = THREE.MathUtils.clamp((Math.abs(z) - (halfZ - 0.025)) / 0.025, 0, 1);
+    const hemTaper = 1.0 - 0.65 * Math.max(edgeFactorX, edgeFactorZ);
+    const localThicknessOffset = rawY * hemTaper;
+
+    const absX = Math.abs(x);
+    let cx: number;
+    let cy: number;
+    let nx: number;
+    let ny: number;
+
+    if (absX <= halfW) {
+      // Gentle cosine crown across the mattress top + subtle fabric fold ripples along Z
+      const u = absX / halfW;
+      const crown = crownHeight * Math.cos(u * (Math.PI / 2));
+      const topRipple =
+        Math.sin(z * 11.0 + x * 2.2) * 0.0032 +
+        Math.cos(z * 19.0 - x * 3.4) * 0.0016;
+
+      cx = x;
+      cy = crown + topRipple;
+      nx = 0;
+      ny = 1;
+    } else {
+      const over = absX - halfW;
+      const hangFactor = THREE.MathUtils.clamp(over / drapeDrop, 0, 1);
+
+      if (over <= shoulderArcLen) {
+        // Smooth quarter-circle roll over the mattress shoulder
+        const angle = (over / shoulderArcLen) * (Math.PI / 2);
+        cx = signX * (halfW + Math.sin(angle) * shoulderRadius);
+        cy = -(1 - Math.cos(angle)) * shoulderRadius;
+        nx = signX * Math.sin(angle);
+        ny = Math.cos(angle);
+      } else {
+        // Natural gravity drape down the side with subtle outward flare
+        const rem = over - shoulderArcLen;
+        cx = signX * (halfW + shoulderRadius + rem * 0.06);
+        cy = -shoulderRadius - rem * 0.998;
+        nx = signX * 0.998;
+        ny = 0.06;
+      }
+
+      // Subtle fabric pleat ripples along Z that deepen as the fabric hangs down
+      const pleat =
+        (Math.sin(z * 14.0 + signX * 1.1) * 0.0075 +
+          Math.cos(z * 23.0 - signX * 0.7) * 0.0035) *
+        hangFactor;
+      const hemWave = Math.sin(z * 9.5 + signX * 0.5) * 0.004 * hangFactor;
+
+      cx += nx * pleat;
+      cy += ny * pleat * 0.25 - hemWave;
+    }
+
+    pos.setXYZ(
+      i,
+      cx + nx * localThicknessOffset,
+      cy + ny * localThicknessOffset,
+      z,
+    );
   }
   geo.computeVertexNormals();
 

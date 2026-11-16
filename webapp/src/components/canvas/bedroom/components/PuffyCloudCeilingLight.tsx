@@ -19,13 +19,13 @@ export const cloudBezelMaterial = new THREE.MeshStandardMaterial({
 
 // 2. Opal Diffuser Face (Illuminated Surface)
 export const cloudDiffuserMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color('#FFFDF8'),
+  color: new THREE.Color('#FFF8EE'),
   roughness: 0.12,
   metalness: 0.0,
   transmission: 0.65,              // Translucent milky depth
   thickness: 0.02,
-  emissive: new THREE.Color('#FFF5E5'), // Warm 3200K daylight tone
-  emissiveIntensity: 0.65,         // Soft glowing surface without blowing out exposure
+  emissive: new THREE.Color('#FFF8EE'), // Warm 3200K daylight tone
+  emissiveIntensity: 0.85,         // Boosted ambient bottom face glow
   transparent: true,
   opacity: 0.98,
 });
@@ -34,41 +34,42 @@ export const cloudDiffuserMaterial = new THREE.MeshPhysicalMaterial({
 // I. GEOMETRY & SHAPE EXTRUSION SPECIFICATION
 // ============================================================================
 
-const TARGET_WIDTH = 1.20;
-const TARGET_LENGTH = 0.85;
+const TARGET_WIDTH = 1.80;
+const TARGET_LENGTH = 1.20;
 const HOUSING_DEPTH = 0.05;
 const BEVEL_THICKNESS = 0.008;
 const BEVEL_SIZE = 0.008;
 const BEVEL_SEGMENTS = 5;
 const BEZEL_BAND_WIDTH = 0.01; // 10mm perimeter aluminum rim
-const HALO_STANDOFF_GAP = 0.015; // 15mm negative recess against ceiling (y = 3.20m)
+const HALO_STANDOFF_GAP = 0.015; // 15mm negative recess against ceiling (y = 3.90m)
 
 /**
  * Constructs a closed 2D cloud contour inspired by the organic Puffy cloud
- * silhouette (4 billowy lobes + gentle undulating base, zero typography),
+ * silhouette (4 distinctly defined pillowy domes/lobes across top & sides
+ * with a flat-ish soft bottom base, zero typography),
  * normalized and centered at (0, 0) to exact metric span (width x length).
  */
 function buildCloudContourPoints(width: number, length: number): THREE.Vector2[] {
   const rawShape = new THREE.Shape();
 
   // Construct upright in standard 2D (+Y = top of cloud), then flip Y for world +Z orientation
-  // Start at lower-left junction
-  rawShape.moveTo(-0.42, -0.20);
+  // Start at bottom-left corner of the flat-ish soft base
+  rawShape.moveTo(-0.38, -0.24);
 
-  // Lobe 1: Left billowy puff
-  rawShape.bezierCurveTo(-0.64, -0.18, -0.64, 0.14, -0.34, 0.14);
+  // Lobe 1: Left side pillowy lobe
+  rawShape.bezierCurveTo(-0.62, -0.24, -0.62, 0.12, -0.35, 0.13);
 
-  // Lobe 2: Signature tall central-left crown lobe
-  rawShape.bezierCurveTo(-0.30, 0.48, 0.14, 0.50, 0.20, 0.18);
+  // Lobe 2: Signature tall central-left crown dome
+  rawShape.bezierCurveTo(-0.34, 0.44, 0.04, 0.46, 0.06, 0.22);
 
-  // Lobe 3: Right-upper billowy puff
-  rawShape.bezierCurveTo(0.42, 0.24, 0.60, 0.06, 0.52, -0.10);
+  // Lobe 3: Central-right rounded cloud dome
+  rawShape.bezierCurveTo(0.14, 0.40, 0.42, 0.32, 0.38, 0.08);
 
-  // Lobe 4: Right-lower rounded puff into soft base
-  rawShape.bezierCurveTo(0.56, -0.28, 0.34, -0.32, 0.18, -0.24);
+  // Lobe 4: Right side pillowy lobe curving smoothly into base
+  rawShape.bezierCurveTo(0.62, 0.08, 0.62, -0.24, 0.38, -0.24);
 
-  // Soft undulating Puffy cloud base returning to start
-  rawShape.bezierCurveTo(0.02, -0.18, -0.20, -0.28, -0.42, -0.20);
+  // Flat-ish soft bottom base returning to start (no pinch)
+  rawShape.bezierCurveTo(0.16, -0.26, -0.16, -0.26, -0.38, -0.24);
 
   const sampled = rawShape.getPoints(160);
   // Remove duplicate closing point if present
@@ -133,10 +134,10 @@ function createPathFromPoints(points: THREE.Vector2[]): THREE.Path {
   return path;
 }
 
-export const CLOUD_CEILING_POSITION: [number, number, number] = [0.0, 3.185, 0.70];
+export const CLOUD_CEILING_POSITION: [number, number, number] = [0.0, 3.885, 0.70];
 
 export interface PuffyCloudCeilingLightOptions {
-  /** Ceiling plane Y coordinate in meters (default: 3.20m) */
+  /** Ceiling plane Y coordinate in meters (default: 3.90m) */
   ceilingY?: number;
   /** World X position (default: 0.0) */
   positionX?: number;
@@ -161,7 +162,7 @@ export interface PuffyCloudCeilingLightInstance extends BedroomAssetInstance {
 export function createPuffyCloudCeilingLight(
   options: PuffyCloudCeilingLightOptions = {},
 ): PuffyCloudCeilingLightInstance {
-  const ceilingY = options.ceilingY ?? 3.20;
+  const ceilingY = options.ceilingY ?? 3.90;
   const positionX = options.positionX ?? CLOUD_CEILING_POSITION[0];
   const positionZ = options.positionZ ?? CLOUD_CEILING_POSITION[2];
   const enableAmbientLight = options.enableAmbientLight ?? true;
@@ -170,9 +171,9 @@ export function createPuffyCloudCeilingLight(
   const group = new THREE.Group();
   group.name = 'PuffyCloudCeilingLight';
 
-  // Flush-mounted at room center: [0.0, 3.185, 0.70], rotation: [-PI/2, 0, 0]
+  // Flush-mounted at room center: [0.0, 3.885, 0.70], rotation: [-PI/2, 0, 0]
   // With rx = -PI/2, local +Z maps to World +Y (upward toward ceiling).
-  const anchorY = ceilingY - HALO_STANDOFF_GAP; // 3.185m when ceilingY = 3.20m
+  const anchorY = ceilingY - HALO_STANDOFF_GAP; // 3.885m when ceilingY = 3.90m
   group.position.set(positionX, anchorY, positionZ);
   group.rotation.set(-Math.PI / 2, 0, 0);
   group.scale.set(1, 1, 1);
@@ -194,7 +195,7 @@ export function createPuffyCloudCeilingLight(
 
   const meshes: THREE.Mesh[] = [];
 
-  // Account for bevelSize so total outer footprint stays ~1.20m x 0.85m
+  // Account for bevelSize so total outer footprint stays ~1.80m x 1.20m
   const outerCoreW = TARGET_WIDTH - BEVEL_SIZE * 2;
   const outerCoreL = TARGET_LENGTH - BEVEL_SIZE * 2;
   const innerW = outerCoreW - BEZEL_BAND_WIDTH * 2;
@@ -223,7 +224,7 @@ export function createPuffyCloudCeilingLight(
     bevelSegments: BEVEL_SEGMENTS,
     curveSegments: 32,
   });
-  // Top of bezel sits at local z = 0 (World y = 3.185m, leaving 15mm halo standoff below ceiling 3.20m)
+  // Top of bezel sits at local z = 0 (World y = 3.885m, leaving 15mm halo standoff below ceiling 3.90m)
   const bezelTopLocalZ = 0;
   bezelGeo.translate(0, 0, bezelTopLocalZ - (bezelCoreDepth + BEVEL_THICKNESS));
 
@@ -247,7 +248,7 @@ export function createPuffyCloudCeilingLight(
     curveSegments: 32,
   });
   // Recessed 2mm inside the bottom bezel lip (bezel bottom is at -0.050m -> diffuser bottom at -0.048m)
-  const bezelBottomLocalZ = bezelTopLocalZ - HOUSING_DEPTH; // -0.050m (World y = 3.135m)
+  const bezelBottomLocalZ = bezelTopLocalZ - HOUSING_DEPTH; // -0.050m (World y = 3.835m)
   diffuserGeo.translate(0, 0, bezelBottomLocalZ + 0.002 + diffuserBevel);
 
   const diffuserMesh = new THREE.Mesh(diffuserGeo, localDiffuserMat);
@@ -256,7 +257,7 @@ export function createPuffyCloudCeilingLight(
   group.add(diffuserMesh);
   meshes.push(diffuserMesh);
 
-  // 3. Halo Standoff Mounting Hub (15mm negative recess against ceiling y = 3.20m)
+  // 3. Halo Standoff Mounting Hub (15mm negative recess against ceiling y = 3.90m)
   const standoffPoints = outerPoints.map((pt) => new THREE.Vector2(pt.x * 0.72, pt.y * 0.72));
   const standoffShape = createShapeFromPoints(standoffPoints);
   const standoffGeo = new THREE.ExtrudeGeometry(standoffShape, {
@@ -264,7 +265,7 @@ export function createPuffyCloudCeilingLight(
     bevelEnabled: false,
     curveSegments: 24,
   });
-  // Spans from local z = 0 (World y=3.185m) up to +0.015m (World y=3.200m flush with ceiling)
+  // Spans from local z = 0 (World y=3.885m) up to +0.015m (World y=3.900m flush with ceiling)
   standoffGeo.translate(0, 0, bezelTopLocalZ);
 
   const standoffMesh = new THREE.Mesh(standoffGeo, localStandoffMat);
@@ -299,7 +300,7 @@ export function createPuffyCloudCeilingLight(
     2.0,
   );
   ceilingAmbientLight.name = 'CloudCeilingAmbientLight';
-  // Local -Z points downward into the room (-0.065m => World y = 3.12m, just below diffuser)
+  // Local -Z points downward into the room (-0.065m => World y = 3.82m, just below diffuser)
   ceilingAmbientLight.position.set(0, 0, -0.065);
   ceilingAmbientLight.castShadow = false; // Soft fill light only to avoid shadow clutter
   group.add(ceilingAmbientLight);
