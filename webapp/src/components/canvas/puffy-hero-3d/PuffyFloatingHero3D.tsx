@@ -328,10 +328,19 @@ export function PuffyFloatingHero3D({
     const width = Math.max(300, container.clientWidth || 780);
     const height = Math.max(340, container.clientHeight || 640);
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: !isSoftwareGl,
-      powerPreference: "high-performance",
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: !isSoftwareGl,
+        powerPreference: "high-performance",
+      });
+    } catch (err) {
+      console.error("[PuffyFloatingHero3D] WebGLRenderer initialization failed:", err);
+      setIntroState("EXPLORING");
+      setIntroPhase1Stage("ready");
+      return;
+    }
+
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
@@ -350,6 +359,15 @@ export function PuffyFloatingHero3D({
 
     const sceneModule = new WoolMeadowSceneModule();
     sceneModuleRef.current = sceneModule;
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      console.warn("[PuffyFloatingHero3D] WebGL context lost; clearing intro overlay.");
+      sceneModule.skipIntroFlight();
+      setIntroState("EXPLORING");
+      setIntroPhase1Stage("ready");
+    };
+    renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
 
     sceneModule.onTelemetry((telemetry) => {
       telemetryCallbackRef.current?.(telemetry);
@@ -371,13 +389,19 @@ export function PuffyFloatingHero3D({
       setIntroState("EXPLORING");
     });
 
-    sceneModule.init({
-      scene,
-      camera,
-      renderer,
-      container,
-      isSoftwareGl,
-    });
+    try {
+      sceneModule.init({
+        scene,
+        camera,
+        renderer,
+        container,
+        isSoftwareGl,
+      });
+    } catch (err) {
+      console.error("[PuffyFloatingHero3D] Scene initialization failed:", err);
+      setIntroState("EXPLORING");
+      setIntroPhase1Stage("ready");
+    }
 
     // Preserve vertical page scrolling on mobile after OrbitControls mutates touchAction
     renderer.domElement.style.touchAction = "pan-y";
@@ -458,6 +482,7 @@ export function PuffyFloatingHero3D({
       window.clearTimeout(timeoutId);
       resizeObserver.disconnect();
       window.removeEventListener("resize", handleWindowResize);
+      renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
       timer.dispose();
 
       sceneModule.dispose();
