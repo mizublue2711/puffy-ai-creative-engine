@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 export type BedroomComponentCategory = 'furniture' | 'lighting' | 'flooring' | 'decor';
+export type BedroomDockCategory = 'bedding' | 'lighting' | 'landscape' | 'walls';
 
 export type BedroomStyle = 'japandi' | 'nordic-coastal' | 'mid-century' | 'urban-loft';
 
@@ -274,6 +275,12 @@ export interface BedroomComponentMetadata {
   id: string;
   name: string;
   category: BedroomComponentCategory;
+  dockCategory?: BedroomDockCategory;
+  shortLabel?: string;
+  isToggleable?: boolean;
+  defaultState?: boolean | number;
+  variantKey?: string;
+  options?: Array<number | string>;
   dimensions: { width: number; height: number; depth: number };
   defaultTransform: {
     position: [number, number, number];
@@ -284,13 +291,118 @@ export interface BedroomComponentMetadata {
   disposableMeshes: THREE.Mesh[];
 }
 
+export interface BedroomDockItemConfig {
+  id: string;
+  name: string;
+  shortLabel: string;
+  dockCategory: BedroomDockCategory;
+  isToggleable: boolean;
+  defaultState: boolean | number;
+  variantKey?: string;
+  options?: Array<number | string>;
+}
+
 export const BEDROOM_REGISTRY: Record<string, BedroomComponentMetadata> = {};
+
+const BEDROOM_CONFIG_ALIASES: Record<string, string> = {
+  'bed-throw-blanket': 'puffy-bed-runner',
+};
+
+export const BEDROOM_CONFIGURABLE_ITEMS: Record<string, BedroomDockItemConfig> = {
+  'puffy-bed-runner': {
+    id: 'puffy-bed-runner',
+    name: 'Bed Runner',
+    shortLabel: 'Runner',
+    dockCategory: 'bedding',
+    isToggleable: true,
+    defaultState: true,
+  },
+  'puffy-pillow-pair': {
+    id: 'puffy-pillow-pair',
+    name: 'Pillows',
+    shortLabel: 'Pillows',
+    dockCategory: 'bedding',
+    isToggleable: true,
+    variantKey: 'pillowCount',
+    options: [0, 2, 4],
+    defaultState: 2,
+  },
+  'staggered-pendant-cluster': {
+    id: 'staggered-pendant-cluster',
+    name: 'Pendant Cluster',
+    shortLabel: 'Pendants',
+    dockCategory: 'lighting',
+    isToggleable: true,
+    defaultState: true,
+  },
+  'puffy-cloud-ceiling-light': {
+    id: 'puffy-cloud-ceiling-light',
+    name: 'Cloud Ceiling Light',
+    shortLabel: 'Cloud Light',
+    dockCategory: 'lighting',
+    isToggleable: true,
+    defaultState: true,
+  },
+  'zen-courtyard-sanctuary': {
+    id: 'zen-courtyard-sanctuary',
+    name: 'Zen Courtyard',
+    shortLabel: 'Zen Garden',
+    dockCategory: 'landscape',
+    isToggleable: true,
+    defaultState: true,
+  },
+};
+
+const configListeners = new Set<() => void>();
+let configSnapshotVersion = 0;
+
+export function subscribeBedroomConfigRegistry(listener: () => void): () => void {
+  configListeners.add(listener);
+  return () => {
+    configListeners.delete(listener);
+  };
+}
+
+export function getBedroomConfigRegistryVersion(): number {
+  return configSnapshotVersion;
+}
+
+export function getConfigurableBedroomItems(category?: BedroomDockCategory): BedroomDockItemConfig[] {
+  const items = Object.values(BEDROOM_CONFIGURABLE_ITEMS);
+  if (!category) return items;
+  return items.filter((item) => item.dockCategory === category);
+}
+
+function inferDockCategory(category: BedroomComponentCategory): BedroomDockCategory {
+  if (category === 'lighting') return 'lighting';
+  return 'bedding';
+}
 
 /**
  * Registers or updates a bedroom LEGO component in the centralized registry.
+ * Any component marked `isToggleable: true` is also automatically exposed to the
+ * dynamic BedroomConfiguratorDock.
  */
 export function registerBedroomComponent(metadata: BedroomComponentMetadata): BedroomComponentMetadata {
   BEDROOM_REGISTRY[metadata.id] = metadata;
+
+  if (metadata.isToggleable) {
+    const configId = BEDROOM_CONFIG_ALIASES[metadata.id] ?? metadata.id;
+    const existing = BEDROOM_CONFIGURABLE_ITEMS[configId];
+    BEDROOM_CONFIGURABLE_ITEMS[configId] = {
+      id: configId,
+      name: existing?.name ?? metadata.name,
+      shortLabel: metadata.shortLabel ?? existing?.shortLabel ?? metadata.name,
+      dockCategory: metadata.dockCategory ?? existing?.dockCategory ?? inferDockCategory(metadata.category),
+      isToggleable: true,
+      defaultState: metadata.defaultState ?? existing?.defaultState ?? true,
+      variantKey: metadata.variantKey ?? existing?.variantKey,
+      options: metadata.options ?? existing?.options,
+    };
+    configSnapshotVersion += 1;
+    configListeners.forEach((listener) => listener());
+  }
+
   return metadata;
 }
 

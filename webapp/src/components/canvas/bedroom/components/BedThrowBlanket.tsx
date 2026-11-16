@@ -364,6 +364,10 @@ export function createBedThrowBlanket(
     id: 'bed-throw-blanket',
     name: 'Draped Chenille Bed Runner with Tassels',
     category: 'decor',
+    dockCategory: 'bedding',
+    shortLabel: 'Runner',
+    isToggleable: true,
+    defaultState: true,
     dimensions: {
       width: mattressW + shoulderRadius * 2,
       height: drapeDrop + crownDrop + thickness + tasselLength,
