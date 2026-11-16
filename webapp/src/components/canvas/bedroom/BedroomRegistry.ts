@@ -170,12 +170,12 @@ export const BEDROOM_STYLE_PRESETS: Record<BedroomStyle, BedroomStylePreset> = {
     id: 'mid-century',
     label: 'Mid-Century',
     wall: {
-      color: '#4A3528',
-      roughness: 0.56,
+      color: '#8E7558',
+      roughness: 0.72,
       accentSlatColor: '#C5A059',
       accentSlatVisible: true,
       accentSlatMetalness: 0.88,
-      baseboardColor: '#3A281E',
+      baseboardColor: '#1A1816',
     },
     floor: {
       color: '#6A4730',
