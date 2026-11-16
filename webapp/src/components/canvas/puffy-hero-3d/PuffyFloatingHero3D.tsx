@@ -27,6 +27,7 @@ import {
   BEDROOM_STYLE_PRESETS,
   type BedroomStyle,
 } from "../bedroom/BedroomRegistry.ts";
+import { BedroomConfiguratorDock } from "../../ui/BedroomConfiguratorDock.tsx";
 import "./PuffyFloatingHero3D.css";
 
 export interface ActiveTrustOverlay {
@@ -1076,6 +1077,11 @@ export function PuffyFloatingHero3D({
           );
         })}
       </div>
+
+      {/* 5b. Bedroom Staging Configurator Dock (only in Bedroom XR mode) */}
+      {currentEnvironment === "bedroom" && (
+        <BedroomConfiguratorDock bottomOffset={isDockCollapsed ? 68 : 104} />
+      )}
 
       {/* 6. Collapsible Bottom Control Dock */}
       <div
