@@ -50,8 +50,62 @@ function createLimewashPlasterNormalMap(): THREE.CanvasTexture {
   return tex;
 }
 
+function createVerticalTimberNormalMap(): THREE.CanvasTexture {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    const img = ctx.createImageData(size, size);
+    const data = img.data;
+    const twoPi = Math.PI * 2;
+    for (let y = 0; y < size; y++) {
+      const yPhase = (y / size) * twoPi;
+      for (let x = 0; x < size; x++) {
+        // Seamless vertical timber micro-grain running continuously along Y
+        const fineGrain = Math.sin(x * 0.42 + Math.sin(yPhase * 2) * 1.1) * 0.12;
+        const cathedral = Math.sin(x * 0.14 + Math.cos(yPhase) * 0.6) * 0.07;
+        const pore = (((x * 37 + y * 13) % 17) / 17 - 0.5) * 0.05;
+        const idx = (y * size + x) * 4;
+        data[idx] = Math.round(THREE.MathUtils.clamp(0.5 + fineGrain + cathedral + pore, 0, 1) * 255);
+        data[idx + 1] = Math.round(THREE.MathUtils.clamp(0.5 + pore * 0.4, 0, 1) * 255);
+        data[idx + 2] = 242;
+        data[idx + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.NoColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(1, 1);
+  return tex;
+}
+
+// Muted Warm Sand Walnut / Honey Teak
+export const midCenturyMutedWoodMaterial = new THREE.MeshStandardMaterial({
+  color: new THREE.Color('#8E7558'),
+  roughness: 0.72,
+  metalness: 0.0,
+  normalScale: new THREE.Vector2(0.3, 0.3),
+});
+
+// Negative Reveal Shadow Gap Material
+export const shadowGapMaterial = new THREE.MeshBasicMaterial({
+  color: new THREE.Color('#1A1816'),
+});
+
+// Warm Mineral Limewash Plaster (Right Wall)
+export const warmPlasterMaterial = new THREE.MeshStandardMaterial({
+  color: new THREE.Color('#EAE5DC'),
+  roughness: 0.92,
+  metalness: 0.0,
+});
+
 /**
- * LEGO Component: Room Boundary (Limewash Plaster Back & Right Walls, Negative Shadow Reveal & Architectural Slats)
+ * LEGO Component: Room Boundary (Limewash Plaster & Mid-Century Vertical Timber Walls, Negative Shadow Reveal & Architectural Slats)
  * Seals the floor-to-wall seam with a 15mm x 15mm dark anodized shadow reveal and supports 0.5s GSAP style transitions.
  */
 export function createRoomBoundary(options: RoomBoundaryOptions = {}): StyleableBedroomAsset {
@@ -66,6 +120,7 @@ export function createRoomBoundary(options: RoomBoundaryOptions = {}): Styleable
   group.name = 'RoomBoundaryAndBaseboard';
 
   const plasterNormalMap = createLimewashPlasterNormalMap();
+  const timberNormalMap = createVerticalTimberNormalMap();
 
   const limewashPlasterMat = new THREE.MeshStandardMaterial({
     color: new THREE.Color('#E6E3DC'),
@@ -74,6 +129,16 @@ export function createRoomBoundary(options: RoomBoundaryOptions = {}): Styleable
     normalMap: plasterNormalMap,
     normalScale: new THREE.Vector2(0.32, 0.32),
   });
+
+  const localWarmPlasterMat = warmPlasterMaterial.clone();
+  localWarmPlasterMat.normalMap = plasterNormalMap;
+  localWarmPlasterMat.normalScale = new THREE.Vector2(0.24, 0.24);
+
+  const localMutedWoodMat = midCenturyMutedWoodMaterial.clone();
+  localMutedWoodMat.normalMap = timberNormalMap;
+  localMutedWoodMat.normalScale = new THREE.Vector2(0.3, 0.3);
+
+  const localShadowGapMat = shadowGapMaterial.clone();
 
   const shadowRevealMat = new THREE.MeshStandardMaterial({
     color: new THREE.Color('#1F1E1C'),
@@ -102,6 +167,38 @@ export function createRoomBoundary(options: RoomBoundaryOptions = {}): Styleable
   wallMesh.receiveShadow = true;
   group.add(wallMesh);
   meshes.push(wallMesh);
+
+  // 1b. Mid-Century Floor-to-Ceiling Vertical Timber Plank Array (y = 0.0m..3.90m, 5mm negative shadow reveals)
+  const verticalPlankGroup = new THREE.Group();
+  verticalPlankGroup.name = 'MidCenturyVerticalTimberWall';
+  verticalPlankGroup.visible = false;
+
+  const plankDepth = 0.025;
+  const revealGap = 0.005;
+  const plankCount = Math.max(1, Math.round(width / (0.60 + revealGap)));
+  const plankWidth = (width - (plankCount - 1) * revealGap) / plankCount;
+  const backingDepth = wallDepth - plankDepth;
+
+  const backingGeo = new THREE.BoxGeometry(width, wallHeight, backingDepth);
+  const backingMesh = new THREE.Mesh(backingGeo, localShadowGapMat);
+  backingMesh.name = 'MidCenturyShadowRevealBacking';
+  backingMesh.position.set(centerX, wallHeight / 2, wallZ - plankDepth - backingDepth / 2);
+  verticalPlankGroup.add(backingMesh);
+  meshes.push(backingMesh);
+
+  const plankGeo = new THREE.BoxGeometry(plankWidth, wallHeight, plankDepth);
+  const startX = centerX - width / 2;
+  for (let i = 0; i < plankCount; i++) {
+    const plank = new THREE.Mesh(plankGeo, localMutedWoodMat);
+    plank.name = `MidCenturyVerticalPlank_${i + 1}`;
+    const px = startX + plankWidth / 2 + i * (plankWidth + revealGap);
+    plank.position.set(px, wallHeight / 2, wallZ - plankDepth / 2);
+    plank.castShadow = true;
+    plank.receiveShadow = true;
+    verticalPlankGroup.add(plank);
+    meshes.push(plank);
+  }
+  group.add(verticalPlankGroup);
 
   // 2. Negative Shadow Baseboard Reveal along Back Wall (15mm x 15mm dark bronze/black anodized channel)
   const backRevealGeo = new THREE.BoxGeometry(width, revealSize, revealSize);
@@ -169,11 +266,22 @@ export function createRoomBoundary(options: RoomBoundaryOptions = {}): Styleable
   group.add(slatGroup);
 
   const applyStyle = (preset: BedroomStylePreset, duration = 0.5) => {
+    const isMidCentury = preset.id === 'mid-century';
     const wc = new THREE.Color(preset.wall.color);
     const sc = new THREE.Color(preset.wall.accentSlatColor);
 
-    gsap.to(limewashPlasterMat.color, { r: wc.r, g: wc.g, b: wc.b, duration, ease: 'power2.out' });
-    gsap.to(limewashPlasterMat, { roughness: preset.wall.roughness, duration, ease: 'power2.out' });
+    verticalPlankGroup.visible = isMidCentury;
+    wallMesh.visible = !isMidCentury;
+    backRevealMesh.visible = !isMidCentury;
+    rightWallMesh.material = isMidCentury ? localWarmPlasterMat : limewashPlasterMat;
+
+    if (isMidCentury) {
+      gsap.to(localMutedWoodMat.color, { r: wc.r, g: wc.g, b: wc.b, duration, ease: 'power2.out' });
+      gsap.to(localMutedWoodMat, { roughness: preset.wall.roughness, duration, ease: 'power2.out' });
+    } else {
+      gsap.to(limewashPlasterMat.color, { r: wc.r, g: wc.g, b: wc.b, duration, ease: 'power2.out' });
+      gsap.to(limewashPlasterMat, { roughness: preset.wall.roughness, duration, ease: 'power2.out' });
+    }
     // Shadow reveal channel retains its dark bronze/black anodized finish (#1F1E1C) across all style presets
     gsap.to(accentSlatMat.color, { r: sc.r, g: sc.g, b: sc.b, duration, ease: 'power2.out' });
     gsap.to(accentSlatMat, {
@@ -186,7 +294,7 @@ export function createRoomBoundary(options: RoomBoundaryOptions = {}): Styleable
 
   registerBedroomComponent({
     id: 'room-boundary',
-    name: 'Limewash Plaster Walls & Negative Shadow Reveal',
+    name: 'Limewash Plaster & Vertical Timber Walls',
     category: 'decor',
     dimensions: { width, height: wallHeight, depth: wallDepth },
     defaultTransform: {
@@ -194,15 +302,54 @@ export function createRoomBoundary(options: RoomBoundaryOptions = {}): Styleable
       rotation: [0, 0, 0],
       scale: [1, 1, 1],
     },
-    materialSlots: ['limewash-mineral-plaster', 'anodized-shadow-reveal', 'architectural-slats'],
+    materialSlots: [
+      'limewash-mineral-plaster',
+      'warm-sand-walnut-vertical-planks',
+      'negative-shadow-reveal-gap',
+      'warm-mineral-limewash-plaster',
+      'anodized-shadow-reveal',
+      'architectural-slats',
+    ],
     disposableMeshes: meshes,
+  });
+
+  registerBedroomComponent({
+    id: 'mid-century-headboard-wall',
+    name: 'Mid-Century Vertical Timber Headboard Wall',
+    category: 'decor',
+    dimensions: { width, height: wallHeight, depth: plankDepth },
+    defaultTransform: {
+      position: [centerX, 0, wallZ],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+    },
+    materialSlots: ['warm-sand-walnut-vertical-planks', 'negative-shadow-reveal-gap', 'architectural-slats'],
+    disposableMeshes: [],
+  });
+
+  registerBedroomComponent({
+    id: 'mid-century-accent-wall',
+    name: 'Mid-Century Warm Mineral Limewash Plaster Right Wall',
+    category: 'decor',
+    dimensions: { width: wallDepth, height: wallHeight, depth: rightWallSpanZ },
+    defaultTransform: {
+      position: [rightWallX + wallDepth / 2, plasterWallY, rightWallCenterZ],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+    },
+    materialSlots: ['warm-mineral-limewash-plaster', 'anodized-shadow-reveal'],
+    disposableMeshes: [],
   });
 
   return {
     group,
     meshes,
     applyStyle,
-    dispose: () => disposeComponent('room-boundary'),
+    dispose: () => {
+      disposeComponent('mid-century-headboard-wall');
+      disposeComponent('mid-century-accent-wall');
+      disposeComponent('room-boundary');
+    },
   };
 }
 
