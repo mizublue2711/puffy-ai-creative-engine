@@ -336,9 +336,24 @@ export function createBedThrowBlanket(
   tasselMesh.instanceMatrix.needsUpdate = true;
   group.add(tasselMesh);
 
-  const applyStyle = (preset: BedroomStylePreset, duration = 0.5) => {
-    const targetCol = new THREE.Color(preset.throwBlanket.color);
-    const targetSheen = new THREE.Color(preset.throwBlanket.sheenColor);
+  const setRunnerPalette = (
+    palette: { color: string; sheenColor: string; roughness: number; tasselColor?: string },
+    duration = 0.5,
+  ) => {
+    const targetCol = new THREE.Color(palette.color);
+    const targetSheen = new THREE.Color(palette.sheenColor);
+    const targetTassel = palette.tasselColor ? new THREE.Color(palette.tasselColor) : null;
+
+    if (duration <= 0) {
+      throwMat.color.copy(targetCol);
+      throwMat.sheenColor.copy(targetSheen);
+      throwMat.roughness = palette.roughness;
+      if (targetTassel) {
+        tasselMat.color.copy(targetTassel);
+      }
+      return;
+    }
+
     gsap.to(throwMat.color, {
       r: targetCol.r,
       g: targetCol.g,
@@ -354,10 +369,23 @@ export function createBedThrowBlanket(
       ease: 'power2.out',
     });
     gsap.to(throwMat, {
-      roughness: preset.throwBlanket.roughness,
+      roughness: palette.roughness,
       duration,
       ease: 'power2.out',
     });
+    if (targetTassel) {
+      gsap.to(tasselMat.color, {
+        r: targetTassel.r,
+        g: targetTassel.g,
+        b: targetTassel.b,
+        duration,
+        ease: 'power2.out',
+      });
+    }
+  };
+
+  const applyStyle = (preset: BedroomStylePreset, duration = 0.5) => {
+    setRunnerPalette(preset.throwBlanket, duration);
   };
 
   registerBedroomComponent({
@@ -386,7 +414,10 @@ export function createBedThrowBlanket(
     group,
     meshes: [throwMesh, tasselMesh],
     applyStyle,
+    setRunnerPalette,
     dispose: () => disposeComponent('bed-throw-blanket'),
+  } as StyleableBedroomAsset & {
+    setRunnerPalette: typeof setRunnerPalette;
   };
 }
 
