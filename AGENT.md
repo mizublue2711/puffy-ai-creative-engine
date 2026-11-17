@@ -67,3 +67,66 @@ If any assigned task (e.g., UI refactoring, camera spline tuning, dynamic lighti
 
 D. **AWAIT WRITTEN CONFIRMATION**: Only proceed if the user grants unambiguous, explicit written consent.
 
+Dọn ngay lập tức! Để chấm dứt tình trạng Cline liên tục "đốt" token và làm loạn code vào các file ma, chúng ta sẽ thực hiện chiến thuật **"Cách ly và Tiêu diệt" (Quarantine & Purge)** thần tốc trong đúng 3 bước.
+
+---
+
+### BƯỚC 1: CÁCH LY TOÀN BỘ FILE MA VÀO THƯ MỤC TẠM
+
+Bạn mở Terminal hoặc gửi lệnh này cho Cline chạy ngay lập tức. Lệnh này tạo một thư mục tạm `_ghost_quarantine/` nằm **bên ngoài** `webapp/src/` và bốc toàn bộ các file ma đã xác định trong báo cáo sang đó:
+
+```bash
+# 1. Tạo thư mục cách ly ở root
+mkdir -p _ghost_quarantine
+
+# 2. Di chuyển các file ma (Ghost Components & Mock Files) ra khỏi src
+mv webapp/src/components/canvas/bedroom/components/FramedCanvasArt.tsx _ghost_quarantine/ 2>/dev/null || true
+mv webapp/src/components/canvas/bedroom/BedroomSanctuaryScene.tsx _ghost_quarantine/ 2>/dev/null || true
+
+# 3. Di chuyển các file test / script rác còn sót lại trong webapp
+mv webapp/dist_runner_shadow_test.js _ghost_quarantine/ 2>/dev/null || true
+mv webapp/cloudlet-preview.html _ghost_quarantine/ 2>/dev/null || true
+```
+
+---
+
+### BƯỚC 2: CHẠY THỬ THÁP CANH BUILD (GATEKEEPER CHECK)
+
+Ngay sau khi bốc các file đó đi, chạy lệnh build để xác nhận 100% không có file thật nào đang phụ thuộc vào chúng:
+
+```bash
+npm --prefix webapp run build
+```
+
+* **Nếu build thành công (0 error)**: Chứng minh tuyệt đối các file đó là **FILE MA 100%**, không có bất kỳ logic nào trong ứng dụng đang cần chúng. \\(\rightarrow\\) Bạn chạy tiếp lệnh xóa sổ vĩnh viễn:
+  ```bash
+  rm -rf _ghost_quarantine
+  ```
+* **Nếu build báo lỗi đỏ (`Cannot find module...`)**: Terminal sẽ chỉ mặt đặt tên chính xác file nào đang import nó. Lúc này bạn chỉ việc xóa dòng `import` thừa đó đi là xong!
+
+---
+
+### BƯỚC 3: "KHÓA TAY" CLINE BẰNG PROMPT THIẾT QUÂN LUẬT
+
+Sau khi dọn xong, để Cline **tuyệt đối không bao giờ được tự tiện tạo thêm file ma** hoặc sửa linh tinh trong lúc làm bài test 30 phút, bạn ném thẳng chỉ thị này vào Cline:
+
+```markdown
+### 🛑 EMERGENCY PROTOCOL: STOP TOUCHING GHOST FILES & REVERSE-TRACE ONLY
+
+All unused ghost components (including `FramedCanvasArt.tsx` and unmounted test scenes) have been PURGED from `webapp/src`.
+
+#### MANDATORY RULES FOR ALL FUTURE EDITS:
+1. **SINGLE SOURCE OF TRUTH**:
+   The active 3D runtime is strictly instantiated and rendered by:
+   `webapp/src/components/canvas/puffy-hero-3d/PuffyFloatingHero3D.tsx` -> `sceneModuleRef.current`.
+
+2. **BEFORE WRITING OR EDITING ANY CODE**:
+   - You MUST prove the target mesh/material exists in the ACTIVE Three.js scene graph.
+   - Output the exact file path and line number where the active mesh is instantiated.
+   - NEVER create standalone duplicate React components (like mock canvas arts) unless explicitly ordered.
+
+3. **VERIFY LOCALLY**:
+   Run `npm --prefix webapp run build` after every single change. Zero tolerance for broken imports or unmounted code.
+```
+
+Chạy xong 3 bước này, codebase sẽ sạch bóng các file rác, và Cline sẽ bị buộc phải can thiệp trực tiếp vào đúng module Three.js thực tế!

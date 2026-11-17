@@ -10,6 +10,7 @@ import {
   ENVIRONMENT_TO_STYLE,
   disposeAllBedroomComponents,
   disposeComponent,
+  registerBedroomComponent,
   type BedFrameVariantId,
   type BedroomEnvironmentId,
   type BedroomStyle,
@@ -34,7 +35,6 @@ import { createWindowCurtainWall } from './components/WindowCurtainWall.tsx';
 import { createBedThrowBlanket } from './components/BedThrowBlanket.tsx';
 import { PuffyBedRunner } from './components/PuffyBedRunner.tsx';
 import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
-import { createFramedCanvasArt } from './components/FramedCanvasArt.tsx';
 import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
 import { createPuffyCloudCeilingLight } from './components/PuffyCloudCeilingLight.tsx';
 import { createCourtyardWall } from './components/courtyard/CourtyardWall.tsx';
@@ -78,6 +78,51 @@ export interface BedroomSanctuaryInstance {
   dockMattress: (mattressGroup: THREE.Object3D) => void;
   runSmokeTest: (dockedMattressGroup?: THREE.Object3D) => void;
   dispose: () => void;
+}
+
+export const WALL_ART_TEXTURES: Record<string, string> = {
+  'japandi': '/assets/art/japandi-sanctuary.webp',
+  'mid-century': '/assets/art/mid-century.webp',
+  'urban-loft': '/assets/art/urban-loft.webp',
+  'nordic-coastal': '/assets/art/nordic-coastal.webp',
+};
+
+export function getWallArtTexturePath(envOrStyle?: string | null): string {
+  if (!envOrStyle) return WALL_ART_TEXTURES['japandi'];
+  const clean = envOrStyle.toLowerCase().trim().replace(/\s+/g, '-');
+  if (clean in WALL_ART_TEXTURES) return WALL_ART_TEXTURES[clean];
+  if (clean.includes('japandi') || clean.includes('zen')) return WALL_ART_TEXTURES['japandi'];
+  if (clean.includes('mid-century') || clean.includes('midcentury')) return WALL_ART_TEXTURES['mid-century'];
+  if (clean.includes('urban') || clean.includes('loft')) return WALL_ART_TEXTURES['urban-loft'];
+  if (clean.includes('nordic') || clean.includes('coastal')) return WALL_ART_TEXTURES['nordic-coastal'];
+  return WALL_ART_TEXTURES['japandi'];
+}
+
+const wallArtTextureLoader = new THREE.TextureLoader();
+const wallArtTextureCache = new Map<string, THREE.Texture>();
+
+export function loadWallArtTexture(path: string, onUpdate?: () => void): THREE.Texture {
+  let tex = wallArtTextureCache.get(path);
+  if (!tex) {
+    tex = wallArtTextureLoader.load(
+      path,
+      (loaded) => {
+        loaded.colorSpace = THREE.SRGBColorSpace;
+        loaded.needsUpdate = true;
+        onUpdate?.();
+      },
+      undefined,
+      (err) => {
+        console.warn(`[WallArt] Failed to load art texture: ${path}`, err);
+      }
+    );
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.needsUpdate = true;
+    wallArtTextureCache.set(path, tex);
+  } else {
+    tex.needsUpdate = true;
+  }
+  return tex;
 }
 
 /**
@@ -458,11 +503,91 @@ export function createBedroomSanctuaryScene(
     group.add(root);
   };
 
-  const framedArt = createFramedCanvasArt({
-    wallZ: backWallZ,
-    centerY: 1.95,
+  // 8. Gallery Wall Art (Elevated on Back Wall: Width 1.6m, Height 1.05m, Passe-Partout)
+  const wallArtGroup = new THREE.Group();
+  wallArtGroup.name = 'SanctuaryGalleryWallArt';
+  wallArtGroup.position.set(0, 2.50, -1.85);
+
+  // Layer 1: Dark Minimalist Wood Frame (Width 1.64m, Height 1.09m, Depth 0.03m)
+  const artFrameGeo = new THREE.BoxGeometry(1.64, 1.09, 0.03);
+  const artFrameMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#1a1816'),
+    roughness: 0.75,
+    metalness: 0.1,
+    depthTest: true,
   });
-  group.add(framedArt.group);
+  const artFrameMesh = new THREE.Mesh(artFrameGeo, artFrameMat);
+  artFrameMesh.name = 'SanctuaryWallArt_Frame';
+  artFrameMesh.castShadow = true;
+  artFrameMesh.receiveShadow = true;
+  wallArtGroup.add(artFrameMesh);
+
+  // Layer 2: White Mat Board / Passe-Partout (Width 1.60m, Height 1.05m at z = +0.016)
+  const artMatGeo = new THREE.PlaneGeometry(1.60, 1.05);
+  const artMatBoardMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#F9F9F7'),
+    roughness: 0.95,
+    depthTest: true,
+  });
+  const artMatBoardMesh = new THREE.Mesh(artMatGeo, artMatBoardMat);
+  artMatBoardMesh.name = 'SanctuaryWallArt_MatBoard';
+  artMatBoardMesh.position.set(0, 0, 0.016);
+  artMatBoardMesh.receiveShadow = true;
+  wallArtGroup.add(artMatBoardMesh);
+
+  // Layer 3: Artwork Canvas Surface (Width 1.30m, Height 0.75m at z = +0.018)
+  const initialArtEnv = useBedroomConfigStore.getState().activeEnvironment || initialStyle;
+  const initialArtPath = getWallArtTexturePath(initialArtEnv);
+
+  const artCanvasGeo = new THREE.PlaneGeometry(1.30, 0.75);
+  const artCanvasMat = new THREE.MeshStandardMaterial({
+    roughness: 0.80,
+    metalness: 0.0,
+    depthTest: true,
+  });
+
+  const activeArtTex = loadWallArtTexture(initialArtPath, () => {
+    artCanvasMat.map = activeArtTex;
+    activeArtTex.needsUpdate = true;
+    artCanvasMat.needsUpdate = true;
+  });
+  artCanvasMat.map = activeArtTex;
+  activeArtTex.needsUpdate = true;
+  artCanvasMat.needsUpdate = true;
+
+  const artCanvasMesh = new THREE.Mesh(artCanvasGeo, artCanvasMat);
+  artCanvasMesh.name = 'SanctuaryWallArt_Canvas';
+  artCanvasMesh.position.set(0, 0, 0.018);
+  artCanvasMesh.receiveShadow = true;
+  wallArtGroup.add(artCanvasMesh);
+
+  group.add(wallArtGroup);
+
+  const updateWallArtTexture = (envOrStyle?: string | null) => {
+    const nextPath = getWallArtTexturePath(envOrStyle);
+    const nextTex = loadWallArtTexture(nextPath, () => {
+      artCanvasMat.map = nextTex;
+      nextTex.needsUpdate = true;
+      artCanvasMat.needsUpdate = true;
+    });
+    artCanvasMat.map = nextTex;
+    nextTex.needsUpdate = true;
+    artCanvasMat.needsUpdate = true;
+  };
+
+  registerBedroomComponent({
+    id: 'framed-canvas-art',
+    name: 'Framed Architectural Canvas Art',
+    category: 'decor',
+    dimensions: { width: 1.64, height: 1.09, depth: 0.03 },
+    defaultTransform: {
+      position: [0, 2.50, -1.85],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+    },
+    materialSlots: ['art-frame', 'passe-partout', 'canvas-print'],
+    disposableMeshes: [artFrameMesh, artMatBoardMesh, artCanvasMesh],
+  });
 
   const bedsideBook = createBedsideArtBook({
     sideX: mattressW / 2 + 0.38,
@@ -603,7 +728,7 @@ export function createBedroomSanctuaryScene(
     roomBoundary.applyStyle(preset, duration);
     floor.applyStyle(preset, duration);
     rug.applyStyle(preset, duration);
-    framedArt.applyStyle(preset, duration);
+    updateWallArtTexture(style);
     bedsideBook.applyStyle(preset, duration);
     pendantCluster?.applyStyle(preset, duration);
 
@@ -759,6 +884,12 @@ export function createBedroomSanctuaryScene(
     unmountBedRunner();
     unmountPillows();
     disposeComponent('framed-canvas-art');
+    artFrameGeo.dispose();
+    artFrameMat.dispose();
+    artMatGeo.dispose();
+    artMatBoardMat.dispose();
+    artCanvasGeo.dispose();
+    artCanvasMat.dispose();
     disposeComponent('bedside-art-book');
     disposeComponent('courtyard-wall');
     courtyardWall.dispose();
