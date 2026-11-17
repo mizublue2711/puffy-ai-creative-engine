@@ -75,3 +75,63 @@ Run the deployment audit script to purge Vite caches and validate all configurat
 ```bash
 ./scripts/deployment-audit.sh
 ```
+QUAN TRỌNG!!!
+SƠ ĐỒ ĐIỀU KHIỂN CÁC TẦNG MENU (MENU CONTROL HIERARCHY)
+
+[ TẦNG 0: GLOBAL APP NAVBAR ] (ShowroomHeader.tsx)
+  │  Mục đích: Điều hướng cấp cao nhất của toàn bộ Webapp
+  │  Nút điều khiển: [ ☁ 3D Interactive ] | [ 🖼 2D Campaign Renders ] | [ 🎨 Banner Studio ]
+  │
+  ├──► Nếu chọn "2D Campaign Renders" ──► Mở [ShowroomGallery2D.tsx] (Xem ảnh banner, 4K PBR, zoom lightbox)
+  │
+  └──► Nếu chọn "3D Interactive" ───────► Mở KHÔNG GIAN 3D TỔNG THỂ
+            │
+            ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                      TẦNG 1: SPATIAL SCENE ROUTER & TRANSITION                         │
+│                                                                                        │
+│   [ TRẠNG THÁI A: MEADOW / HERO 3D ]         [ TRẠNG THÁI B: BEDROOM SANCTUARY ]       │
+│   (PuffyFloatingHero3D.tsx)                   (BedroomSanctuaryScene.tsx)              │
+│   - Đồi cỏ & đàn cừu (SheepFlockEngine)       - Phòng ngủ kiến trúc Nhật/Bắc Âu        │
+│   - Tấm đệm mút nổi (FloatingWoolPad)         - Sàn gỗ, rèm cửa, thảm, tranh tường     │
+│   - IntroSequence (Mây bay lướt)              - Khung giường, gối, đèn chùm, khăn      │
+└──────────────────────────┬─────────────────────────────────┬───────────────────────────┘
+                           │                                 │
+                           ▼                                 ▼
+┌──────────────────────────────────────────┐   ┌─────────────────────────────────────────┐
+│       MENU ĐIỀU KHIỂN TẦNG HERO 3D       │   │      MENU ĐIỀU KHIỂN TẦNG PHÒNG NGỦ     │
+│       (PuffyFloatingHero3D.tsx)          │   │      (BedroomConfiguratorDock.tsx)      │
+├──────────────────────────────────────────┤   ├─────────────────────────────────────────┤
+│ 1. Product Switcher:                     │   │ 1. Bed Frame Selector:                  │
+│    • Cloud | Lux | Royal                 │   │    • Kyoto (gỗ thấp kiểu Nhật)          │
+│    -> Đổi lõi mút và độ dày đệm          │   │    • Milan (bọc đệm cao cấp)            │
+│ 2. Explode / Assemble CTA:               │   │    • Solace (tối giản hiện đại)         │
+│    • Bung 10 lớp ruột đệm (GSAP)         │   │ 2. Pillow Count:                        │
+│ 3. Camera Angle Selector:                │   │    • 0 | 2 | 4 chiếc gối                │
+│    • Hero 45° | Top-Down | Dolly         │   │ 3. Runner Accessory:                    │
+│ 4. Scene Transition Button:              │   │    • Bật/Tắt khăn Bed Runner            │
+│    • "Enter Bedroom" -> Kích hoạt mây    │   │ 4. Environment Style:                   │
+│      bay lướt và đáp xuống phòng ngủ     │   │    • Japandi | Nordic | Mid-Cent | Urban│
+└──────────────────────────────────────────┘   └─────────────────────────────────────────┘
+                           │                                 │
+                           ▼                                 ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        TẦNG 2: STATE & LOGIC LAYER (STORE)                             │
+│                              (useBedroomConfigStore.ts)                                │
+│                                                                                        │
+│   Lưu trữ trạng thái toàn cục:                                                        │
+│   - `activeMattress`: 'cloud' | 'lux' | 'royal'                                        │
+│   - `activeBedFrame`: 'kyoto' | 'milan' | 'solace'                                     │
+│   - `activeEnvironment`: 'japandi' | 'nordic' | 'mid-century' | 'urban'                │
+│   - `activeItems`: { 'puffy-bed-runner': boolean, 'puffy-pillow-pair': boolean, ... }   │
+└──────────────────────────────────────────┬─────────────────────────────────────────────┘
+                                           │
+                                           ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                   TẦNG 3: ENGINE NỘI SUY ĐỒ HỌA 3D (THREE.JS / GSAP)                   │
+│                                                                                        │
+│   - Dynamic Crown Calculation: getMountedMattressCrownY()                              │
+│   - GSAP Material Tweens: updateBedRunnerTheme(), Room boundary color palette          │
+│   - Three.js Imperative Mesh: Mattress, Pillows, Bed Frame, Runner, Curtains           │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
