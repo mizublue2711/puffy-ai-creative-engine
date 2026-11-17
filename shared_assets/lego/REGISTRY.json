@@ -14,9 +14,9 @@
       ],
       "native_aspect_ratio": "2:1",
       "physical_dimensions_meters": {
-        "width": 0.12,
-        "height": 0.06,
-        "surface_offset": 0.001
+        "width": 0.38,
+        "height": 0.172,
+        "surface_offset": 0.0018
       },
       "craft_sources": {
         "materialcraft_mcmat": "assets/lego/badges/puffy_badge.mcmat",
@@ -25,7 +25,7 @@
       },
       "threejs_binding": {
         "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
-        "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
+        "geometry": "THREE.PlaneGeometry(0.38, 0.172)",
         "material": "THREE.MeshPhysicalMaterial",
         "normal_scale": [
           1.2,
@@ -556,18 +556,20 @@
     "badge_lux_embroidered_v1": {
       "id": "badge_lux_embroidered_v1",
       "version": "1.0.0",
-      "source_svg": "assets/logos/Puffy_Logo_0.svg",
-      "native_aspect_ratio": "2:1",
+      "source_svg": "assets/lego/badges/puffy_lux_badge_master.svg",
+      "source_mask": "assets/lego/badges/masks/puffy_lux_badge_mask.png",
+      "webapp_mirror": "webapp/public/assets/lego/badges/puffy_lux_badge_mask.png",
+      "native_aspect_ratio": "2.2:1",
       "physical_dimensions_meters": {
-        "width": 0.12,
-        "height": 0.06,
-        "surface_offset": 0.001
+        "width": 0.38,
+        "height": 0.172,
+        "surface_offset": 0.0018
       },
       "threejs_binding": {
         "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
         "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
         "material_slot": "mat_brand_badge_lux",
-        "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
+        "geometry": "THREE.PlaneGeometry(0.38, 0.172)",
         "material": "THREE.MeshPhysicalMaterial",
         "normal_scale": [
           1.0,
@@ -581,18 +583,20 @@
     "badge_cloud_embroidered_v1": {
       "id": "badge_cloud_embroidered_v1",
       "version": "1.0.0",
-      "source_svg": "assets/logos/Puffy_Logo_0.svg",
-      "native_aspect_ratio": "2:1",
+      "source_svg": "assets/lego/badges/puffy_cloud_badge_master.svg",
+      "source_mask": "assets/lego/badges/masks/puffy_cloud_badge_mask.png",
+      "webapp_mirror": "webapp/public/assets/lego/badges/puffy_cloud_badge_mask.png",
+      "native_aspect_ratio": "2.2:1",
       "physical_dimensions_meters": {
-        "width": 0.12,
-        "height": 0.06,
-        "surface_offset": 0.001
+        "width": 0.38,
+        "height": 0.172,
+        "surface_offset": 0.0018
       },
       "threejs_binding": {
         "module": "webapp/src/components/canvas/puffy-hero-3d/MattressAnatomy.ts",
         "controller": "webapp/src/components/canvas/puffy-hero-3d/FloatingWoolPad.ts",
         "material_slot": "mat_brand_badge_cloud",
-        "geometry": "THREE.PlaneGeometry(0.12, 0.06)",
+        "geometry": "THREE.PlaneGeometry(0.38, 0.172)",
         "material": "THREE.MeshPhysicalMaterial",
         "normal_scale": [
           1.0,

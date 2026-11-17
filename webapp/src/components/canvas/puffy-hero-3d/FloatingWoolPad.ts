@@ -579,14 +579,15 @@ export class FloatingWoolPad {
       this.baseSidewallBottomY + this.baseSidewallHeight * clampedRatio * 0.5;
     const badgeScale = 0.85 + 0.15 * clampedRatio;
 
-    for (const badge of [this.badgeRoyalMesh, this.badgeLuxMesh, this.badgeMonarchMesh]) {
+    for (const badge of [
+      this.badgeRoyalMesh,
+      this.badgeLuxMesh,
+      this.badgeCloudMesh,
+      this.badgeMonarchMesh,
+    ]) {
       if (!badge) continue;
       badge.position.y = scaledCharcoalY;
       badge.scale.set(badgeScale, badgeScale, 1);
-    }
-    if (this.badgeCloudMesh) {
-      this.badgeCloudMesh.position.y = scaledFullFrontMidY;
-      this.badgeCloudMesh.scale.set(badgeScale, badgeScale, 1);
     }
 
     for (const handle of this.handleMeshes) {
@@ -1055,17 +1056,20 @@ export class FloatingWoolPad {
     this.disposables.push(sidewallGeo);
 
     // 3. Dedicated Embroidered Brand Badges per model (zero shared normal/AO ROYAL ghosting)
-    const badgeGeo = new THREE.PlaneGeometry(0.12, 0.06);
-    preparePBRGeometry(badgeGeo);
+    // Unified badge geometry across ALL 3 tiers (Cloud = Lux = Royal): aspect ratio ~2.2:1 (0.38m x 0.172m)
+    // Height occupies ~65% of the lower sidewall tier (0.264m * 0.65 = 0.1716m ~ 0.172m)
+    // Width spans ~48% of the horizontal gap between front handles (~0.797m gap * 0.48 = 0.38m)
+    const unifiedBadgeGeo = new THREE.PlaneGeometry(0.38, 0.172);
+    preparePBRGeometry(unifiedBadgeGeo);
 
     const createBadgeMesh = (
       name: string,
       mat: THREE.MeshPhysicalMaterial,
       visible: boolean,
     ): THREE.Mesh => {
-      const mesh = new THREE.Mesh(badgeGeo, mat);
+      const mesh = new THREE.Mesh(unifiedBadgeGeo, mat);
       mesh.name = name;
-      mesh.position.set(0, charcoalY, length / 2 + 0.001);
+      mesh.position.set(0, charcoalY, length / 2 + 0.0018);
       mesh.visible = visible;
       this.encasementTrayGroup.add(mesh);
       return mesh;
@@ -1119,7 +1123,7 @@ export class FloatingWoolPad {
     this.hybridTagMesh = hybridTagMesh;
 
     this.disposables.push(
-      badgeGeo,
+      unifiedBadgeGeo,
       handleTex,
       handleGeo,
       handleFaceMat,

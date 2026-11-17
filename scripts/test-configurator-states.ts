@@ -110,7 +110,11 @@ async function main() {
   console.log('[ConfiguratorTest] Launching headless Chromium with SwiftShader WebGL...');
   const browser = await chromium.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium',
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : process.platform === 'linux'
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
     args: [
       '--no-sandbox',
       '--disable-dev-shm-usage',

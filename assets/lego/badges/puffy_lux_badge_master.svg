@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" width="100%" height="100%">
+  <defs>
+    <!-- Strict Perimeter Clipping: Zero blur/shadow bleeding outside the rounded badge -->
+    <clipPath id="patchClip">
+      <rect x="40" y="40" width="1520" height="720" rx="64" ry="64" />
+    </clipPath>
+
+    <!-- 1. #patchBaseTwill: Dark Slate Carbon / Obsidian Navy micro-twill upholstery weave -->
+    <pattern id="patchBaseTwill" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#1E222E" />
+      <rect x="0" y="0" width="6" height="12" fill="#181B25" opacity="0.55" />
+      <line x1="0" y1="0" x2="12" y2="0" stroke="#282E3E" stroke-width="1.2" opacity="0.45" />
+      <line x1="0" y1="6" x2="12" y2="6" stroke="#12151D" stroke-width="1.2" opacity="0.65" />
+    </pattern>
+
+    <!-- Subtle internal fabric vignette for woven depth -->
+    <radialGradient id="patchSurfaceVignette" cx="50%" cy="48%" r="60%">
+      <stop offset="0%" stop-color="#2A3040" stop-opacity="0.22" />
+      <stop offset="65%" stop-color="#1E222E" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#0E1017" stop-opacity="0.55" />
+    </radialGradient>
+
+    <!-- Merrowed Overlock Border Thread Gradient (Smoked Slate) -->
+    <linearGradient id="merrowedThreadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4E5568" />
+      <stop offset="25%" stop-color="#3A3F50" />
+      <stop offset="50%" stop-color="#4E5568" />
+      <stop offset="75%" stop-color="#3A3F50" />
+      <stop offset="100%" stop-color="#4E5568" />
+    </linearGradient>
+
+    <!-- 2. #satinThreadRelief: Vertical tubular satin gradient (cylindrical thread relief) -->
+    <linearGradient id="satinThreadRelief" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="30%" stop-color="#F8FAFC" />
+      <stop offset="70%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </linearGradient>
+
+    <!-- Fine diagonal satin-stitch thread ribs for micro embroidery texture -->
+    <pattern id="satinThreadRibs" width="0.7" height="0.7" patternUnits="userSpaceOnUse" patternTransform="rotate(55)">
+      <line x1="0" y1="0" x2="0" y2="0.7" stroke="#94A3B8" stroke-width="0.22" stroke-opacity="0.18" />
+      <line x1="0.35" y1="0" x2="0.35" y2="0.7" stroke="#FFFFFF" stroke-width="0.22" stroke-opacity="0.22" />
+    </pattern>
+
+    <!-- 3. #metallicGoldThread: Horizontal metallic gold thread gradient for "ROYAL" -->
+    <linearGradient id="metallicGoldThread" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B45309" />
+      <stop offset="28%" stop-color="#D4AF37" />
+      <stop offset="55%" stop-color="#FDE047" />
+      <stop offset="80%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#C5A059" />
+    </linearGradient>
+
+    <!-- Vertical specular sheen for ROYAL bevel relief -->
+    <linearGradient id="goldVerticalSheen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.45" />
+      <stop offset="45%" stop-color="#D4AF37" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#78350F" stop-opacity="0.35" />
+    </linearGradient>
+
+    <!-- 4a. #embroideryContactShadow: Dual-stage contact cavity & elevation shadow for Puffy + Cloud -->
+    <filter id="embroideryContactShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <!-- Stage 2: Soft Elevation Falloff -->
+      <feDropShadow in="SourceGraphic" dx="0" dy="8" stdDeviation="5" flood-color="#000000" flood-opacity="0.5" result="elevationFalloff" />
+      <!-- Stage 1: Micro Contact Rim -->
+      <feDropShadow in="SourceGraphic" dx="0" dy="4" stdDeviation="1.8" flood-color="#090B10" flood-opacity="0.95" result="contactRim" />
+      <feMerge>
+        <feMergeNode in="elevationFalloff" />
+        <feMergeNode in="contactRim" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- 4b. #embroideryRelief: Sharp internal ambient occlusion shadow for ROYAL subbrand -->
+    <filter id="embroideryRelief" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#0B0D13" flood-opacity="0.85" />
+    </filter>
+  </defs>
+
+  <!-- Layer 1: Patch Base (Woven Obsidian Navy / Dark Slate Carbon Twill) -->
+  <g id="layer-patch-base" clip-path="url(#patchClip)">
+    <rect x="40" y="40" width="1520" height="720" rx="64" ry="64" fill="#1E222E" />
+    <rect x="40" y="40" width="1520" height="720" rx="64" ry="64" fill="url(#patchBaseTwill)" />
+    <rect x="40" y="40" width="1520" height="720" rx="64" ry="64" fill="url(#patchSurfaceVignette)" />
+  </g>
+
+  <!-- Layer 2: Overlock Stitched Border (Merrowed Edge in Smoked Slate) -->
+  <g id="layer-overlock-border" clip-path="url(#patchClip)">
+    <!-- Outer Smoked Slate contour -->
+    <rect x="52" y="52" width="1496" height="696" rx="54" ry="54" fill="none" stroke="#3A3F50" stroke-width="3" opacity="0.85" />
+    <!-- Primary Merrowed Overlock Stitch -->
+    <rect x="64" y="64" width="1472" height="672" rx="44" ry="44" fill="none" stroke="url(#merrowedThreadGrad)" stroke-width="20" stroke-dasharray="14 6" />
+    <!-- Inner Smoked Slate contour -->
+    <rect x="76" y="76" width="1448" height="648" rx="36" ry="36" fill="none" stroke="#4E5568" stroke-width="2.5" opacity="0.7" />
+  </g>
+
+  <!-- Layer 3: Upper Tier - "Puffy" Wordmark & Cloud Emblem (3-Tier Satin Embroidery) -->
+  <g id="layer-puffy-cloud" filter="url(#embroideryContactShadow)">
+    <g transform="translate(159.3, 135) scale(8.6)">
+      <!-- Letter P: Stacked Optical Occlusion -> Tubular Satin Relief -> Satin Ribs -->
+      <path fill="#090B10" fill-rule="evenodd" stroke="#090B10" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"
+        d="M5.48 13.18h5.33c1.44 0 2.47-.31 3.09-.94.67-.57 1-1.56 1-2.96 0-1.2-.3-2.16-.93-2.88a4.22 4.22 0 0 0-2.85-.94H5.48v7.72Zm0 4.82v6.92a2.65 2.65 0 0 1-2.64 2.66H0V3.6c0-.77.27-1.44.81-1.98S2.01.79 2.78.79h9.04c2.83 0 4.94.73 6.33 2.18 1.44 1.46 2.16 3.61 2.16 6.47 0 2.7-.7 4.83-2.08 6.38-1.4 1.46-3.4 2.18-6.03 2.18H5.48Z" />
+      <path id="puffy-letter-p" fill="url(#satinThreadRelief)" fill-rule="evenodd"
+        d="M5.48 13.18h5.33c1.44 0 2.47-.31 3.09-.94.67-.57 1-1.56 1-2.96 0-1.2-.3-2.16-.93-2.88a4.22 4.22 0 0 0-2.85-.94H5.48v7.72Zm0 4.82v6.92a2.65 2.65 0 0 1-2.64 2.66H0V3.6c0-.77.27-1.44.81-1.98S2.01.79 2.78.79h9.04c2.83 0 4.94.73 6.33 2.18 1.44 1.46 2.16 3.61 2.16 6.47 0 2.7-.7 4.83-2.08 6.38-1.4 1.46-3.4 2.18-6.03 2.18H5.48Z" />
+      <path fill="url(#satinThreadRibs)" fill-rule="evenodd"
+        d="M5.48 13.18h5.33c1.44 0 2.47-.31 3.09-.94.67-.57 1-1.56 1-2.96 0-1.2-.3-2.16-.93-2.88a4.22 4.22 0 0 0-2.85-.94H5.48v7.72Zm0 4.82v6.92a2.65 2.65 0 0 1-2.64 2.66H0V3.6c0-.77.27-1.44.81-1.98S2.01.79 2.78.79h9.04c2.83 0 4.94.73 6.33 2.18 1.44 1.46 2.16 3.61 2.16 6.47 0 2.7-.7 4.83-2.08 6.38-1.4 1.46-3.4 2.18-6.03 2.18H5.48Z" />
+
+      <!-- Letter u -->
+      <path fill="#090B10" stroke="#090B10" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"
+        d="M39.84 7.88v10.85c0 3.72-.9 5.96-2.8 7.12-1.92 1.16-4 1.73-6.28 1.73-2.22-.1-4.25-.73-6.08-1.89s-2.8-3.34-2.8-6.96V7.88h5.42v11.95c0 1.26.35 2.18 1.08 2.76a4 4 0 0 0 5 0c.74-.58 1.12-1.5 1.12-2.76v-9.27c0-.73.24-1.36.73-1.89a2.47 2.47 0 0 1 1.9-.78h2.71Z" />
+      <path id="puffy-letter-u" fill="url(#satinThreadRelief)"
+        d="M39.84 7.88v10.85c0 3.72-.9 5.96-2.8 7.12-1.92 1.16-4 1.73-6.28 1.73-2.22-.1-4.25-.73-6.08-1.89s-2.8-3.34-2.8-6.96V7.88h5.42v11.95c0 1.26.35 2.18 1.08 2.76a4 4 0 0 0 5 0c.74-.58 1.12-1.5 1.12-2.76v-9.27c0-.73.24-1.36.73-1.89a2.47 2.47 0 0 1 1.9-.78h2.71Z" />
+      <path fill="url(#satinThreadRibs)"
+        d="M39.84 7.88v10.85c0 3.72-.9 5.96-2.8 7.12-1.92 1.16-4 1.73-6.28 1.73-2.22-.1-4.25-.73-6.08-1.89s-2.8-3.34-2.8-6.96V7.88h5.42v11.95c0 1.26.35 2.18 1.08 2.76a4 4 0 0 0 5 0c.74-.58 1.12-1.5 1.12-2.76v-9.27c0-.73.24-1.36.73-1.89a2.47 2.47 0 0 1 1.9-.78h2.71Z" />
+
+      <!-- First Letter f -->
+      <path fill="#090B10" stroke="#090B10" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"
+        d="M47.44.79c-2.12 0-3.63.44-4.57 1.32-.97.93-1.46 2.33-1.46 4.2v21.27h5.27v-15.6h.77a2.5 2.5 0 0 0 1.78-.74c.5-.5.77-1.13.77-1.9V8.16h-3.33v-1.4c0-.62.13-1.03.39-1.24.3-.21.82-.31 1.54-.31H50V.79h-2.56Z" />
+      <path id="puffy-letter-f1" fill="url(#satinThreadRelief)"
+        d="M47.44.79c-2.12 0-3.63.44-4.57 1.32-.97.93-1.46 2.33-1.46 4.2v21.27h5.27v-15.6h.77a2.5 2.5 0 0 0 1.78-.74c.5-.5.77-1.13.77-1.9V8.16h-3.33v-1.4c0-.62.13-1.03.39-1.24.3-.21.82-.31 1.54-.31H50V.79h-2.56Z" />
+      <path fill="url(#satinThreadRibs)"
+        d="M47.44.79c-2.12 0-3.63.44-4.57 1.32-.97.93-1.46 2.33-1.46 4.2v21.27h5.27v-15.6h.77a2.5 2.5 0 0 0 1.78-.74c.5-.5.77-1.13.77-1.9V8.16h-3.33v-1.4c0-.62.13-1.03.39-1.24.3-.21.82-.31 1.54-.31H50V.79h-2.56Z" />
+
+      <!-- Second Letter f -->
+      <path fill="#090B10" stroke="#090B10" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"
+        d="M57.6.79c-2.12 0-3.64.44-4.57 1.32-.98.93-1.47 2.33-1.47 4.2v21.27h5.27v-15.6h.78a2.5 2.5 0 0 0 1.77-.74c.51-.5.78-1.13.78-1.9V8.16h-3.34v-1.4c0-.62.13-1.03.4-1.24.3-.21.82-.31 1.54-.31h1.4V.79H57.6Z" />
+      <path id="puffy-letter-f2" fill="url(#satinThreadRelief)"
+        d="M57.6.79c-2.12 0-3.64.44-4.57 1.32-.98.93-1.47 2.33-1.47 4.2v21.27h5.27v-15.6h.78a2.5 2.5 0 0 0 1.77-.74c.51-.5.78-1.13.78-1.9V8.16h-3.34v-1.4c0-.62.13-1.03.4-1.24.3-.21.82-.31 1.54-.31h1.4V.79H57.6Z" />
+      <path fill="url(#satinThreadRibs)"
+        d="M57.6.79c-2.12 0-3.64.44-4.57 1.32-.98.93-1.47 2.33-1.47 4.2v21.27h5.27v-15.6h.78a2.5 2.5 0 0 0 1.77-.74c.51-.5.78-1.13.78-1.9V8.16h-3.34v-1.4c0-.62.13-1.03.4-1.24.3-.21.82-.31 1.54-.31h1.4V.79H57.6Z" />
+
+      <!-- Letter y -->
+      <path fill="#090B10" stroke="#090B10" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"
+        d="M61.84 34.53l2.97-4.26h1.49a3.7 3.7 0 0 0 2.46-.74c.6-.5.72-1.27.36-2.36L61.84 7.88h6.02l4.23 13.33 3.68-11.47c.31-1.24 1.15-1.86 2.5-1.86h3.76l-7.98 22.23c-.63 1.7-1.41 2.91-2.36 3.63-.94.62-2.48.94-4.61.94h-5.36l.12-.15Z" />
+      <path id="puffy-letter-y" fill="url(#satinThreadRelief)"
+        d="M61.84 34.53l2.97-4.26h1.49a3.7 3.7 0 0 0 2.46-.74c.6-.5.72-1.27.36-2.36L61.84 7.88h6.02l4.23 13.33 3.68-11.47c.31-1.24 1.15-1.86 2.5-1.86h3.76l-7.98 22.23c-.63 1.7-1.41 2.91-2.36 3.63-.94.62-2.48.94-4.61.94h-5.36l.12-.15Z" />
+      <path fill="url(#satinThreadRibs)"
+        d="M61.84 34.53l2.97-4.26h1.49a3.7 3.7 0 0 0 2.46-.74c.6-.5.72-1.27.36-2.36L61.84 7.88h6.02l4.23 13.33 3.68-11.47c.31-1.24 1.15-1.86 2.5-1.86h3.76l-7.98 22.23c-.63 1.7-1.41 2.91-2.36 3.63-.94.62-2.48.94-4.61.94h-5.36l.12-.15Z" />
+
+      <!-- Cloud Emblem with sweeping bottom tail wave -->
+      <path fill="#090B10" stroke="#090B10" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"
+        d="M141.98 32.23a25.5 25.5 0 0 1-7.2-2.36c-5.79-3.37-10.95-5.36-20.86-1.07-8.56 3.71-17.07 3.12-22.75-.64-3.14-2.07-4.63-4.82-4.97-7.6a7.65 7.65 0 0 1 2.04-6c3.77-4.33 10.32-2.28 10.32-2.28l.49-1.57c.08-.27 2.51-6.8 8.8-6.52 6.55.3 8.87 7.99 8.87 7.99s2.04-.86 4.62-.73c2.25.1 4.91 1 7 3.61 4.27 5.32 1 11.15 1 11.15s.19.17.73-.44a11.2 11.2 0 0 0 1.64-2.85A11.02 11.02 0 0 0 120.08 7.4l-.7.07C118.06 4.98 115.1.33 108.04.01c-6.62-.3-10.84 4.55-12.4 8-2.17-.42-6.45-.31-10.23 3.48a11.94 11.94 0 0 0-3.37 9.07c.18 4.4 2.49 8.21 6.84 11.1a23.65 23.65 0 0 0 12.81 3.8c4.38 0 9.06-.84 13.88-2.82 9.79-4 12.78-2.24 16.95-.34 3.28 1.5 6.27 2.22 9.1 1.92 3.87-.41 6.81-2.38 6.81-2.38s-2.8.82-6.45.39Z" />
+      <path id="puffy-cloud-emblem" fill="url(#satinThreadRelief)"
+        d="M141.98 32.23a25.5 25.5 0 0 1-7.2-2.36c-5.79-3.37-10.95-5.36-20.86-1.07-8.56 3.71-17.07 3.12-22.75-.64-3.14-2.07-4.63-4.82-4.97-7.6a7.65 7.65 0 0 1 2.04-6c3.77-4.33 10.32-2.28 10.32-2.28l.49-1.57c.08-.27 2.51-6.8 8.8-6.52 6.55.3 8.87 7.99 8.87 7.99s2.04-.86 4.62-.73c2.25.1 4.91 1 7 3.61 4.27 5.32 1 11.15 1 11.15s.19.17.73-.44a11.2 11.2 0 0 0 1.64-2.85A11.02 11.02 0 0 0 120.08 7.4l-.7.07C118.06 4.98 115.1.33 108.04.01c-6.62-.3-10.84 4.55-12.4 8-2.17-.42-6.45-.31-10.23 3.48a11.94 11.94 0 0 0-3.37 9.07c.18 4.4 2.49 8.21 6.84 11.1a23.65 23.65 0 0 0 12.81 3.8c4.38 0 9.06-.84 13.88-2.82 9.79-4 12.78-2.24 16.95-.34 3.28 1.5 6.27 2.22 9.1 1.92 3.87-.41 6.81-2.38 6.81-2.38s-2.8.82-6.45.39Z" />
+      <path fill="url(#satinThreadRibs)"
+        d="M141.98 32.23a25.5 25.5 0 0 1-7.2-2.36c-5.79-3.37-10.95-5.36-20.86-1.07-8.56 3.71-17.07 3.12-22.75-.64-3.14-2.07-4.63-4.82-4.97-7.6a7.65 7.65 0 0 1 2.04-6c3.77-4.33 10.32-2.28 10.32-2.28l.49-1.57c.08-.27 2.51-6.8 8.8-6.52 6.55.3 8.87 7.99 8.87 7.99s2.04-.86 4.62-.73c2.25.1 4.91 1 7 3.61 4.27 5.32 1 11.15 1 11.15s.19.17.73-.44a11.2 11.2 0 0 0 1.64-2.85A11.02 11.02 0 0 0 120.08 7.4l-.7.07C118.06 4.98 115.1.33 108.04.01c-6.62-.3-10.84 4.55-12.4 8-2.17-.42-6.45-.31-10.23 3.48a11.94 11.94 0 0 0-3.37 9.07c.18 4.4 2.49 8.21 6.84 11.1a23.65 23.65 0 0 0 12.81 3.8c4.38 0 9.06-.84 13.88-2.82 9.79-4 12.78-2.24 16.95-.34 3.28 1.5 6.27 2.22 9.1 1.92 3.87-.41 6.81-2.38 6.81-2.38s-2.8.82-6.45.39Z" />
+    </g>
+  </g>
+
+  <!-- Layer 4: Lower Tier - "LUX" Subbrand (Centered at x: 800, baseline y: 580, ~85px tracking) -->
+  <g id="layer-lux-subbrand" filter="url(#embroideryRelief)">
+    <!-- Letter L (x: 618..674) -->
+    <path id="lux-letter-l" fill="url(#metallicGoldThread)" stroke="#FEF08A" stroke-opacity="0.35" stroke-width="1.5" stroke-linejoin="round"
+      d="M 618 484 H 633 V 565 H 674 V 580 H 618 Z" />
+    <path fill="url(#goldVerticalSheen)"
+      d="M 618 484 H 633 V 565 H 674 V 580 H 618 Z" />
+
+    <!-- Letter U (x: 764..836) -->
+    <path id="lux-letter-u" fill="url(#metallicGoldThread)" fill-rule="evenodd" stroke="#FEF08A" stroke-opacity="0.35" stroke-width="1.5" stroke-linejoin="round"
+      d="M 764 484 H 779 V 544 C 779 555.6 788.4 565 800 565 C 811.6 565 821 555.6 821 544 V 484 H 836 V 544 C 836 563.9 819.9 580 800 580 C 780.1 580 764 563.9 764 544 Z" />
+    <path fill="url(#goldVerticalSheen)" fill-rule="evenodd"
+      d="M 764 484 H 779 V 544 C 779 555.6 788.4 565 800 565 C 811.6 565 821 555.6 821 544 V 484 H 836 V 544 C 836 563.9 819.9 580 800 580 C 780.1 580 764 563.9 764 544 Z" />
+
+    <!-- Letter X (x: 914..982) -->
+    <path id="lux-letter-x" fill="url(#metallicGoldThread)" stroke="#FEF08A" stroke-opacity="0.35" stroke-width="1.5" stroke-linejoin="round"
+      d="M 914 484 H 931 L 948 516 L 965 484 H 982 L 956.5 532 L 982 580 H 965 L 948 548 L 931 580 H 914 L 939.5 532 Z" />
+    <path fill="url(#goldVerticalSheen)"
+      d="M 914 484 H 931 L 948 516 L 965 484 H 982 L 956.5 532 L 982 580 H 965 L 948 548 L 931 580 H 914 L 939.5 532 Z" />
+  </g>
+</svg>

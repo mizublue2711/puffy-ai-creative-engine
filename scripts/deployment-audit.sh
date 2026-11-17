@@ -23,7 +23,7 @@ DIST_DIR="$ROOT_DIR/webapp/dist"
 HASH_FILE="$ROOT_DIR/.agent/last_bundle_hash"
 
 if [ -d "$DIST_DIR" ]; then
-  CURRENT_HASH="$(find "$DIST_DIR" -type f | sort | xargs sha256sum | sha256sum | awk '{print $1}')"
+  CURRENT_HASH="$(find "$DIST_DIR" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
   if [ -f "$HASH_FILE" ]; then
     PREV_HASH="$(cat "$HASH_FILE")"
     if [ "$CURRENT_HASH" = "$PREV_HASH" ]; then

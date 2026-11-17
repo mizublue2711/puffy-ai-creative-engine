@@ -38,8 +38,8 @@ export interface LoadedAssets {
     microDiamondsAo: THREE.CanvasTexture;
     badgeRoyal: THREE.Texture;
     badgeMonarch: THREE.CanvasTexture;
-    badgeCloud: THREE.CanvasTexture;
-    badgeLux: THREE.CanvasTexture;
+    badgeCloud: THREE.Texture;
+    badgeLux: THREE.Texture;
   };
 }
 
@@ -274,8 +274,8 @@ export function createEmbroideredBadgeMaterial(
 
 export function createEmbroideredBadge(texturePath = '/textures/badge'): THREE.Mesh {
   const {material} = createEmbroideredBadgeMaterial(texturePath);
-  // 3. Thin 2:1 planar patch matching SVG viewBox (0.12m x 0.06m), avoiding thick BoxGeometry
-  const geometry = new THREE.PlaneGeometry(0.12, 0.06);
+  // 3. Thin ~2.2:1 planar patch matching real-world mattress scale (0.38m x 0.172m), avoiding thick BoxGeometry
+  const geometry = new THREE.PlaneGeometry(0.38, 0.172);
   preparePBRGeometry(geometry);
   const badgeMesh = new THREE.Mesh(geometry, material);
   badgeMesh.name = 'puffy-embroidered-badge';
@@ -794,8 +794,16 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   materials.set('mat_brand_badge', matBrandBadge);
   materials.set('mat_brand_badge_royal', matBrandBadge);
 
-  const luxBadgeBundle = createModelBadgeMaterial('LUX', maxAnisotropy);
-  const cloudBadgeBundle = createModelBadgeMaterial('CLOUD', maxAnisotropy);
+  const luxBadgeBundle = createLuxBadgeMaterial(
+    '/assets/lego/badges/puffy_lux_badge_mask.png',
+    '/assets/lego/badges/puffy_lux_badge_normal.png',
+    maxAnisotropy,
+  );
+  const cloudBadgeBundle = createCloudBadgeMaterial(
+    '/assets/lego/badges/puffy_cloud_badge_mask.png',
+    '/assets/lego/badges/puffy_cloud_badge_normal.png',
+    maxAnisotropy,
+  );
   const monarchBadgeBundle = createModelBadgeMaterial('MONARCH', maxAnisotropy);
 
   materials.set('mat_brand_badge_lux', luxBadgeBundle.material);
@@ -1324,6 +1332,113 @@ function drawPuffyCloudEmblem(
   ctx.stroke();
   ctx.restore();
 }
+
+/**
+ * Loads the master Puffy Lux badge mask (/assets/lego/badges/puffy_lux_badge_mask.png)
+ * and binds it to MeshPhysicalMaterial with sRGB color space, physical sheen, and alpha transparency.
+ */
+export function createLuxBadgeMaterial(
+  maskPath = '/assets/lego/badges/puffy_lux_badge_mask.png',
+  normalPath = '/assets/lego/badges/puffy_lux_badge_normal.png',
+  maxAnisotropy = 16,
+): {
+  material: THREE.MeshPhysicalMaterial;
+  albedoMap: THREE.Texture;
+  disposables: Array<{dispose(): void}>;
+} {
+  const textureLoader = new THREE.TextureLoader();
+
+  const badgeMap = textureLoader.load(maskPath);
+  badgeMap.colorSpace = THREE.SRGBColorSpace;
+  badgeMap.anisotropy = maxAnisotropy;
+  badgeMap.wrapS = THREE.ClampToEdgeWrapping;
+  badgeMap.wrapT = THREE.ClampToEdgeWrapping;
+
+  const badgeNormal = textureLoader.load(normalPath);
+  badgeNormal.colorSpace = THREE.NoColorSpace;
+  badgeNormal.anisotropy = maxAnisotropy;
+  badgeNormal.wrapS = THREE.ClampToEdgeWrapping;
+  badgeNormal.wrapT = THREE.ClampToEdgeWrapping;
+
+  const material = new THREE.MeshPhysicalMaterial({
+    name: 'mat_brand_badge_lux',
+    color: new THREE.Color('#FFFFFF'),
+    map: badgeMap,
+    normalMap: badgeNormal,
+    normalScale: new THREE.Vector2(1.5, 1.5),
+    roughness: 0.55,
+    metalness: 0.1,
+    sheen: 1.0,
+    sheenRoughness: 0.38,
+    sheenColor: new THREE.Color('#FFFFFF'),
+    polygonOffset: true,
+    polygonOffsetFactor: -1.0,
+    transparent: true,
+    alphaTest: 0.05,
+    depthWrite: true,
+  });
+
+  return {
+    material,
+    albedoMap: badgeMap,
+    disposables: [badgeMap, badgeNormal, material],
+  };
+}
+
+
+/**
+ * Loads the master Puffy Cloud badge mask (/assets/lego/badges/puffy_cloud_badge_mask.png)
+ * and tangent-space normal map (/assets/lego/badges/puffy_cloud_badge_normal.png),
+ * applying physical 3D embossed bevel relief, sheen, and alpha transparency.
+ */
+export function createCloudBadgeMaterial(
+  maskPath = '/assets/lego/badges/puffy_cloud_badge_mask.png',
+  normalPath = '/assets/lego/badges/puffy_cloud_badge_normal.png',
+  maxAnisotropy = 16,
+): {
+  material: THREE.MeshPhysicalMaterial;
+  albedoMap: THREE.Texture;
+  disposables: Array<{dispose(): void}>;
+} {
+  const textureLoader = new THREE.TextureLoader();
+
+  const badgeMap = textureLoader.load(maskPath);
+  badgeMap.colorSpace = THREE.SRGBColorSpace;
+  badgeMap.anisotropy = maxAnisotropy;
+  badgeMap.wrapS = THREE.ClampToEdgeWrapping;
+  badgeMap.wrapT = THREE.ClampToEdgeWrapping;
+
+  const badgeNormal = textureLoader.load(normalPath);
+  badgeNormal.colorSpace = THREE.NoColorSpace;
+  badgeNormal.anisotropy = maxAnisotropy;
+  badgeNormal.wrapS = THREE.ClampToEdgeWrapping;
+  badgeNormal.wrapT = THREE.ClampToEdgeWrapping;
+
+  const material = new THREE.MeshPhysicalMaterial({
+    name: 'mat_brand_badge_cloud',
+    color: new THREE.Color('#FFFFFF'),
+    map: badgeMap,
+    normalMap: badgeNormal,
+    normalScale: new THREE.Vector2(1.5, 1.5),
+    roughness: 0.55,
+    metalness: 0.1,
+    sheen: 1.0,
+    sheenRoughness: 0.38,
+    sheenColor: new THREE.Color('#FFFFFF'),
+    polygonOffset: true,
+    polygonOffsetFactor: -1.0,
+    transparent: true,
+    alphaTest: 0.05,
+    depthWrite: true,
+  });
+
+  return {
+    material,
+    albedoMap: badgeMap,
+    disposables: [badgeMap, badgeNormal, material],
+  };
+}
+
 
 /**
  * Generates a dedicated 1024x512 embroidered patch material with its own matching
