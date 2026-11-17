@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import gsap from 'gsap';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import {
@@ -31,6 +32,7 @@ import { createHardwoodFloor } from './components/HardwoodFloor.tsx';
 import { createRoomBoundary } from './components/RoomBoundary.tsx';
 import { createWindowCurtainWall } from './components/WindowCurtainWall.tsx';
 import { createBedThrowBlanket } from './components/BedThrowBlanket.tsx';
+import { PuffyBedRunner } from './components/PuffyBedRunner.tsx';
 import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
 import { createFramedCanvasArt } from './components/FramedCanvasArt.tsx';
 import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
@@ -273,21 +275,94 @@ export function createBedroomSanctuaryScene(
   // 8. 4-Archetype Decor Props (Bed Runner, Accent Pillows, Framed Art, Bedside Artbook)
   let throwBlanket: ReturnType<typeof createBedThrowBlanket> | null = null;
   const applyRunnerEnvironmentPalette = (
-    env: BedroomEnvironmentId,
-    duration = 0,
+    envOrStyle: BedroomEnvironmentId | string,
+    duration = 0.5,
   ) => {
     if (!throwBlanket) return;
+
+    // 1. Resolve target palette based on environment or style preset:
+    const normalizedKey = (envOrStyle || '').toLowerCase().replace(/\s+/g, '-');
     const palette =
-      ENVIRONMENT_RUNNER_PALETTES[env] ?? ENVIRONMENT_RUNNER_PALETTES['zen-sanctuary'];
-    const runnerWithPalette = throwBlanket as ReturnType<typeof createBedThrowBlanket> & {
-      setRunnerPalette?: (
-        p: { color: string; sheenColor: string; tasselColor?: string; roughness: number },
-        d?: number,
-      ) => void;
-    };
-    if (runnerWithPalette.setRunnerPalette) {
-      runnerWithPalette.setRunnerPalette(palette, duration);
+      (ENVIRONMENT_RUNNER_PALETTES as Record<string, any>)[normalizedKey] ??
+      (ENVIRONMENT_RUNNER_PALETTES as Record<string, any>)[envOrStyle] ??
+      ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'] ??
+      ENVIRONMENT_RUNNER_PALETTES['zen-sanctuary'];
+
+    if (!palette) return;
+
+    const targetColor = new THREE.Color(palette.color);
+    const targetSheen = new THREE.Color(palette.sheenColor || '#FFFFFF');
+    const targetTassel = new THREE.Color(palette.tasselColor || '#D8D4CA');
+
+    if (duration <= 0) {
+      throwBlanket.group.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
+          if (!mat) return;
+
+          const isTassel = mesh.name.toLowerCase().includes('tassel') || mesh.geometry.name.includes('tassel');
+
+          if (isTassel) {
+            mat.color.copy(targetTassel);
+            mat.needsUpdate = true;
+          } else {
+            mat.color.copy(targetColor);
+            if ('sheenColor' in mat && mat.sheenColor) {
+              mat.sheenColor.copy(targetSheen);
+            }
+            mat.roughness = palette.roughness;
+            mat.needsUpdate = true;
+          }
+        }
+      });
+      return;
     }
+
+    // 2. Traverse throwBlanket meshes and tween their materials directly with GSAP:
+    throwBlanket.group.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
+        if (!mat) return;
+
+        // Identify whether this mesh is the runner fabric body or the tassels:
+        const isTassel = mesh.name.toLowerCase().includes('tassel') || mesh.geometry.name.includes('tassel');
+
+        if (isTassel) {
+          gsap.to(mat.color, {
+            r: targetTassel.r,
+            g: targetTassel.g,
+            b: targetTassel.b,
+            duration,
+            ease: 'power2.out',
+          });
+        } else {
+          // Main runner textile body:
+          gsap.to(mat.color, {
+            r: targetColor.r,
+            g: targetColor.g,
+            b: targetColor.b,
+            duration,
+            ease: 'power2.out',
+          });
+          if ('sheenColor' in mat && mat.sheenColor) {
+            gsap.to(mat.sheenColor, {
+              r: targetSheen.r,
+              g: targetSheen.g,
+              b: targetSheen.b,
+              duration,
+              ease: 'power2.out',
+            });
+          }
+          gsap.to(mat, {
+            roughness: palette.roughness,
+            duration,
+            ease: 'power2.out',
+          });
+        }
+      }
+    });
   };
 
   const mountBedRunner = () => {
@@ -531,6 +606,9 @@ export function createBedroomSanctuaryScene(
     framedArt.applyStyle(preset, duration);
     bedsideBook.applyStyle(preset, duration);
     pendantCluster?.applyStyle(preset, duration);
+
+    // ENSURE RUNNER RECEIVES BOTH THE PRESET KEY AND DURATION:
+    applyRunnerEnvironmentPalette(style, duration);
   };
 
   let mountedEnvironment: BedroomEnvironmentId | null = null;
@@ -542,7 +620,12 @@ export function createBedroomSanctuaryScene(
 
     if (mountedEnvironment !== activeEnvironment) {
       mountedEnvironment = activeEnvironment;
-      setStyle(ENVIRONMENT_TO_STYLE[activeEnvironment] ?? initialStyle, 0);
+      const targetStyle =
+        (ENVIRONMENT_TO_STYLE as Record<string, BedroomStyle>)[activeEnvironment] ??
+        (activeEnvironment as BedroomStyle) ??
+        initialStyle;
+
+      setStyle(targetStyle, 0.5);
     }
 
     mountBedFrameAndHeadboard(activeBedFrame);
@@ -708,6 +791,9 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
   ...options
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const { activeItems, activeEnvironment, activeMattress } = useBedroomConfigStore();
+  const contactY =
+    activeMattress === 'cloud' ? 0.448 : (activeMattress as string) === 'lux' ? 0.528 : 0.602;
 
   useEffect(() => {
     // Mode A: Attached to an external Three.js Scene
@@ -822,6 +908,13 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
   return (
     <div ref={mountRef} className="w-full h-full relative" style={{ minHeight: '640px' }}>
       {!externalScene && <BedroomConfiguratorDock bottomOffset={24} />}
+      {activeItems['puffy-bed-runner'] !== false && (
+        <PuffyBedRunner
+          key={`runner-instance-${activeEnvironment}`}
+          position={[0, contactY + 0.001, 0.45]}
+          environmentKey={activeEnvironment}
+        />
+      )}
     </div>
   );
 };

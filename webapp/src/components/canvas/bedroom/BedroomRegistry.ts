@@ -89,9 +89,9 @@ export const BEDROOM_STYLE_PRESETS: Record<BedroomStyle, BedroomStylePreset> = {
       pattern: 'jute',
     },
     throwBlanket: {
-      color: '#2B3245',
-      sheenColor: '#5B6787',
-      roughness: 0.92,
+      color: '#B5AFA2',
+      sheenColor: '#C8C2B6',
+      roughness: 0.94,
       pattern: 'linen',
     },
     pillows: {
@@ -140,8 +140,8 @@ export const BEDROOM_STYLE_PRESETS: Record<BedroomStyle, BedroomStylePreset> = {
       pattern: 'jute',
     },
     throwBlanket: {
-      color: '#202436',
-      sheenColor: '#4E5B85',
+      color: '#8FA0A3',
+      sheenColor: '#A4B4B6',
       roughness: 0.92,
       pattern: 'chunky-knit',
     },
@@ -191,9 +191,9 @@ export const BEDROOM_STYLE_PRESETS: Record<BedroomStyle, BedroomStylePreset> = {
       pattern: 'velvet',
     },
     throwBlanket: {
-      color: '#1E2538',
-      sheenColor: '#506491',
-      roughness: 0.78,
+      color: '#AFA695',
+      sheenColor: '#C4BCAE',
+      roughness: 0.95,
       pattern: 'cashmere',
     },
     pillows: {
@@ -242,9 +242,9 @@ export const BEDROOM_STYLE_PRESETS: Record<BedroomStyle, BedroomStylePreset> = {
       pattern: 'flatweave',
     },
     throwBlanket: {
-      color: '#2E3440',
-      sheenColor: '#5B677D',
-      roughness: 0.9,
+      color: '#636870',
+      sheenColor: '#80858E',
+      roughness: 0.90,
       pattern: 'waffle',
     },
     pillows: {
@@ -307,40 +307,65 @@ export const BEDROOM_REGISTRY: Record<string, BedroomComponentMetadata> = {};
 export type MattressVariantId = 'cloud' | 'royal' | 'flux';
 export type BedFrameVariantId = 'kyoto' | 'milan' | 'solace';
 export type CuratedSetId = 'zen-kyoto' | 'modern-milan' | 'warm-solace';
-export type BedroomEnvironmentId = 'zen-sanctuary' | 'mid-century' | 'modern-sanctuary';
+export type BedroomEnvironmentId =
+  | BedroomStyle
+  | 'japandi-sanctuary'
+  | 'zen'
+  | 'zen-sanctuary'
+  | 'nordic'
+  | 'nordic-coastal'
+  | 'coastal'
+  | 'mid-century'
+  | 'mid-century-modern'
+  | 'urban'
+  | 'urban-loft'
+  | 'modern'
+  | 'modern-sanctuary'
+  | string;
 
-export const ENVIRONMENT_TO_STYLE: Record<BedroomEnvironmentId, BedroomStyle> = {
+export const ENVIRONMENT_TO_STYLE: Record<string, BedroomStyle> = {
+  'japandi': 'japandi',
+  'japandi-sanctuary': 'japandi',
+  'zen': 'japandi',
   'zen-sanctuary': 'japandi',
+  'nordic': 'nordic-coastal',
+  'nordic-coastal': 'nordic-coastal',
+  'coastal': 'nordic-coastal',
   'mid-century': 'mid-century',
+  'mid-century-modern': 'mid-century',
+  'urban': 'urban-loft',
+  'urban-loft': 'urban-loft',
+  'modern': 'urban-loft',
   'modern-sanctuary': 'nordic-coastal',
 };
 
-export const ENVIRONMENT_RUNNER_PALETTES = {
-  // 1. Zen Courtyard (Karesansui Sand & Moon Mirror View):
-  // Matches bleached kaolin sand, tatami/bamboo tones, and soft natural light.
-  'zen-sanctuary': {
-    color: '#B5AFA2', // Bleached bamboo / pale raw linen
-    tasselColor: '#D8D4CA', // Unbleached cotton fringe
-    sheenColor: '#C8C2B6',
-    roughness: 0.94,
-  },
-  // 2. Mid-Century Timber (Vertical Wood Slats & Warm Limewash):
-  // Harmonizes with muted walnut/honey teak and warm plaster tones.
-  'mid-century': {
-    color: '#AFA695', // Warm oat cashmere / soft flax
-    tasselColor: '#D5CFC3', // Natural ecru
-    sheenColor: '#C4BCAE',
-    roughness: 0.95,
-  },
-  // 3. Modern Minimalist (Monochrome Architectural Sanctuary):
-  // Blends with off-white walls, soft sheer curtains, and diffused daylight.
-  'modern-sanctuary': {
-    color: '#7C828D', // Muted smoke slate greige (calm, desaturated)
-    tasselColor: '#EAE6DF',
-    sheenColor: '#9CA3AF',
-    roughness: 0.92,
-  },
-} as const;
+export const ENVIRONMENT_RUNNER_PALETTES: Record<string, {
+  color: string;
+  tasselColor: string;
+  sheenColor: string;
+  roughness: number;
+}> = {
+  // 1. Japandi Sanctuary: Bleached bamboo / pale raw flax greige
+  'japandi': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+  'japandi-sanctuary': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+  'zen': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+  'zen-sanctuary': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+
+  // 2. Nordic Coastal: Muted seafoam mist / driftwood sage greige
+  'nordic': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+  'nordic-coastal': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+  'coastal': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+
+  // 3. Mid-Century: Warm oat cashmere / soft natural hemp
+  'mid-century': { color: '#AFA695', tasselColor: '#D5CFC3', sheenColor: '#C4BCAE', roughness: 0.95 },
+  'mid-century-modern': { color: '#AFA695', tasselColor: '#D5CFC3', sheenColor: '#C4BCAE', roughness: 0.95 },
+
+  // 4. Urban Loft: Muted industrial smoked slate / warm charcoal greige
+  'urban': { color: '#636870', tasselColor: '#D4D6D9', sheenColor: '#80858E', roughness: 0.90 },
+  'urban-loft': { color: '#636870', tasselColor: '#D4D6D9', sheenColor: '#80858E', roughness: 0.90 },
+  'modern': { color: '#636870', tasselColor: '#D4D6D9', sheenColor: '#80858E', roughness: 0.90 },
+  'modern-sanctuary': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+};
 
 export interface CuratedPairingSpec {
   id: CuratedSetId;

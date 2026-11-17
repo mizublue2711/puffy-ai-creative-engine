@@ -348,8 +348,10 @@ export function createBedThrowBlanket(
       throwMat.color.copy(targetCol);
       throwMat.sheenColor.copy(targetSheen);
       throwMat.roughness = palette.roughness;
+      throwMat.needsUpdate = true;
       if (targetTassel) {
         tasselMat.color.copy(targetTassel);
+        tasselMat.needsUpdate = true;
       }
       return;
     }
@@ -360,6 +362,9 @@ export function createBedThrowBlanket(
       b: targetCol.b,
       duration,
       ease: 'power2.out',
+      onUpdate: () => {
+        throwMat.needsUpdate = true;
+      },
     });
     gsap.to(throwMat.sheenColor, {
       r: targetSheen.r,
@@ -380,6 +385,9 @@ export function createBedThrowBlanket(
         b: targetTassel.b,
         duration,
         ease: 'power2.out',
+        onUpdate: () => {
+          tasselMat.needsUpdate = true;
+        },
       });
     }
   };

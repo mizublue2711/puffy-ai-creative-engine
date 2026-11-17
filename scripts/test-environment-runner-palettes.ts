@@ -107,18 +107,21 @@ async function main() {
     server.listen(PORT, '127.0.0.1', () => resolve());
   });
 
-  console.log('[EnvPaletteTest] Launching headless Chromium with SwiftShader WebGL...');
+  console.log('[EnvPaletteTest] Launching headless Chromium...');
+  const isLinux = process.platform === 'linux';
   const browser = await chromium.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium',
-    args: [
-      '--no-sandbox',
-      '--disable-dev-shm-usage',
-      '--no-proxy-server',
-      '--use-gl=angle',
-      '--use-angle=swiftshader',
-      '--enable-unsafe-swiftshader',
-    ],
+    executablePath: isLinux && fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined,
+    args: isLinux
+      ? [
+          '--no-sandbox',
+          '--disable-dev-shm-usage',
+          '--no-proxy-server',
+          '--use-gl=angle',
+          '--use-angle=swiftshader',
+          '--enable-unsafe-swiftshader',
+        ]
+      : ['--no-sandbox', '--disable-dev-shm-usage'],
   });
 
   try {
@@ -142,7 +145,7 @@ async function main() {
     }> = [
       { envId: 'zen-sanctuary', filename: 'test_env_palette_zen_kyoto.png' },
       { envId: 'mid-century', filename: 'test_env_palette_midcentury_kyoto.png' },
-      { envId: 'modern-sanctuary' },
+      { envId: 'modern-sanctuary', filename: 'test_env_palette_modern_kyoto.png' },
     ];
 
     for (const item of environments) {

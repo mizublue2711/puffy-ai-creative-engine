@@ -21,6 +21,17 @@ export interface BedroomConfiguratorDockProps {
 
 const CURATED_SET_OPTIONS: CuratedSetId[] = ['zen-kyoto', 'modern-milan', 'warm-solace'];
 
+export const ROOM_ENVIRONMENT_OPTIONS: Array<{
+  id: string;
+  label: string;
+  shortLabel: string;
+}> = [
+  { id: 'japandi', label: 'Japandi Sanctuary', shortLabel: 'Japandi' },
+  { id: 'nordic-coastal', label: 'Nordic Coastal', shortLabel: 'Nordic' },
+  { id: 'mid-century', label: 'Mid-Century', shortLabel: 'Mid-Century' },
+  { id: 'urban-loft', label: 'Urban Loft', shortLabel: 'Urban Loft' },
+];
+
 const CATEGORY_META: Array<{
   id: BedroomDockCategory;
   label: string;
@@ -29,7 +40,7 @@ const CATEGORY_META: Array<{
   { id: 'bedding', label: 'Bedding', alwaysShow: true },
   { id: 'lighting', label: 'Lights', alwaysShow: true },
   { id: 'landscape', label: 'Garden', alwaysShow: true },
-  { id: 'walls', label: 'Walls', alwaysShow: false },
+  { id: 'walls', label: 'Walls', alwaysShow: true },
 ];
 
 function CategoryIcon({ category }: { category: BedroomDockCategory }) {

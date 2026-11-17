@@ -27,6 +27,7 @@ import {
   type BedroomSanctuaryInstance,
 } from '../bedroom/BedroomSanctuaryScene.tsx';
 import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
+import { useBedroomConfigStore } from '../../../store/useBedroomConfigStore.ts';
 import { createDawnLensFlare, type DawnLensFlareRig } from './dawnLensFlare.ts';
 import { GroundMistLayer } from './GroundMistLayer.ts';
 
@@ -571,6 +572,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   public setBedroomStyle(style: BedroomStyle): void {
     this.bedroomStyle = style;
     this.bedroomSanctuary?.setStyle(style, 0.5);
+    useBedroomConfigStore.getState().setEnvironment(style as any);
   }
 
   /**

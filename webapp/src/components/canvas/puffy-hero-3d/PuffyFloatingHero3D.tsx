@@ -30,6 +30,7 @@ import {
   type BedroomStyle,
 } from "../bedroom/BedroomRegistry.ts";
 import { BedroomConfiguratorDock } from "../../ui/BedroomConfiguratorDock.tsx";
+import { useBedroomConfigStore } from "../../../store/useBedroomConfigStore.ts";
 import { useBannerStore } from "../../../store/useBannerStore.ts";
 import { useShowroomViewStore } from "../../../store/useShowroomViewStore.ts";
 import { useSceneCapture, downloadSnapshotUrl } from "../../../hooks/useSceneCapture.ts";
@@ -684,6 +685,7 @@ export function PuffyFloatingHero3D({
   const handleSelectBedroomStyle = (style: BedroomStyle) => {
     setBedroomStyle(style);
     sceneModuleRef.current?.setBedroomStyle(style);
+    useBedroomConfigStore.getState().setEnvironment(style as any);
   };
 
   useEffect(() => {

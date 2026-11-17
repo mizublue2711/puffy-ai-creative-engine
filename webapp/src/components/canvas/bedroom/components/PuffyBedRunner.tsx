@@ -29,50 +29,34 @@ declare global {
  * Maps both short and full environment keys ('zen', 'zen-sanctuary', 'mid-century', 'modern', 'modern-sanctuary')
  * to coordinated textile, fringe, and sheen colors.
  */
-export const ENVIRONMENT_RUNNER_PALETTES: Record<
-  string,
-  {
-    color: string;
-    tasselColor: string;
-    sheenColor: string;
-    roughness: number;
-  }
-> = {
-  // 1. Zen Courtyard (Matches bleached sand, bamboo & tatami tones)
-  zen: {
-    color: '#B5AFA2', // Bleached bamboo / pale raw linen
-    tasselColor: '#D8D4CA', // Natural unbleached cotton fringe
-    sheenColor: '#C8C2B6',
-    roughness: 0.94,
-  },
-  'zen-sanctuary': {
-    color: '#B5AFA2',
-    tasselColor: '#D8D4CA',
-    sheenColor: '#C8C2B6',
-    roughness: 0.94,
-  },
+export interface RunnerPalette {
+  color: string;
+  tasselColor: string;
+  sheenColor: string;
+  roughness: number;
+}
 
-  // 2. Mid-Century Modern (Matches warm walnut & honey teak)
-  'mid-century': {
-    color: '#AFA695', // Warm oat cashmere / soft natural hemp
-    tasselColor: '#D5CFC3', // Natural ecru fringe
-    sheenColor: '#C4BCAE',
-    roughness: 0.95,
-  },
+export const ENVIRONMENT_RUNNER_PALETTES: Record<string, RunnerPalette> = {
+  // 1. Japandi Sanctuary: Bleached bamboo / pale raw flax greige
+  'japandi': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+  'japandi-sanctuary': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+  'zen': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
+  'zen-sanctuary': { color: '#B5AFA2', tasselColor: '#D8D4CA', sheenColor: '#C8C2B6', roughness: 0.94 },
 
-  // 3. Modern Sanctuary (Matches warm greige plaster & sheer drapes)
-  modern: {
-    color: '#7C828D', // Muted smoke slate greige
-    tasselColor: '#EAE6DF', // Soft white fringe
-    sheenColor: '#9CA3AF',
-    roughness: 0.92,
-  },
-  'modern-sanctuary': {
-    color: '#7C828D',
-    tasselColor: '#EAE6DF',
-    sheenColor: '#9CA3AF',
-    roughness: 0.92,
-  },
+  // 2. Nordic Coastal: Muted seafoam mist / driftwood sage greige
+  'nordic': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+  'nordic-coastal': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+  'coastal': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
+
+  // 3. Mid-Century: Warm oat cashmere / soft natural hemp
+  'mid-century': { color: '#AFA695', tasselColor: '#D5CFC3', sheenColor: '#C4BCAE', roughness: 0.95 },
+  'mid-century-modern': { color: '#AFA695', tasselColor: '#D5CFC3', sheenColor: '#C4BCAE', roughness: 0.95 },
+
+  // 4. Urban Loft: Muted industrial smoked slate / warm charcoal greige
+  'urban': { color: '#636870', tasselColor: '#D4D6D9', sheenColor: '#80858E', roughness: 0.90 },
+  'urban-loft': { color: '#636870', tasselColor: '#D4D6D9', sheenColor: '#80858E', roughness: 0.90 },
+  'modern': { color: '#636870', tasselColor: '#D4D6D9', sheenColor: '#80858E', roughness: 0.90 },
+  'modern-sanctuary': { color: '#8FA0A3', tasselColor: '#E2E5E6', sheenColor: '#A4B4B6', roughness: 0.92 },
 };
 
 /**
@@ -329,17 +313,35 @@ export interface PuffyBedRunnerProps {
  * Ensures fallback resolution so the runner is ALWAYS rendered and never disappears.
  */
 export const PuffyBedRunner: React.FC<PuffyBedRunnerProps> = ({
-  environmentKey = 'zen',
+  environmentKey = 'japandi-sanctuary',
   position = [0, 0, 0.45],
 }) => {
-  // Guaranteed fallback ensures mesh never breaks or disappears:
-  const palette =
-    ENVIRONMENT_RUNNER_PALETTES[environmentKey] || ENVIRONMENT_RUNNER_PALETTES['zen'];
+  const normalizedKey = (environmentKey || '').toLowerCase().replace(/\s+/g, '-');
+  const palette = ENVIRONMENT_RUNNER_PALETTES[normalizedKey] || ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'];
+
+  const matRef = React.useRef<THREE.MeshPhysicalMaterial>(null);
+  const tasselMatRef = React.useRef<THREE.MeshStandardMaterial>(null);
+
+  React.useEffect(() => {
+    if (matRef.current) {
+      matRef.current.color.set(palette.color);
+      matRef.current.sheenColor.set(palette.sheenColor);
+      matRef.current.roughness = palette.roughness;
+      matRef.current.needsUpdate = true;
+    }
+    if (tasselMatRef.current) {
+      tasselMatRef.current.color.set(palette.tasselColor);
+      tasselMatRef.current.needsUpdate = true;
+    }
+  }, [palette]);
 
   return (
     <group name="PuffyBedRunner" position={position} visible={true}>
       <mesh geometry={runnerDrapedGeometry} castShadow receiveShadow>
+        {/* Adding key={palette.color} forces Three.js / R3F to instantly update shader color without delay! */}
         <meshPhysicalMaterial
+          ref={matRef}
+          key={`runner-mat-${palette.color}`}
           color={palette.color}
           roughness={palette.roughness}
           metalness={0.0}
@@ -351,6 +353,8 @@ export const PuffyBedRunner: React.FC<PuffyBedRunnerProps> = ({
 
       <mesh geometry={tasselFringeGeometry} position={[0, -0.22, 0]}>
         <meshStandardMaterial
+          ref={tasselMatRef}
+          key={`tassel-mat-${palette.tasselColor}`}
           color={palette.tasselColor}
           roughness={0.95}
         />
@@ -363,11 +367,12 @@ export const PuffyBedRunner: React.FC<PuffyBedRunnerProps> = ({
  * Three.js Imperative Factory for scenes not using React Three Fiber JSX.
  */
 export function createPuffyBedRunnerGroup(
-  environmentKey = 'zen',
+  environmentKey = 'japandi-sanctuary',
   position: [number, number, number] = [0, 0, 0.45],
 ): THREE.Group {
+  const normalizedKey = (environmentKey || '').toLowerCase().replace(/\s+/g, '-');
   const palette =
-    ENVIRONMENT_RUNNER_PALETTES[environmentKey] || ENVIRONMENT_RUNNER_PALETTES['zen'];
+    ENVIRONMENT_RUNNER_PALETTES[normalizedKey] || ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'];
 
   const group = new THREE.Group();
   group.name = 'PuffyBedRunner';
@@ -396,6 +401,29 @@ export function createPuffyBedRunnerGroup(
   tasselMesh.castShadow = true;
   tasselMesh.receiveShadow = true;
   group.add(tasselMesh);
+
+  // Dynamic palette updaters so imperative usage also updates reactively in real time
+  const setPalette = (p: RunnerPalette) => {
+    runnerMat.color.set(p.color);
+    runnerMat.sheenColor.set(p.sheenColor);
+    runnerMat.roughness = p.roughness;
+    runnerMat.needsUpdate = true;
+    tasselMat.color.set(p.tasselColor);
+    tasselMat.needsUpdate = true;
+  };
+  const setEnvironment = (envKey: string) => {
+    const k = (envKey || '').toLowerCase().replace(/\s+/g, '-');
+    const p = ENVIRONMENT_RUNNER_PALETTES[k] || ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'];
+    setPalette(p);
+  };
+  Object.assign(group, {
+    setEnvironment,
+    setPalette,
+    runnerMesh,
+    tasselMesh,
+    runnerMat,
+    tasselMat,
+  });
 
   return group;
 }
