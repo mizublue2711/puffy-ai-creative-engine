@@ -259,6 +259,41 @@ export function PuffyFloatingHero3D({
   const [isCraftLabVisible, setIsCraftLabVisible] = useState<boolean>(false);
   const [previewResetSignal, setPreviewResetSignal] = useState<number>(0);
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
+  const [isMattressDropdownOpen, setIsMattressDropdownOpen] = useState<boolean>(false);
+  const [isCameraDropdownOpen, setIsCameraDropdownOpen] = useState<boolean>(false);
+  const mattressDropdownRef = useRef<HTMLDivElement>(null);
+  const cameraDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handlePointerDownOutside = (event: MouseEvent) => {
+      if (
+        mattressDropdownRef.current &&
+        !mattressDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsMattressDropdownOpen(false);
+      }
+      if (
+        cameraDropdownRef.current &&
+        !cameraDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCameraDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMattressDropdownOpen(false);
+        setIsCameraDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDownOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDownOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   const [introState, setIntroState] = useState<IntroState>(() =>
     typeof window !== "undefined" && window.location.search.includes("audit=exploded")
       ? "EXPLORING"
@@ -276,6 +311,7 @@ export function PuffyFloatingHero3D({
   );
 
   const isMobile = viewport === "mobile";
+  const doorTrigger = useShowroomViewStore((st) => st.doorTrigger);
   const currentSizeSpec = useMemo(
     () => resolveMattressSizeSpec(selectedSize),
     [selectedSize]
@@ -578,10 +614,61 @@ export function PuffyFloatingHero3D({
     return () => window.cancelAnimationFrame(rafId);
   }, [isMobile]);
 
+  const dismissIntroImmediately = () => {
+    setIntroState("EXPLORING");
+    setIntroPhase1Stage("ready");
+    setOrbitHintPhase("hidden");
+    sceneModuleRef.current?.skipIntroFlight();
+  };
+
   const handleToggleCraftLab = (show: boolean) => {
+    if (show) {
+      dismissIntroImmediately();
+    }
     setIsCraftLabVisible(show);
     sceneModuleRef.current?.setLabPaused(show);
+    useShowroomViewStore.getState().setActiveDoor(
+      show ? "indoor-lab" : currentEnvironment === "bedroom" ? "bedroom" : "meadow"
+    );
   };
+
+  const handleResetToMeadow = () => {
+    dismissIntroImmediately();
+    if (isCraftLabVisible) {
+      setIsCraftLabVisible(false);
+      sceneModuleRef.current?.setLabPaused(false);
+    }
+    setCurrentEnvironment("meadow");
+    sceneModuleRef.current?.setEnvironmentMode("meadow");
+    setActivePreset("hero45");
+    sceneModuleRef.current?.resetCamera();
+    useShowroomViewStore.getState().setActiveDoor("meadow");
+  };
+
+  useEffect(() => {
+    if (!doorTrigger) return;
+    const { door } = doorTrigger;
+    if (door === "meadow") {
+      handleResetToMeadow();
+    } else if (door === "bedroom") {
+      dismissIntroImmediately();
+      if (isCraftLabVisible) {
+        setIsCraftLabVisible(false);
+        sceneModuleRef.current?.setLabPaused(false);
+      }
+      if (isExploded) {
+        setIsExploded(false);
+        sceneModuleRef.current?.setExploded(false);
+        setActiveLayerIndex(0);
+      }
+      setCurrentEnvironment("bedroom");
+      sceneModuleRef.current?.setEnvironmentMode("bedroom");
+      useShowroomViewStore.getState().setActiveDoor("bedroom");
+    } else if (door === "indoor-lab") {
+      dismissIntroImmediately();
+      handleToggleCraftLab(true);
+    }
+  }, [doorTrigger]);
 
   const handleSetCameraPreset = (preset: CameraAnglePreset) => {
     if (isCraftLabVisible) {
@@ -657,8 +744,17 @@ export function PuffyFloatingHero3D({
     }
     const nextMode: SanctuaryEnvironmentMode =
       currentEnvironment === "bedroom" ? "meadow" : "bedroom";
+    if (nextMode === "bedroom") {
+      dismissIntroImmediately();
+      if (isExploded) {
+        setIsExploded(false);
+        sceneModuleRef.current?.setExploded(false);
+        setActiveLayerIndex(0);
+      }
+    }
     setCurrentEnvironment(nextMode);
     sceneModuleRef.current?.setEnvironmentMode(nextMode);
+    useShowroomViewStore.getState().setActiveDoor(nextMode === "bedroom" ? "bedroom" : "meadow");
   };
 
   const handleSelectEcoModel = (newModelKey: PuffyModelKey) => {
@@ -683,6 +779,7 @@ export function PuffyFloatingHero3D({
   };
 
   const handleSelectBedroomStyle = (style: BedroomStyle) => {
+    dismissIntroImmediately();
     setBedroomStyle(style);
     sceneModuleRef.current?.setBedroomStyle(style);
     useBedroomConfigStore.getState().setEnvironment(style as any);
@@ -692,7 +789,12 @@ export function PuffyFloatingHero3D({
     const prev = prevIntroStateRef.current;
     prevIntroStateRef.current = introState;
 
-    if (introState === "EXPLORING" && prev === "FLYING") {
+    if (
+      introState === "EXPLORING" &&
+      prev === "FLYING" &&
+      currentEnvironment === "meadow" &&
+      !isCraftLabVisible
+    ) {
       setOrbitHintPhase("visible");
       const fadeTimer = window.setTimeout(() => {
         setOrbitHintPhase("fading");
@@ -706,10 +808,10 @@ export function PuffyFloatingHero3D({
       };
     }
 
-    if (introState !== "EXPLORING") {
+    if (introState !== "EXPLORING" || currentEnvironment !== "meadow" || isCraftLabVisible) {
       setOrbitHintPhase("hidden");
     }
-  }, [introState]);
+  }, [introState, currentEnvironment, isCraftLabVisible]);
 
   const handleEnterDream = () => {
     sceneModuleRef.current?.startIntroFlight();
@@ -784,14 +886,16 @@ export function PuffyFloatingHero3D({
       )}
 
       {/* Phase 1 (IDLE): Warm Linen Backdrop Overlay (#F6F4EE, z-index: 10, pointer-events: auto) */}
-      <div
-        className="intro-linen-backdrop"
-        data-visible={introState === "IDLE" ? "true" : "false"}
-        aria-hidden="true"
-      />
+      {currentEnvironment === "meadow" && !isCraftLabVisible && (
+        <div
+          className="intro-linen-backdrop"
+          data-visible={introState === "IDLE" ? "true" : "false"}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Phase 1 (IDLE): Floating 3D Cloudlet over linen backdrop + Enter the Dream CTA */}
-      {introState === "IDLE" && (
+      {currentEnvironment === "meadow" && !isCraftLabVisible && introState === "IDLE" && (
         <div
           className="intro-idle-cta-wrap"
           data-revealed={introPhase1Stage === "ready" ? "true" : "false"}
@@ -810,7 +914,7 @@ export function PuffyFloatingHero3D({
       )}
 
       {/* Phase 2 (FLYING): Failsafe Skip Intro Pill Button */}
-      {introState === "FLYING" && (
+      {currentEnvironment === "meadow" && !isCraftLabVisible && introState === "FLYING" && (
         <button
           type="button"
           className="intro-skip-pill"
@@ -822,7 +926,7 @@ export function PuffyFloatingHero3D({
       )}
 
       {/* Morphing HUD Interaction Hint: Scroll-to-Drift -> Drag-to-Orbit 360° */}
-      {(introState === "FLYING" || orbitHintPhase !== "hidden") && (
+      {currentEnvironment === "meadow" && !isCraftLabVisible && (introState === "FLYING" || orbitHintPhase !== "hidden") && (
         <div
           className="intro-scroll-hint"
           data-phase={introState === "FLYING" ? "scroll" : "orbit"}
@@ -1259,114 +1363,304 @@ export function PuffyFloatingHero3D({
       />
 
       {/* 5. Active-Layer Cutaway HUD Pill Strip */}
-      <div
-        className="canvas-cutaway-10layer-hud"
-        data-visible={isExploded ? "true" : "false"}
-        aria-hidden={!isExploded}
-      >
-        <span className="canvas-cutaway-hud-label">3D Slide-Out Layer:</span>
-        {activeModelLayers.map((layer, idx) => {
-          const masterIdx = layer.id - 1;
-          const sequentialNum = idx + 1;
-          const isActive = masterIdx === activeLayer.id - 1;
-          return (
-            <button
-              key={layer.id}
-              type="button"
-              className="canvas-cutaway-hud-pill tabular-nums"
-              data-active={isActive ? "true" : "false"}
-              title={`Layer ${sequentialNum}: ${layer.name} (${layer.badgeLabel})`}
-              onClick={() => handleSelectLayerIn3D(masterIdx, true)}
-            >
-              L{sequentialNum}
-            </button>
-          );
-        })}
-      </div>
+      {currentEnvironment === 'meadow' && isExploded && !isCraftLabVisible && (
+        <div
+          className="canvas-cutaway-10layer-hud"
+          data-visible={isExploded ? "true" : "false"}
+          aria-hidden={!isExploded}
+        >
+          <span className="canvas-cutaway-hud-label">3D Slide-Out Layer:</span>
+          {activeModelLayers.map((layer, idx) => {
+            const masterIdx = layer.id - 1;
+            const sequentialNum = idx + 1;
+            const isActive = masterIdx === activeLayer.id - 1;
+            return (
+              <button
+                key={layer.id}
+                type="button"
+                className="canvas-cutaway-hud-pill tabular-nums"
+                data-active={isActive ? "true" : "false"}
+                title={`Layer ${sequentialNum}: ${layer.name} (${layer.badgeLabel})`}
+                onClick={() => handleSelectLayerIn3D(masterIdx, true)}
+              >
+                L{sequentialNum}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* 5b. Bedroom Staging Configurator Dock (only in Bedroom XR mode) */}
-      {currentEnvironment === "bedroom" && (
-        <BedroomConfiguratorDock bottomOffset={isDockCollapsed ? 68 : 104} />
+      {currentEnvironment === 'bedroom' && !isCraftLabVisible && (
+        <BedroomConfiguratorDock
+          bottomOffset={24}
+          isExploded={isExploded}
+          onToggleExplode={handleToggleExplode}
+        />
       )}
 
       {/* 6. Collapsible Bottom Control Dock */}
-      <div
-        className="canvas-bottom-dock-wrapper"
-        data-collapsed={isDockCollapsed ? "true" : "false"}
-      >
-        <button
-          type="button"
-          className="dock-collapse-toggle"
-          onClick={() => setIsDockCollapsed((prev) => !prev)}
+      {currentEnvironment === 'meadow' && !isCraftLabVisible && (
+        <div
+          className="canvas-bottom-dock-wrapper"
+          data-collapsed={isDockCollapsed ? "true" : "false"}
         >
-          {isDockCollapsed ? "▴ Show 3D Controls" : "▾ Hide 3D Controls"}
-        </button>
-
-        <div className="canvas-bottom-dock">
           <button
             type="button"
-            className="dock-btn"
-            data-active={isExploded ? "true" : "false"}
-            onClick={handleToggleExplode}
+            className="dock-collapse-toggle"
+            onClick={() => {
+              setIsDockCollapsed((prev) => {
+                if (!prev) {
+                  setIsMattressDropdownOpen(false);
+                  setIsCameraDropdownOpen(false);
+                }
+                return !prev;
+              });
+            }}
           >
-            {isExploded
-              ? "📦 Assemble Mattress"
-              : `💥 Explode ${ecoModelConfig.layersCount} Layers`}
+            {isDockCollapsed ? "▴ Show 3D Controls" : "▾ Hide 3D Controls"}
           </button>
 
-          <button
-            type="button"
-            className="dock-btn"
-            onClick={handleResetCamera}
-          >
-            Reset Camera
-          </button>
+          <div className="canvas-bottom-dock">
+            {/* 1. Mattress Choice Dropdown */}
+            <div className="relative" ref={mattressDropdownRef} style={{ position: "relative" }}>
+              <button
+                type="button"
+                className="dock-btn flex items-center gap-1.5"
+                data-active={isMattressDropdownOpen ? "true" : "false"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMattressDropdownOpen((prev) => !prev);
+                  setIsCameraDropdownOpen(false);
+                }}
+                aria-expanded={isMattressDropdownOpen}
+                aria-haspopup="true"
+              >
+                <span>{ecoModelConfig.shortLabel}</span>
+                <svg
+                  className="w-4 h-4 shrink-0 transition-transform duration-200"
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    flexShrink: 0,
+                    transform: isMattressDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
 
-          <button
-            type="button"
-            className="dock-btn"
-            data-active={isCraftLabVisible ? "true" : "false"}
-            onClick={() => handleToggleCraftLab(!isCraftLabVisible)}
-          >
-            Layer Spec Tooltips
-          </button>
+              {isMattressDropdownOpen && (
+                <div
+                  className="dock-popover absolute bottom-full mb-2 left-0 min-w-[140px] bg-[#12151D]/90 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-30 flex flex-col gap-0.5"
+                  role="menu"
+                  aria-label="Select Mattress Model"
+                >
+                  {PUFFY_MODEL_ORDER.map((modelKey) => {
+                    const cfg = getModelConfig(modelKey);
+                    const isSelected = modelKey === activeEcoModelKey;
+                    return (
+                      <button
+                        key={modelKey}
+                        type="button"
+                        role="menuitem"
+                        data-selected={isSelected ? "true" : "false"}
+                        className={`dock-popover-item flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors w-full text-left ${
+                          isSelected
+                            ? "bg-white/10 text-white font-semibold"
+                            : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectEcoModel(modelKey);
+                          setIsMattressDropdownOpen(false);
+                        }}
+                      >
+                        <span
+                          className={`dock-popover-indicator w-1.5 h-1.5 rounded-full shrink-0 ${
+                            isSelected
+                              ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]"
+                              : "bg-transparent"
+                          }`}
+                          data-active={isSelected ? "true" : "false"}
+                          aria-hidden="true"
+                        />
+                        <span>{cfg.shortLabel}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
-          <div className="dock-divider" aria-hidden="true" />
+            {/* 2. Camera View Dropdown */}
+            <div className="relative" ref={cameraDropdownRef} style={{ position: "relative" }}>
+              <button
+                type="button"
+                className="dock-btn flex items-center gap-1.5"
+                data-active={isCameraDropdownOpen ? "true" : "false"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsCameraDropdownOpen((prev) => !prev);
+                  setIsMattressDropdownOpen(false);
+                }}
+                aria-expanded={isCameraDropdownOpen}
+                aria-haspopup="true"
+              >
+                <span>Camera</span>
+                <svg
+                  className="w-4 h-4 shrink-0 transition-transform duration-200"
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    flexShrink: 0,
+                    transform: isCameraDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
 
-          {CAMERA_PRESETS.map((preset) => (
+              {isCameraDropdownOpen && (
+                <div
+                  className="dock-popover absolute bottom-full mb-2 left-1/2 -translate-x-1/2 min-w-[190px] bg-[#12151D]/90 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-30 flex flex-col gap-0.5"
+                  role="menu"
+                  aria-label="Camera Presets"
+                >
+                  <button
+                    type="button"
+                    role="menuitem"
+                    data-active={activePreset === "hero45" ? "true" : "false"}
+                    className={`dock-popover-item flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors w-full text-left ${
+                      activePreset === "hero45"
+                        ? "bg-white/10 text-white font-semibold"
+                        : "text-white/80 hover:text-white hover:bg-white/10"
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleResetCamera();
+                      setIsCameraDropdownOpen(false);
+                    }}
+                  >
+                    <span
+                      className={`dock-popover-indicator w-1.5 h-1.5 rounded-full shrink-0 ${
+                        activePreset === "hero45"
+                          ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]"
+                          : "bg-transparent"
+                      }`}
+                      data-active={activePreset === "hero45" ? "true" : "false"}
+                      aria-hidden="true"
+                    />
+                    <span>Hero 45° (Default / Reset)</span>
+                  </button>
+
+                  <div className="dock-popover-divider my-1 h-px bg-white/10" aria-hidden="true" />
+
+                  {CAMERA_PRESETS.map((preset) => {
+                    const isActive = activePreset === preset.id;
+                    return (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        role="menuitem"
+                        data-active={isActive ? "true" : "false"}
+                        className={`dock-popover-item flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors w-full text-left ${
+                          isActive
+                            ? "bg-white/10 text-white font-semibold"
+                            : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSetCameraPreset(preset.id);
+                          setIsCameraDropdownOpen(false);
+                        }}
+                      >
+                        <span
+                          className={`dock-popover-indicator w-1.5 h-1.5 rounded-full shrink-0 ${
+                            isActive
+                              ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]"
+                              : "bg-transparent"
+                          }`}
+                          data-active={isActive ? "true" : "false"}
+                          aria-hidden="true"
+                        />
+                        <span>{preset.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* 3. Action Button: Explode / Assemble 10 Layers */}
             <button
-              key={preset.id}
               type="button"
-              className="dock-btn"
-              data-active={activePreset === preset.id ? "true" : "false"}
-              onClick={() => handleSetCameraPreset(preset.id)}
+              className="dock-btn flex items-center gap-1.5"
+              data-active={isExploded ? "true" : "false"}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMattressDropdownOpen(false);
+                setIsCameraDropdownOpen(false);
+                handleToggleExplode();
+              }}
             >
-              {preset.label}
+              {isExploded ? (
+                <>
+                  <svg
+                    className="w-4 h-4 shrink-0"
+                    style={{ width: "16px", height: "16px", flexShrink: 0 }}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                    <path d="m3.3 7 8.7 5 8.7-5" />
+                    <path d="M12 22V12" />
+                  </svg>
+                  <span>Assemble Mattress</span>
+                </>
+              ) : (
+                <>
+                  <svg
+                    className="w-4 h-4 shrink-0"
+                    style={{ width: "16px", height: "16px", flexShrink: 0 }}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m12 2 10 5-10 5-10-5Z" />
+                    <path d="m2 12 10 5 10-5" />
+                    <path d="m2 17 10 5 10-5" />
+                  </svg>
+                  <span>Explode {ecoModelConfig.layersCount} Layers</span>
+                </>
+              )}
             </button>
-          ))}
-
-          <div className="dock-divider" aria-hidden="true" />
-
-          <button
-            type="button"
-            className="dock-btn dock-btn-accent"
-            onClick={handlePressWoolPad}
-          >
-            Press Wool Pad
-          </button>
-
-          <button
-            type="button"
-            className="dock-btn"
-            data-active={currentEnvironment === "bedroom" ? "true" : "false"}
-            onClick={handleToggleBedroomMode}
-          >
-            {currentEnvironment === "bedroom"
-              ? "Return to Meadow"
-              : "View in Bedroom (XR)"}
-          </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

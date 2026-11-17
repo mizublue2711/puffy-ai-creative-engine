@@ -213,7 +213,7 @@
 .puffy-floating-hero-3d .reference-cutout-preview {
   position: absolute;
   inset: 0;
-  z-index: 11;
+  z-index: 60;
   background-color: rgba(246, 244, 239, 0.98);
   display: flex;
   flex-direction: column;
@@ -1077,6 +1077,9 @@
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -1101,6 +1104,74 @@
 
 .puffy-floating-hero-3d .dock-btn-accent:hover {
   background-color: var(--puffy3d-ocean-teal-hover);
+}
+
+/* Bottom Dock Popovers */
+.puffy-floating-hero-3d .dock-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  background: rgba(18, 21, 29, 0.90);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.puffy-floating-hero-3d .dock-popover-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: var(--puffy3d-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.puffy-floating-hero-3d .dock-popover-item:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.10);
+}
+
+.puffy-floating-hero-3d .dock-popover-item[data-selected="true"],
+.puffy-floating-hero-3d .dock-popover-item[data-active="true"] {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+}
+
+.puffy-floating-hero-3d .dock-popover-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background-color: transparent;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.puffy-floating-hero-3d .dock-popover-indicator[data-active="true"] {
+  background-color: #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
+}
+
+.puffy-floating-hero-3d .dock-popover-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.10);
+  margin: 4px 2px;
 }
 
 /* Failsafe Skip Intro Pill Button */

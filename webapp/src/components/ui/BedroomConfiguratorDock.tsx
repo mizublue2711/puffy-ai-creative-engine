@@ -17,6 +17,8 @@ import './BedroomConfiguratorDock.css';
 export interface BedroomConfiguratorDockProps {
   /** Distance from viewport bottom in pixels (default: 24px) */
   bottomOffset?: number;
+  isExploded?: boolean;
+  onToggleExplode?: () => void;
 }
 
 const CURATED_SET_OPTIONS: CuratedSetId[] = ['zen-kyoto', 'modern-milan', 'warm-solace'];
@@ -107,6 +109,8 @@ function CategoryIcon({ category }: { category: BedroomDockCategory }) {
 
 export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = ({
   bottomOffset = 24,
+  isExploded = false,
+  onToggleExplode,
 }) => {
   // Re-render automatically if any new item is dynamically registered in BedroomRegistry.ts
   useSyncExternalStore(
@@ -156,7 +160,10 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
                   className="bedroom-stepper-btn"
                   data-selected={isSelected ? 'true' : 'false'}
                   aria-pressed={isSelected}
-                  onClick={() => setPillowCount(count)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPillowCount(count);
+                  }}
                 >
                   {count}
                 </button>
@@ -178,7 +185,10 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
         aria-checked={isOn}
         className="bedroom-toggle-pill"
         data-on={isOn ? 'true' : 'false'}
-        onClick={() => toggleItem(item.id)}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleItem(item.id);
+        }}
       >
         <span>{item.shortLabel}:</span>
         <span className="bedroom-toggle-status">{isOn ? 'ON' : 'OFF'}</span>
@@ -194,67 +204,145 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
       aria-label="Bedroom Staging Configurator"
     >
       {isDockExpanded && (categoryItems.length > 0 || activeCategory === 'bedding') && (
-        <div className="bedroom-config-drawer">
-          {activeCategory === 'bedding' && (
+        <div className="bedroom-config-drawer" data-category={activeCategory}>
+          {activeCategory === 'bedding' ? (
             <>
-              <div
-                className="bedroom-stepper-group"
-                role="group"
-                aria-label="Set Presets (1-Click Pairing)"
-              >
-                <span className="bedroom-stepper-label">Set:</span>
-                <div className="bedroom-stepper-segments">
-                  {CURATED_SET_OPTIONS.map((setId) => {
-                    const spec = CURATED_BEDROOM_PAIRINGS[setId];
-                    const isSelected =
-                      activeMattress === spec.mattress && activeBedFrame === spec.bedFrame;
-                    return (
-                      <button
-                        key={setId}
-                        type="button"
-                        className="bedroom-stepper-btn"
-                        data-selected={isSelected ? 'true' : 'false'}
-                        aria-pressed={isSelected}
-                        onClick={() => applyCuratedSet(setId)}
-                      >
-                        {spec.shortLabel}
-                      </button>
-                    );
-                  })}
+              {/* --- ROW 1 (Mattress & Structural Core) --- */}
+              <div className="bedroom-dock-row-1 flex items-center justify-center gap-2">
+                <div
+                  className="bedroom-stepper-group"
+                  role="group"
+                  aria-label="Set Presets (1-Click Pairing)"
+                >
+                  <span className="bedroom-stepper-label">Set:</span>
+                  <div className="bedroom-stepper-segments">
+                    {CURATED_SET_OPTIONS.map((setId) => {
+                      const spec = CURATED_BEDROOM_PAIRINGS[setId];
+                      const isSelected =
+                        activeMattress === spec.mattress && activeBedFrame === spec.bedFrame;
+                      return (
+                        <button
+                          key={setId}
+                          type="button"
+                          className="bedroom-stepper-btn"
+                          data-selected={isSelected ? 'true' : 'false'}
+                          aria-pressed={isSelected}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            applyCuratedSet(setId);
+                          }}
+                        >
+                          {spec.shortLabel}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+
+                {/* --- NATIVE CSS HORIZONTAL MATTRESS STEPPER --- */}
+                <div
+                  className="bedroom-stepper-group"
+                  role="group"
+                  aria-label="Mattress Model Variant"
+                >
+                  <span className="bedroom-stepper-label">Mattress:</span>
+                  <div className="bedroom-stepper-segments">
+                    {(['cloud', 'lux', 'royal'] as const).map((variant) => {
+                      const isSelected = String(activeMattress || '').toLowerCase() === variant;
+                      return (
+                        <button
+                          key={variant}
+                          type="button"
+                          className="bedroom-stepper-btn"
+                          data-selected={isSelected ? 'true' : 'false'}
+                          aria-pressed={isSelected}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMattress(variant);
+                          }}
+                        >
+                          {variant.charAt(0).toUpperCase() + variant.slice(1)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* --- DEDICATED ASSEMBLE / EXPLODE TOGGLE BUTTON --- */}
+                <button
+                  type="button"
+                  className="bedroom-explode-btn"
+                  data-active={isExploded ? 'true' : 'false'}
+                  aria-pressed={isExploded}
+                  title={isExploded ? 'Assemble Mattress' : 'Explode Layers'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleExplode?.();
+                  }}
+                >
+                  {isExploded ? (
+                    <>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                        <path d="m3.3 7 8.7 5 8.7-5" />
+                        <path d="M12 22V12" />
+                      </svg>
+                      <span>Assemble</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m12 2 10 5-10 5-10-5Z" />
+                        <path d="m2 12 10 5 10-5" />
+                        <path d="m2 17 10 5 10-5" />
+                      </svg>
+                      <span>Explode</span>
+                    </>
+                  )}
+                </button>
               </div>
 
-              {/* --- NATIVE CSS HORIZONTAL MATTRESS STEPPER --- */}
-              <div
-                className="bedroom-stepper-group"
-                role="group"
-                aria-label="Mattress Model Variant"
-              >
-                <span className="bedroom-stepper-label">Mattress:</span>
-                <div className="bedroom-stepper-segments">
-                  {(['cloud', 'lux', 'royal'] as const).map((variant) => {
-                    const isSelected = String(activeMattress || '').toLowerCase() === variant;
-                    return (
-                      <button
-                        key={variant}
-                        type="button"
-                        className="bedroom-stepper-btn"
-                        data-selected={isSelected ? 'true' : 'false'}
-                        aria-pressed={isSelected}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setMattress(variant);
-                        }}
-                      >
-                        {variant.charAt(0).toUpperCase() + variant.slice(1)}
-                      </button>
-                    );
-                  })}
-                </div>
+              {/* --- ROW 2 (Soft Furnishings & Accents) --- */}
+              <div className="bedroom-dock-row-2 flex items-center justify-center gap-4 mt-2">
+                {(() => {
+                  const pillowsItem = categoryItems.find((i) => i.variantKey === 'pillowCount');
+                  const runnerItem = categoryItems.find(
+                    (i) => i.id === 'bed-runner' || i.shortLabel.toLowerCase() === 'runner',
+                  );
+                  const otherItems = categoryItems.filter(
+                    (i) => i !== pillowsItem && i !== runnerItem,
+                  );
+                  return (
+                    <>
+                      {pillowsItem && renderControl(pillowsItem)}
+                      {runnerItem && renderControl(runnerItem)}
+                      {otherItems.map(renderControl)}
+                    </>
+                  );
+                })()}
               </div>
             </>
+          ) : (
+            <div className="bedroom-dock-row-1 flex items-center justify-center gap-2">
+              {categoryItems.map(renderControl)}
+            </div>
           )}
-          {categoryItems.map(renderControl)}
         </div>
       )}
 

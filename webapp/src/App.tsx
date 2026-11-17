@@ -4,7 +4,6 @@ import {
   ShowroomHeader,
   type ShowroomTab,
 } from "./components/showroom/ShowroomHeader";
-import { ShowroomGallery2D } from "./components/showroom/ShowroomGallery2D";
 import { BannerStudio } from "./components/banner/BannerStudio";
 import { useShowroomViewStore } from "./store/useShowroomViewStore";
 
@@ -45,17 +44,22 @@ export function App() {
 
       <main className="showroom-stage">
         <div
-          key={activeTab}
+          key={
+            activeTab === "banner-studio" || activeTab === "studio"
+              ? "banner-studio"
+              : "interactive"
+          }
           className="showroom-view-panel"
           data-view={activeTab}
         >
-          {activeTab === "interactive" ? (
+          {activeTab === "interactive" ||
+          activeTab === "meadow" ||
+          activeTab === "bedroom" ||
+          activeTab === "indoor-lab" ? (
             <HeroSplitSection />
-          ) : activeTab === "banner-studio" ? (
+          ) : activeTab === "banner-studio" || activeTab === "studio" ? (
             <BannerStudio />
-          ) : (
-            <ShowroomGallery2D />
-          )}
+          ) : null}
         </div>
       </main>
 

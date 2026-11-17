@@ -933,6 +933,10 @@ export class WoolMeadowSceneModule implements ISceneModule {
     this.introSequence?.skipFlight();
   }
 
+  public skipIntro(): void {
+    this.skipIntroFlight();
+  }
+
   /**
    * Independent Layer Explosion state machine (`isExploded`).
    * Elevates or collapses the 10 layers strictly in-place inside the current environment
