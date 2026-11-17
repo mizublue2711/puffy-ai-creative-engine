@@ -414,13 +414,13 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   const quiltBaseColor = textureLoader.load('/textures/quilt/01_baseColor.png');
   quiltBaseColor.colorSpace = THREE.SRGBColorSpace; // Eliminate muddy gamma gray
 
-  const quiltNormal = textureLoader.load('/textures/quilt/02_normal.png');
+  const quiltNormal = textureLoader.load('/textures/quilt/02_normal.webp');
   quiltNormal.colorSpace = THREE.NoColorSpace;
 
   const quiltHeight = textureLoader.load('/textures/quilt/04_height.png');
   quiltHeight.colorSpace = THREE.NoColorSpace;
 
-  const quiltAO = textureLoader.load('/textures/quilt/05_ambientOcclusion.png');
+  const quiltAO = textureLoader.load('/textures/quilt/05_ambientOcclusion.webp');
   quiltAO.colorSpace = THREE.NoColorSpace;
 
   const repeatX = 4; // 1.6m / 0.4m = 4 repeats along width

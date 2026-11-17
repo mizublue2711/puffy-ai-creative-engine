@@ -23,4 +23,16 @@ pipelines/banner_engine/out/
 
 # OS & Editor
 .DS_Store
+
+# Chặn các file test & smoke test rác
+*smoke_test*
+*test_artifacts*
+test_*.png
+dist_*_test.js
+
+# Chặn file nháp tạm của worker
+*.bak
+*.orig
+temp_*
+
 *.swp
