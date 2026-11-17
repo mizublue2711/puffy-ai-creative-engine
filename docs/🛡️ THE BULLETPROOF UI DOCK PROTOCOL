@@ -1,0 +1,29 @@
+🛡️ THE BULLETPROOF UI DOCK PROTOCOL
+
+### SYSTEM DIRECTIVE: STRICT UI DOCK INTEGRATION PROTOCOL
+
+You are acting as a Precision Frontend Engineer. You MUST strictly adhere to the following architectural rules:
+
+#### 1. STRICT FILE BOUNDARY:
+- ONLY modify the designated UI files.
+- DO NOT touch any 3D scene files (`BedroomSanctuaryScene.tsx`, `IntroSequence.ts`, shaders, or mesh geometries).
+- DO NOT alter any store dispatchers or state schema in Zustand (`useBedroomConfigStore.ts`).
+
+#### 2. PRESERVE 100% EXISTING EVENT HANDLERS:
+- When restyling buttons or replacing emojis with `<BrandIcons />`, you are strictly doing an ASTHETIC SWAP.
+- Retain all original `onClick` triggers, GSAP callbacks (`onToggleExplode`, `onSelectMattress`, `onSwitchScene`), and accessibility attributes.
+- DO NOT create hollow mock buttons or dead state placeholders.
+
+#### 3. SCENE-GATED DOCK VISIBILITY (NO OVERLAPPING):
+- The Hero Floating Dock inside `PuffyFloatingHero3D.tsx` MUST automatically unmount/hide when entering the bedroom:
+  ```tsx
+  if (activeScene !== 'meadow' || isLayerSpecOpen) {
+    return null; // Yield exclusive space to BedroomConfiguratorDock
+  }
+In meadow mode: Hide all bedroom furniture selectors (Frames, Pillows, Runner).
+In bedroom mode: Hide all layer explode and meadow controls.
+4. POINTER EVENTS INTEGRITY:
+Outer floating wrapper: pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-30.
+Inner clickable dock: pointer-events-auto.
+VERIFICATION REQUIREMENT:
+Run npm --prefix webapp run build to verify clean compilation, zero type errors, and confirm visually that switching between scenes leaves NO duplicate floating menus.

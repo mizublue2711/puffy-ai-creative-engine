@@ -126,6 +126,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
     setPillowCount,
     setActiveCategory,
     toggleDockExpanded,
+    setMattress,
   } = useBedroomConfigStore();
 
   const allItems = getConfigurableBedroomItems();
@@ -195,32 +196,63 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
       {isDockExpanded && (categoryItems.length > 0 || activeCategory === 'bedding') && (
         <div className="bedroom-config-drawer">
           {activeCategory === 'bedding' && (
-            <div
-              className="bedroom-stepper-group"
-              role="group"
-              aria-label="Set Presets (1-Click Pairing)"
-            >
-              <span className="bedroom-stepper-label">Set:</span>
-              <div className="bedroom-stepper-segments">
-                {CURATED_SET_OPTIONS.map((setId) => {
-                  const spec = CURATED_BEDROOM_PAIRINGS[setId];
-                  const isSelected =
-                    activeMattress === spec.mattress && activeBedFrame === spec.bedFrame;
-                  return (
-                    <button
-                      key={setId}
-                      type="button"
-                      className="bedroom-stepper-btn"
-                      data-selected={isSelected ? 'true' : 'false'}
-                      aria-pressed={isSelected}
-                      onClick={() => applyCuratedSet(setId)}
-                    >
-                      {spec.shortLabel}
-                    </button>
-                  );
-                })}
+            <>
+              <div
+                className="bedroom-stepper-group"
+                role="group"
+                aria-label="Set Presets (1-Click Pairing)"
+              >
+                <span className="bedroom-stepper-label">Set:</span>
+                <div className="bedroom-stepper-segments">
+                  {CURATED_SET_OPTIONS.map((setId) => {
+                    const spec = CURATED_BEDROOM_PAIRINGS[setId];
+                    const isSelected =
+                      activeMattress === spec.mattress && activeBedFrame === spec.bedFrame;
+                    return (
+                      <button
+                        key={setId}
+                        type="button"
+                        className="bedroom-stepper-btn"
+                        data-selected={isSelected ? 'true' : 'false'}
+                        aria-pressed={isSelected}
+                        onClick={() => applyCuratedSet(setId)}
+                      >
+                        {spec.shortLabel}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+
+              {/* --- NATIVE CSS HORIZONTAL MATTRESS STEPPER --- */}
+              <div
+                className="bedroom-stepper-group"
+                role="group"
+                aria-label="Mattress Model Variant"
+              >
+                <span className="bedroom-stepper-label">Mattress:</span>
+                <div className="bedroom-stepper-segments">
+                  {(['cloud', 'lux', 'royal'] as const).map((variant) => {
+                    const isSelected = String(activeMattress || '').toLowerCase() === variant;
+                    return (
+                      <button
+                        key={variant}
+                        type="button"
+                        className="bedroom-stepper-btn"
+                        data-selected={isSelected ? 'true' : 'false'}
+                        aria-pressed={isSelected}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMattress(variant);
+                        }}
+                      >
+                        {variant.charAt(0).toUpperCase() + variant.slice(1)}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
           )}
           {categoryItems.map(renderControl)}
         </div>

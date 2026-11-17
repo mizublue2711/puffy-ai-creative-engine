@@ -9,7 +9,7 @@ import type { BedroomAssetInstance } from './PuffyBedFrame.tsx';
 export interface PuffyPillowPairOptions {
   /** Mattress top surface Y coordinate in scene units (default: 0.58m) */
   surfaceY?: number;
-  /** Z coordinate near the headboard (default: -0.75m) */
+  /** Z coordinate near the headboard (default: -0.87m) */
   headZ?: number;
   /** Symmetric X offset from bed center (default: 0.42m) */
   offsetX?: number;
@@ -125,7 +125,7 @@ export function createPuffyPillowPair(
   options: PuffyPillowPairOptions = {},
 ): BedroomAssetInstance {
   const surfaceY = options.surfaceY ?? 0.58;
-  const headZ = options.headZ ?? -0.75;
+  const headZ = options.headZ ?? -0.87;
   const offsetX = options.offsetX ?? 0.42;
   const rotX = options.rotX ?? TILT_X_RAD;
   const scale = options.scale ?? 1.0;

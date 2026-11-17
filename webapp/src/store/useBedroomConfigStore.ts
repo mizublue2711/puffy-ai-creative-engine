@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, type UseBoundStore, type StoreApi } from 'zustand';
 import {
   BEDROOM_CONFIGURABLE_ITEMS,
   type BedroomDockCategory,
@@ -6,7 +6,7 @@ import {
 } from '../components/canvas/bedroom/BedroomRegistry.ts';
 
 export type PillowCountOption = 0 | 2 | 4;
-export type MattressVariant = 'cloud' | 'royal' | 'flux';
+export type MattressVariant = 'cloud' | 'lux' | 'royal';
 export type BedFrameVariant = 'kyoto' | 'milan' | 'solace';
 export type CuratedSetPreset = 'zen-kyoto' | 'modern-milan' | 'warm-solace';
 
@@ -64,7 +64,7 @@ export const useBedroomConfigStore = create<BedroomConfigState>((set) => ({
         set({ activeMattress: 'royal', activeBedFrame: 'milan' });
         break;
       case 'warm-solace':
-        set({ activeMattress: 'flux', activeBedFrame: 'solace' });
+        set({ activeMattress: 'lux', activeBedFrame: 'solace' });
         break;
     }
   },
@@ -100,4 +100,6 @@ export const useBedroomConfigStore = create<BedroomConfigState>((set) => ({
     set((state) => ({ isDockExpanded: !state.isDockExpanded })),
 
   setDockExpanded: (isDockExpanded) => set({ isDockExpanded }),
-}));
+})) as unknown as UseBoundStore<StoreApi<Omit<BedroomConfigState, 'activeMattress'> & { activeMattress: any }>>;
+
+

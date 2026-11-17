@@ -421,7 +421,7 @@ export function createBedroomSanctuaryScene(
     if (count === 2) {
       const pair = createPuffyPillowPair({
         surfaceY: pillowSurfaceY,
-        headZ: headboardAnchorZ + 0.18,
+        headZ: headboardAnchorZ + 0.06,
         offsetX: Math.min(0.42, mattressW * 0.23),
         rotX: -0.28,
         scale: 1.0,
@@ -433,7 +433,7 @@ export function createBedroomSanctuaryScene(
       // Back Tier: 2 King Pillows standing upright against headboard
       const backTier = createPuffyPillowPair({
         surfaceY: pillowSurfaceY,
-        headZ: headboardAnchorZ + 0.14,
+        headZ: headboardAnchorZ + 0.02,
         offsetX: Math.min(0.44, mattressW * 0.24),
         rotX: -0.20,
         scale: 1.05,
@@ -442,7 +442,7 @@ export function createBedroomSanctuaryScene(
       // Front Tier: 2 Standard Pillows resting angled forward
       const frontTier = createPuffyPillowPair({
         surfaceY: pillowSurfaceY,
-        headZ: headboardAnchorZ + 0.34,
+        headZ: headboardAnchorZ + 0.22,
         offsetX: Math.min(0.40, mattressW * 0.22),
         rotX: -0.42,
         scale: 0.95,

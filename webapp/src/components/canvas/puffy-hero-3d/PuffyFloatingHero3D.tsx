@@ -862,33 +862,36 @@ export function PuffyFloatingHero3D({
         <span className="canvas-top-badge-title">{badgeTitle}</span>
         <span className="canvas-top-badge-sub tabular-nums">{badgeSub}</span>
 
-        <div
-          className="puffy-model-switcher-pills"
-          role="group"
-          aria-label="3D Mattress Model Preset"
-        >
-          {PUFFY_MODEL_ORDER.map((modelKey) => {
-            const cfg = getModelConfig(modelKey);
-            const isSelected = modelKey === activeEcoModelKey;
-            return (
-              <button
-                key={modelKey}
-                type="button"
-                className="puffy-model-pill"
-                data-selected={isSelected ? "true" : "false"}
-                aria-pressed={isSelected}
-                onClick={() => handleSelectEcoModel(modelKey)}
-              >
-                <span
-                  className="puffy-model-swatch"
-                  style={{ backgroundColor: ECO_MODEL_SWATCHES[modelKey] }}
-                  aria-hidden="true"
-                />
-                <span>{cfg.shortLabel}</span>
-              </button>
-            );
-          })}
-        </div>
+        {/* Only render top mattress selector outside bedroom */}
+        {currentEnvironment !== "bedroom" && (
+          <div
+            className="puffy-model-switcher-pills"
+            role="group"
+            aria-label="3D Mattress Model Preset"
+          >
+            {PUFFY_MODEL_ORDER.map((modelKey) => {
+              const cfg = getModelConfig(modelKey);
+              const isSelected = modelKey === activeEcoModelKey;
+              return (
+                <button
+                  key={modelKey}
+                  type="button"
+                  className="puffy-model-pill"
+                  data-selected={isSelected ? "true" : "false"}
+                  aria-pressed={isSelected}
+                  onClick={() => handleSelectEcoModel(modelKey)}
+                >
+                  <span
+                    className="puffy-model-swatch"
+                    style={{ backgroundColor: ECO_MODEL_SWATCHES[modelKey] }}
+                    aria-hidden="true"
+                  />
+                  <span>{cfg.shortLabel}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {currentEnvironment === "bedroom" && (
           <div
