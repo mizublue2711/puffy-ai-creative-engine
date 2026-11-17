@@ -77,7 +77,7 @@ Run the deployment audit script to purge Vite caches and validate all configurat
 ```
 QUAN TRỌNG!!!
 SƠ ĐỒ ĐIỀU KHIỂN CÁC TẦNG MENU (MENU CONTROL HIERARCHY)
-
+```
 [ TẦNG 0: GLOBAL APP NAVBAR ] (ShowroomHeader.tsx)
   │  Mục đích: Điều hướng cấp cao nhất của toàn bộ Webapp
   │  Nút điều khiển: [ ☁ 3D Interactive ] | [ 🖼 2D Campaign Renders ] | [ 🎨 Banner Studio ]
