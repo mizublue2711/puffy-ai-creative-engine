@@ -647,6 +647,10 @@ export class FloatingWoolPad {
   public getCurrentHeightRatio(): number {
     return Number.isFinite(this.currentHeightRatio) ? this.currentHeightRatio : 1.0;
   }
+  public getActiveBadgeMesh(): THREE.Mesh | null {
+    return this.badgeMesh ?? null;
+  }
+
 
   /**
    * Dual Flagship Modular "Lego" Swapping Logic:

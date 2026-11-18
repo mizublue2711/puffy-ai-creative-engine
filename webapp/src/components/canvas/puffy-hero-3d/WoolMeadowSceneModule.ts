@@ -1081,6 +1081,18 @@ export class WoolMeadowSceneModule implements ISceneModule {
   public getCamera(): THREE.Camera | null {
     return this.context?.camera ?? null;
   }
+  public getRenderer(): THREE.WebGLRenderer | null {
+    return this.context?.renderer ?? null;
+  }
+
+  public getScene(): THREE.Scene | null {
+    return this.context?.scene ?? null;
+  }
+
+  public getActiveBadgeMesh(): THREE.Object3D | null {
+    return this.floatingWoolPad?.getActiveBadgeMesh() ?? null;
+  }
+
 
   /**
    * Eased 360° orbit with a gentle rise/dip around the current OrbitControls target.

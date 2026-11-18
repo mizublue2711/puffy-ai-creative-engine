@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -55,6 +55,7 @@ import {
   type PillowCountOption,
 } from '../../../store/useBedroomConfigStore.ts';
 import { BedroomConfiguratorDock } from '../../ui/BedroomConfiguratorDock.tsx';
+import { SceneCaptureDock } from './components/SceneCaptureDock.tsx';
 
 export interface BedroomSanctuarySceneOptions {
   /** Optional existing FloatingWoolPad whose encasementTrayGroup will be docked onto the bed slats */
@@ -956,6 +957,11 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
   const pillowsRef = useRef<THREE.Object3D | null>(null);
   const runnerRef = useRef<THREE.Object3D | null>(null);
   const sanctuaryRef = useRef<BedroomSanctuaryInstance | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.Camera | null>(null);
+  const logoBadgeRef = useRef<THREE.Object3D | null>(null);
+  const [isSceneReady, setIsSceneReady] = useState(false);
 
   const { activeRoomId, activeMattress: activeTier } = useBedroomConfigStore();
 
@@ -1021,7 +1027,11 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     const width = Math.max(320, container.clientWidth || 1024);
     const height = Math.max(320, container.clientHeight || 680);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      powerPreference: 'high-performance',
+      alpha: true,
+    });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.08;
@@ -1086,6 +1096,12 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
 
     sanctuary.runSmokeTest(mattressDockGroup);
 
+    rendererRef.current = renderer;
+    sceneRef.current = scene;
+    cameraRef.current = camera;
+    logoBadgeRef.current = woolPad.getActiveBadgeMesh();
+    setIsSceneReady(true);
+
     const handleResize = () => {
       if (isDisposed || !container) return;
       const cw = container.clientWidth || width;
@@ -1105,6 +1121,11 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     renderLoop();
 
     return () => {
+      setIsSceneReady(false);
+      rendererRef.current = null;
+      sceneRef.current = null;
+      cameraRef.current = null;
+      logoBadgeRef.current = null;
       isDisposed = true;
       window.cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
@@ -1122,7 +1143,19 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
 
   return (
     <div ref={mountRef} className="w-full h-full relative" style={{ minHeight: '640px' }}>
-      {!externalScene && <BedroomConfiguratorDock bottomOffset={24} />}
+      {!externalScene && (
+        <>
+          <BedroomConfiguratorDock bottomOffset={24} />
+          {isSceneReady && (
+            <SceneCaptureDock
+              renderer={rendererRef.current}
+              scene={sceneRef.current}
+              camera={cameraRef.current}
+              logoBadgeGroup={logoBadgeRef.current}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

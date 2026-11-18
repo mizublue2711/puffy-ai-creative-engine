@@ -381,6 +381,7 @@ export function PuffyFloatingHero3D({
       renderer = new THREE.WebGLRenderer({
         antialias: !isSoftwareGl,
         powerPreference: "high-performance",
+        alpha: true,
       });
     } catch (err) {
       console.error("[PuffyFloatingHero3D] WebGLRenderer initialization failed:", err);
@@ -882,6 +883,10 @@ export function PuffyFloatingHero3D({
             setPendingSnapshot(null);
           }}
           onDismissSnapshot={() => setPendingSnapshot(null)}
+          renderer={sceneModuleRef.current?.getRenderer()}
+          scene={sceneModuleRef.current?.getScene()}
+          camera={sceneModuleRef.current?.getCamera()}
+          logoBadgeGroup={sceneModuleRef.current?.getActiveBadgeMesh()}
         />
       )}
 
