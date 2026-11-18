@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bedside Table
+* source:	https://sketchfab.com/3d-models/bedside-table-ce3c246ebe6747e8890480490b3c887d
+* author:	human1976 (https://sketchfab.com/human1976)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bedside Table" (https://sketchfab.com/3d-models/bedside-table-ce3c246ebe6747e8890480490b3c887d) by human1976 (https://sketchfab.com/human1976) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
