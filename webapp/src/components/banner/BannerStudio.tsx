@@ -102,6 +102,7 @@ export function BannerStudio() {
   const [isGeneratingShot, setIsGeneratingShot] = useState(false);
   const [generationStage, setGenerationStage] = useState<'idle' | 'generating_context' | 'compositing_logo'>('idle');
   const [compositeResult, setCompositeResult] = useState<string | null>(null);
+  const [isCompositing, setIsCompositing] = useState(false);
   const [studioError, setStudioError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -241,38 +242,68 @@ export function BannerStudio() {
     }
   };
 
+  const handleCompositeLogo = async () => {
+    if (!studioPassB) {
+      alert('Không tìm thấy dữ liệu Logo Pass B của góc chụp này.');
+      return;
+    }
+
+    const currentBaseImage = backgroundImage || studioPassA;
+    if (!currentBaseImage) {
+      alert('Vui lòng tải ảnh nền hoặc chụp trước.');
+      return;
+    }
+
+    setIsCompositing(true);
+    setStudioError(null);
+    try {
+      const baseImage = await loadImage(currentBaseImage);
+      const finalImage = await compositeLogoOntoScene(
+        currentBaseImage,
+        studioPassB,
+        baseImage.naturalWidth,
+        baseImage.naturalHeight,
+      );
+      setCompositeResult(finalImage);
+    } catch (error) {
+      console.error('Composite failed:', error);
+      setStudioError(error instanceof Error ? error.message : 'Failed to composite the logo badge.');
+    } finally {
+      setIsCompositing(false);
+    }
+  };
+
   const exportBanner = (type: 'image/png' | 'image/webp') => {
-    if (compositeResult) {
-      const exportComposite = async () => {
+    const sourceImage = compositeResult || backgroundImage || studioPassA;
+    if (sourceImage) {
+      const exportImage = async () => {
         try {
-          const response = await fetch(compositeResult);
-          const sourceBlob = await response.blob();
-          const sourceUrl = URL.createObjectURL(sourceBlob);
-          const image = await loadImage(sourceUrl);
+          const image = await loadImage(sourceImage);
           const canvas = document.createElement('canvas');
           canvas.width = image.naturalWidth;
           canvas.height = image.naturalHeight;
-          canvas.getContext('2d')?.drawImage(image, 0, 0);
-          URL.revokeObjectURL(sourceUrl);
+          const context = canvas.getContext('2d');
+          if (!context) throw new Error('Failed to create export canvas context.');
+          context.drawImage(image, 0, 0);
 
           const outputBlob = await new Promise<Blob>((resolve, reject) => {
             canvas.toBlob(
-              (blob) => blob ? resolve(blob) : reject(new Error('Failed to encode studio composite')),
+              (blob) => blob ? resolve(blob) : reject(new Error('Failed to encode studio image')),
               type,
               0.95,
             );
           });
           const url = URL.createObjectURL(outputBlob);
           const a = document.createElement('a');
-          a.download = `puffy-studio-composite-${image.naturalWidth}x${image.naturalHeight}-${Date.now()}.${type === 'image/png' ? 'png' : 'webp'}`;
+          a.download = `puffy-studio-image-${image.naturalWidth}x${image.naturalHeight}-${Date.now()}.${type === 'image/png' ? 'png' : 'webp'}`;
           a.href = url;
           a.click();
           setTimeout(() => URL.revokeObjectURL(url), 10_000);
         } catch (error) {
-          setStudioError(error instanceof Error ? error.message : 'Failed to export the studio composite.');
+          setStudioError(error instanceof Error ? error.message : 'Failed to export the studio image.');
         }
       };
-      void exportComposite();
+      void exportImage();
       return;
     }
 
@@ -570,6 +601,147 @@ export function BannerStudio() {
             <label style={label} htmlFor="banner-upload">Background photo</label>
             <input id="banner-upload" type="file" accept="image/*" onChange={onUpload} />
           </div>
+          <button
+            type="button"
+            onClick={() => void handleCompositeLogo()}
+            disabled={isCompositing || !studioPassB}
+            aria-busy={isCompositing}
+            style={{
+              width: '100%',
+              minHeight: 38,
+              borderRadius: 999,
+              border: '1px solid rgba(255, 255, 255, 0.24)',
+              background: isCompositing ? 'rgba(255, 255, 255, 0.16)' : '#fff',
+              color: isCompositing ? 'rgba(255, 255, 255, 0.62)' : '#111827',
+              fontFamily: typography.body,
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: isCompositing ? 'wait' : 'pointer',
+              boxShadow: isCompositing ? 'none' : '0 8px 24px rgba(255, 255, 255, 0.10)',
+            }}
+          >
+            {isCompositing ? '🪄 Đang dán logo...' : '✨ Dán Logo Nệm Gốc'}
+          </button>
+        </section>
+
+        <section
+          aria-label="Mattress logo badge Pass B"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 10,
+            padding: 12,
+            borderRadius: 16,
+            border: '1px solid rgba(255, 255, 255, 0.10)',
+            background: 'rgba(0, 0, 0, 0.40)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+            <span
+              style={{
+                color: '#38BDF8',
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              🏷️ MATTRESS LOGO BADGE (PASS B)
+            </span>
+            <span
+              style={{
+                flexShrink: 0,
+                padding: '2px 8px',
+                borderRadius: 999,
+                border: `1px solid ${studioPassB ? 'rgba(16, 185, 129, 0.30)' : 'rgba(245, 158, 11, 0.30)'}`,
+                background: studioPassB ? 'rgba(16, 185, 129, 0.20)' : 'rgba(245, 158, 11, 0.20)',
+                color: studioPassB ? '#6EE7B7' : '#FCD34D',
+                fontSize: 10,
+              }}
+            >
+              {studioPassB ? '✓ Sẵn Sàng' : 'Chưa Chụp'}
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: 112,
+              overflow: 'hidden',
+              borderRadius: 12,
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              backgroundColor: 'rgba(15, 23, 42, 0.80)',
+              backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px)',
+              backgroundSize: '12px 12px',
+            }}
+          >
+            {studioPassB ? (
+              <img
+                src={studioPassB}
+                alt="Isolated logo badge, Pass B"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55))',
+                }}
+              />
+            ) : (
+              <p style={{ margin: 0, padding: '0 16px', color: 'rgba(255, 255, 255, 0.40)', fontSize: 11, textAlign: 'center' }}>
+                Chưa có dữ liệu logo. Hãy bấm nút máy ảnh ở 3D Bedroom để trích xuất.
+              </p>
+            )}
+          </div>
+
+          <button
+            type="button"
+            disabled={!studioPassB}
+            onClick={() => {
+              if (!studioPassB) return;
+              const link = document.createElement('a');
+              link.href = studioPassB;
+              link.download = 'Puffy_Logo_Badge_Transparent.png';
+              link.click();
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              minHeight: 30,
+              padding: '4px 12px',
+              borderRadius: 10,
+              border: '1px solid rgba(14, 165, 233, 0.30)',
+              background: 'rgba(14, 165, 233, 0.10)',
+              color: '#7DD3FC',
+              fontFamily: typography.body,
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: studioPassB ? 'pointer' : 'not-allowed',
+              opacity: studioPassB ? 1 : 0.3,
+              transition: 'background 0.2s ease',
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Tải Logo PNG (Nền Trong Suốt)
+          </button>
         </section>
       </aside>
 
@@ -592,10 +764,10 @@ export function BannerStudio() {
             boxShadow: '0 18px 54px rgba(0, 0, 0, 0.30)',
           }}
         >
-          {studioPassA ? (
+          {compositeResult || backgroundImage || studioPassA ? (
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', maxWidth: '100%', maxHeight: '100%' }}>
               <img
-                src={compositeResult || studioPassA}
+                src={compositeResult || backgroundImage || studioPassA || ''}
                 alt="Captured studio scene preview"
                 style={{
                   objectFit: 'contain',

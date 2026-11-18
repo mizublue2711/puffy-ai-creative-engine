@@ -1,5 +1,66 @@
 import React from 'react';
 import * as THREE from 'three';
+import { useBedroomConfigStore, type MattressVariant } from '../../../../store/useBedroomConfigStore.ts';
+import { useShowroomViewStore } from '../../../../store/useShowroomViewStore.ts';
+
+const fallbackBadgeAssets: Record<MattressVariant, string> = {
+  cloud: '/assets/lego/badges/puffy_cloud_badge_mask.png',
+  lux: '/assets/lego/badges/puffy_lux_badge_mask.png',
+  royal: '/textures/badge/06_beauty_render_4k.png',
+};
+
+const loadAssetAsDataUrl = async (assetPath: string): Promise<string> => {
+  const response = await fetch(assetPath);
+  if (!response.ok) {
+    throw new Error(`Failed to load fallback logo badge (${response.status}): ${assetPath}`);
+  }
+
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(new Error(`Failed to read fallback logo badge: ${assetPath}`));
+      }
+    };
+    reader.onerror = () => reject(reader.error ?? new Error(`Failed to read fallback logo badge: ${assetPath}`));
+    reader.readAsDataURL(blob);
+  });
+};
+
+const hasVisiblePixels = (dataUrl: string): Promise<boolean> =>
+  new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      if (!context) {
+        resolve(false);
+        return;
+      }
+
+      try {
+        context.drawImage(image, 0, 0);
+        const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        for (let alphaIndex = 3; alphaIndex < pixels.length; alphaIndex += 4) {
+          if (pixels[alphaIndex] > 0) {
+            resolve(true);
+            return;
+          }
+        }
+        resolve(false);
+      } catch (error) {
+        console.warn('Unable to inspect captured logo pass; using the mattress badge asset.', error);
+        resolve(false);
+      }
+    };
+    image.onerror = () => resolve(false);
+    image.src = dataUrl;
+  });
 
 export interface SceneCaptureDockProps {
   // Classic snapshot & video recording props
@@ -221,28 +282,109 @@ export function downloadDataUrl(dataUrl: string, filename: string): void {
  * Traverse a Three.js scene to locate the active Puffy brand badge mesh or group.
  */
 export function findLogoBadgeObject(scene: THREE.Scene): THREE.Object3D | null {
-  let fallback: THREE.Object3D | null = null;
-  let activeBadge: THREE.Object3D | null = null;
+  const candidates: Array<{
+    mesh: THREE.Mesh;
+    material: THREE.Material | null;
+    mapSrc: string;
+    score: number;
+    isVisible: boolean;
+  }> = [];
 
   scene.traverse((obj) => {
-    const name = (obj.name || '').toLowerCase();
-    const isBadgeMatch =
-      name.includes('puffy-embroidered-badge') ||
-      name.includes('mat_brand_badge') ||
-      name === 'logomesh' ||
-      name === 'logobadge' ||
-      name.includes('badge') ||
-      name.includes('logo');
+    const mesh = obj as THREE.Mesh;
+    if (!mesh.isMesh) return;
 
-    if (isBadgeMatch) {
-      if (!fallback) fallback = obj;
-      if (obj.visible && !activeBadge) {
-        activeBadge = obj;
+    const meshName = mesh.name.toLowerCase();
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    let bestMaterialMatch: {
+      material: THREE.Material | null;
+      mapSrc: string;
+      score: number;
+    } | null = null;
+
+    for (const material of materials) {
+      const materialName = material.name.toLowerCase();
+      const mappedMaterial = material as THREE.Material & { map?: THREE.Texture | null };
+      const texture = mappedMaterial.map;
+      const image = texture?.image as { currentSrc?: string; src?: string } | undefined;
+      const mapSrc = [
+        image?.currentSrc,
+        image?.src,
+        texture?.name,
+      ]
+        .filter((source): source is string => Boolean(source))
+        .join(' ')
+        .toLowerCase();
+      const materialHasBadgeSignal =
+        materialName.includes('badge') ||
+        materialName.includes('logo') ||
+        mapSrc.includes('badge') ||
+        mapSrc.includes('logo');
+
+      if (!materialHasBadgeSignal) continue;
+
+      const score =
+        (materialName.includes('mat_brand_badge') ? 12 : 0) +
+        (materialName.includes('badge') ? 8 : 0) +
+        (materialName.includes('logo') ? 6 : 0) +
+        (mapSrc.includes('badge') ? 8 : 0) +
+        (mapSrc.includes('logo') ? 6 : 0) +
+        (mapSrc.includes('01_basecolor') ? 2 : 0) +
+        (materialName.includes('lux') || mapSrc.includes('lux') ? 1 : 0);
+
+      if (!bestMaterialMatch || score > bestMaterialMatch.score) {
+        bestMaterialMatch = { material, mapSrc, score };
       }
     }
+
+    const meshHasBadgeSignal =
+      meshName.includes('puffy-embroidered-badge') ||
+      meshName.includes('mat_brand_badge') ||
+      meshName.includes('badge') ||
+      meshName.includes('logo');
+    if (!meshHasBadgeSignal && !bestMaterialMatch) return;
+
+    let isVisible = true;
+    let ancestor: THREE.Object3D | null = mesh;
+    while (ancestor && ancestor !== scene) {
+      isVisible &&= ancestor.visible;
+      ancestor = ancestor.parent;
+    }
+
+    const score =
+      (meshName.includes('puffy-embroidered-badge') ? 16 : 0) +
+      (meshName.includes('mat_brand_badge') ? 12 : 0) +
+      (meshName.includes('badge') ? 8 : 0) +
+      (meshName.includes('logo') ? 6 : 0) +
+      (bestMaterialMatch?.score ?? 0);
+    candidates.push({
+      mesh,
+      material: bestMaterialMatch?.material ?? null,
+      mapSrc: bestMaterialMatch?.mapSrc ?? '',
+      score,
+      isVisible,
+    });
   });
 
-  return activeBadge ?? fallback;
+  const bestCandidate = candidates.sort(
+    (candidate, selected) =>
+      Number(selected.isVisible) - Number(candidate.isVisible) ||
+      selected.score - candidate.score,
+  )[0];
+
+  if (bestCandidate) {
+    console.log(
+      '🎯 [Found Badge Mesh via Material]:',
+      bestCandidate.mesh.name,
+      'Material:',
+      bestCandidate.material?.name,
+      'Map:',
+      bestCandidate.mapSrc,
+    );
+    return bestCandidate.mesh;
+  }
+
+  return null;
 }
 
 // UI STYLES (Apple VisionOS / Cybernetic Minimalist Glassmorphism per ui-rules.md)
@@ -335,9 +477,64 @@ export function SceneCaptureDock({
   onDownloadSnapshot,
   onOpenInStudio,
   onDismissSnapshot,
+  renderer,
+  scene,
+  camera,
+  logoBadgeGroup,
+  resolution,
+  onStudioCapture,
+  onStudioCaptureStart,
+  onStudioCaptureComplete,
+  isStudioCapturing = false,
   className,
   style,
 }: SceneCaptureDockProps) {
+  const [isCapturingStudioPasses, setIsCapturingStudioPasses] = React.useState(false);
+  const hasTwoPassCaptureInputs = Boolean(renderer && scene && camera);
+  const isCaptureDisabled = isStudioCapturing || isCapturingStudioPasses;
+
+  const handleCameraClick = async () => {
+    if (onSnapshot) {
+      onSnapshot();
+      return;
+    }
+
+    if (!renderer || !scene || !camera || isCaptureDisabled) return;
+
+    setIsCapturingStudioPasses(true);
+    try {
+      onStudioCaptureStart?.();
+      const activeBadge = logoBadgeGroup ?? findLogoBadgeObject(scene);
+      const captureResolution = resolution ?? { width: 2048, height: 2048 };
+      const result = await executeTwoPassCapture(
+        renderer,
+        scene,
+        camera,
+        activeBadge,
+        captureResolution,
+      );
+      let passB = result.passB;
+      const passBIsTooSmall = !passB || new Blob([passB]).size < 1000;
+      if (passBIsTooSmall || !(await hasVisiblePixels(passB))) {
+        const mattressValue = useBedroomConfigStore.getState().activeMattress;
+        const activeMattress: MattressVariant =
+          mattressValue === 'lux' || mattressValue === 'royal' ? mattressValue : 'cloud';
+        passB = await loadAssetAsDataUrl(fallbackBadgeAssets[activeMattress]);
+      }
+
+      const timestamp = Date.now();
+      useShowroomViewStore.getState().setStudioPasses(result.passA, passB);
+      useShowroomViewStore.getState().setActiveView('banner-studio');
+      const captureResult = { passA: result.passA, passB, timestamp };
+      await onStudioCapture?.(captureResult);
+      onStudioCaptureComplete?.(captureResult);
+    } catch (error) {
+      console.error('Failed to capture the two-pass studio scene.', error);
+    } finally {
+      setIsCapturingStudioPasses(false);
+    }
+  };
+
   return (
     <div
       style={{ ...dockContainerStyle, ...style }}
@@ -437,19 +634,21 @@ export function SceneCaptureDock({
 
       {/* 3. Horizontal Capsule Dock Controls */}
       <div style={capsuleRowStyle}>
-        {onSnapshot && (
+        {(onSnapshot || hasTwoPassCaptureInputs) && (
           <button
             type="button"
             style={{
               ...circleBtnStyle,
               filter: 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.40))',
               color: '#38BDF8',
+              opacity: isCaptureDisabled ? 0.5 : 1,
             }}
-            title="Chụp ảnh khoảnh khắc (.webp)"
-            aria-label="Chụp ảnh khoảnh khắc (.webp)"
+            title={onSnapshot ? 'Chụp ảnh khoảnh khắc (.webp)' : 'Capture two-pass studio scene'}
+            aria-label={onSnapshot ? 'Chụp ảnh khoảnh khắc (.webp)' : 'Capture two-pass studio scene'}
+            disabled={isCaptureDisabled}
             onClick={(e) => {
               e.stopPropagation();
-              onSnapshot();
+              void handleCameraClick();
             }}
           >
             <PuffyCameraIcon className="w-5 h-5" active />
