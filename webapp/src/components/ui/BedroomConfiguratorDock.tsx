@@ -1,4 +1,4 @@
-import React, { useSyncExternalStore } from 'react';
+import React, { useEffect, useSyncExternalStore } from 'react';
 import {
   CURATED_BEDROOM_PAIRINGS,
   getBedroomConfigRegistryVersion,
@@ -12,6 +12,7 @@ import {
   useBedroomConfigStore,
   type PillowCountOption,
 } from '../../store/useBedroomConfigStore.ts';
+import { BedroomRoomSwitcher } from '../canvas/bedroom/components/BedroomRoomSwitcher.tsx';
 import './BedroomConfiguratorDock.css';
 
 export interface BedroomConfiguratorDockProps {
@@ -119,6 +120,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
   );
 
   const {
+    activeRoomId,
     activeMattress,
     activeBedFrame,
     activeItems,
@@ -133,11 +135,46 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
     setMattress,
   } = useBedroomConfigStore();
 
+  useEffect(() => {
+    if (activeRoomId === 'modern' && activeCategory !== 'bedding') {
+      setActiveCategory('bedding');
+    }
+  }, [activeRoomId, activeCategory, setActiveCategory]);
+
   const allItems = getConfigurableBedroomItems();
   const visibleCategories = CATEGORY_META.filter(
     (cat) => cat.alwaysShow || allItems.some((item) => item.dockCategory === cat.id),
   );
+  const beddingCategory = visibleCategories.find((cat) => cat.id === 'bedding');
+  const classicCategories = visibleCategories.filter((cat) => cat.id !== 'bedding');
   const categoryItems = getConfigurableBedroomItems(activeCategory);
+
+  const renderCategoryTab = (cat: (typeof CATEGORY_META)[number]) => {
+    const isActive = activeCategory === cat.id;
+    return (
+      <button
+        key={cat.id}
+        type="button"
+        role="tab"
+        aria-selected={isActive}
+        className="bedroom-config-tab"
+        data-active={isActive ? 'true' : 'false'}
+        onClick={() => {
+          if (isActive && !isDockExpanded) {
+            toggleDockExpanded();
+          } else {
+            setActiveCategory(cat.id);
+            if (!isDockExpanded) {
+              toggleDockExpanded();
+            }
+          }
+        }}
+      >
+        <CategoryIcon category={cat.id} />
+        <span>{cat.label}</span>
+      </button>
+    );
+  };
 
   const renderControl = (item: BedroomDockItemConfig) => {
     if (item.variantKey === 'pillowCount' && Array.isArray(item.options)) {
@@ -347,32 +384,15 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
       )}
 
       <div className="bedroom-config-pill-bar" role="tablist" aria-label="Bedroom Categories">
-        {visibleCategories.map((cat) => {
-          const isActive = activeCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              className="bedroom-config-tab"
-              data-active={isActive ? 'true' : 'false'}
-              onClick={() => {
-                if (isActive && !isDockExpanded) {
-                  toggleDockExpanded();
-                } else {
-                  setActiveCategory(cat.id);
-                  if (!isDockExpanded) {
-                    toggleDockExpanded();
-                  }
-                }
-              }}
-            >
-              <CategoryIcon category={cat.id} />
-              <span>{cat.label}</span>
-            </button>
-          );
-        })}
+        {beddingCategory && renderCategoryTab(beddingCategory)}
+
+        <BedroomRoomSwitcher />
+
+        {activeRoomId === 'classic' && (
+          <div className="flex items-center gap-2">
+            {classicCategories.map(renderCategoryTab)}
+          </div>
+        )}
 
         <button
           type="button"

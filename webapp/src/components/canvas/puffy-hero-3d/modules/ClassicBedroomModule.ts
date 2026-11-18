@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import gsap from 'gsap';
 import { BEDROOM_ROOMS, type BedroomRoomConfig } from '../../../../config/bedroomRooms.config.ts';
 import {
   BEDROOM_STYLE_PRESETS,
@@ -53,6 +55,111 @@ export function createClassicBedroomModule(
 
   const group = new THREE.Group();
   group.name = `BedroomModule_${config.id}`;
+
+  let disposed = false;
+  let bedsideTable: THREE.Group | null = null;
+  const bedsideTableMaterials: THREE.MeshStandardMaterial[] = [];
+  let currentStyle = initialStyle;
+
+  const applyBedsideTableStyle = (style: BedroomStyle, duration: number) => {
+    let woodColorHex = '#C2B29D';
+    if (style.includes('modern') || style === 'urban-loft') woodColorHex = '#2A2825';
+    if (style.includes('mid-century')) woodColorHex = '#4A3728';
+    const targetColor = new THREE.Color(woodColorHex);
+
+    bedsideTableMaterials.forEach((material) => {
+      gsap.to(material.color, {
+        r: targetColor.r,
+        g: targetColor.g,
+        b: targetColor.b,
+        duration,
+        ease: 'power2.out',
+      });
+    });
+  };
+
+  const disposeBedsideTableResources = (table: THREE.Group) => {
+    const disposedGeometries = new Set<THREE.BufferGeometry>();
+    const disposedMaterials = new Set<THREE.Material>();
+    const disposedTextures = new Set<THREE.Texture>();
+
+    table.traverse((child) => {
+      if (!(child as THREE.Mesh).isMesh) return;
+      const mesh = child as THREE.Mesh;
+      if (mesh.geometry && !disposedGeometries.has(mesh.geometry)) {
+        disposedGeometries.add(mesh.geometry);
+        mesh.geometry.dispose();
+      }
+
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      materials.forEach((material) => {
+        if (!material || disposedMaterials.has(material)) return;
+        disposedMaterials.add(material);
+        Object.values(material).forEach((value) => {
+          if (value instanceof THREE.Texture && !disposedTextures.has(value)) {
+            disposedTextures.add(value);
+            value.dispose();
+          }
+        });
+        material.dispose();
+      });
+    });
+  };
+
+  const tableUrl = '/assets/furniture/bedside_table%20(1)/scene.gltf';
+  new GLTFLoader().load(
+    tableUrl,
+    (gltf) => {
+      const table = gltf.scene;
+      if (disposed) {
+        disposeBedsideTableResources(table);
+        return;
+      }
+
+      const bbox = new THREE.Box3().setFromObject(table);
+      const size = bbox.getSize(new THREE.Vector3());
+      if (size.y > 0) {
+        const targetHeight = 1.25;
+        const scaleFactor = targetHeight / size.y;
+        table.scale.setScalar(scaleFactor);
+      }
+
+      bbox.setFromObject(table);
+      table.position.set(-1.95, -bbox.min.y, -1.70);
+      table.rotation.y = 0;
+
+      table.traverse((child) => {
+        if (!(child as THREE.Mesh).isMesh) return;
+        const mesh = child as THREE.Mesh;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        if (!mesh.material) return;
+
+        if (Array.isArray(mesh.material)) {
+          mesh.material = mesh.material.map((material) => material.clone());
+          bedsideTableMaterials.push(
+            ...mesh.material.filter(
+              (material): material is THREE.MeshStandardMaterial =>
+                material instanceof THREE.MeshStandardMaterial,
+            ),
+          );
+        } else {
+          mesh.material = mesh.material.clone();
+          if (mesh.material instanceof THREE.MeshStandardMaterial) {
+            bedsideTableMaterials.push(mesh.material);
+          }
+        }
+      });
+
+      bedsideTable = table;
+      group.add(table);
+      applyBedsideTableStyle(currentStyle, 0);
+    },
+    undefined,
+    (error) => {
+      console.error(`[ClassicBedroomModule] Failed to load bedside table "${tableUrl}":`, error);
+    },
+  );
 
   // 1. Hardwood Floor (y = 0, x = [-3.80, +3.60], slab depth 7.20m centered z = +1.30)
   const floor = createHardwoodFloor({ width: 7.40, length: 7.20 });
@@ -221,12 +328,14 @@ export function createClassicBedroomModule(
   group.add(courtyardZone);
 
   const setStyle = (style: BedroomStyle, duration = 0.5) => {
+    currentStyle = style;
     const preset = BEDROOM_STYLE_PRESETS[style] ?? BEDROOM_STYLE_PRESETS['nordic-coastal'];
     roomBoundary.applyStyle(preset, duration);
     floor.applyStyle(preset, duration);
     rug.applyStyle(preset, duration);
     updateWallArtTexture(style);
     bedsideBook.applyStyle(preset, duration);
+    applyBedsideTableStyle(style, duration);
   };
 
   const syncToggles = (activeItems: Record<string, boolean>) => {
@@ -238,6 +347,14 @@ export function createClassicBedroomModule(
   };
 
   const dispose = () => {
+    disposed = true;
+    if (bedsideTable) {
+      gsap.killTweensOf(bedsideTableMaterials.map((material) => material.color));
+      group.remove(bedsideTable);
+      disposeBedsideTableResources(bedsideTable);
+      bedsideTable = null;
+      bedsideTableMaterials.length = 0;
+    }
     disposeComponent('hardwood-floor');
     disposeComponent('plush-wool-rug');
     disposeComponent('room-boundary');

@@ -17,7 +17,7 @@ export const BEDROOM_ROOMS: Record<string, BedroomRoomConfig> = {
     label: 'Classic Sanctuary',
     type: 'procedural',
     mattressAnchor: {
-      position: [0, 0, -1.9],
+      position: [0, 0, -0.45], // Centered on jute rug, clear of back wall
     },
   },
   modern: {
