@@ -21,6 +21,9 @@ pipelines/banner_engine/out/
 /dist/
 *.tsbuildinfo
 
+assets_raw/
+*.zip
+
 # OS & Editor
 .DS_Store
 

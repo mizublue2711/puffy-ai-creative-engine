@@ -57,7 +57,6 @@ async function initMidCenturyVerticalWallSnapshot() {
   });
   sanctuary.dockMattress(mattressDockGroup);
   scene.add(sanctuary.group);
-  scene.add(mattressDockGroup);
 
   scene.updateMatrixWorld(true);
 

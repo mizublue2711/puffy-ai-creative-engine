@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "prepreview": "npm run build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:bedroom": "node scripts/verify-bedroom-gltf.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.1",

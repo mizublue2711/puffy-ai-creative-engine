@@ -8,6 +8,50 @@ import {resolvePuffyModelKey, type PuffyModelKey} from './puffyLayersData.ts';
 
 export {PUFFY_FLAGSHIP_PRESETS, type MattressModelConfig, type MattressModelId};
 
+export type MattressTier = 'cloud' | 'lux' | 'royal';
+export type TierChangeListener = (tier: MattressTier) => void;
+
+const tierChangeListeners = new Set<TierChangeListener>();
+
+export function addTierChangeListener(listener: TierChangeListener): () => void {
+  tierChangeListeners.add(listener);
+  return () => {
+    tierChangeListeners.delete(listener);
+  };
+}
+
+export function notifyTierChange(tier: MattressTier): void {
+  tierChangeListeners.forEach((fn) => {
+    try {
+      fn(tier);
+    } catch (e) {
+      console.warn('[MattressAnatomy] Error in tier change listener:', e);
+    }
+  });
+}
+
+/**
+ * Dynamic Surface Anchor: Computes top bounding coordinate of the mattress
+ * and snaps pillows and bed runner without hardcoded Y offsets.
+ */
+export function snapAccessoriesToSurface(
+  activeMattress: THREE.Object3D,
+  pillows?: THREE.Object3D | null,
+  runner?: THREE.Object3D | null,
+): number {
+  activeMattress.updateWorldMatrix(true, true);
+  const box = new THREE.Box3().setFromObject(activeMattress);
+  const topY = box.max.y;
+  if (pillows) {
+    pillows.position.y = topY;
+  }
+  if (runner) {
+    runner.position.y = topY + 0.002;
+  }
+  return topY;
+}
+
+
 export interface LoadedAssets {
   materials: {
     upperBand: THREE.MeshPhysicalMaterial;
@@ -122,6 +166,8 @@ export function updateModelAnatomy(
   heightRatio = 1.0,
 ): void {
   const resolvedKey = resolvePuffyModelKey(modelKey);
+  const tier: MattressTier = resolvedKey === 'cloud' ? 'cloud' : resolvedKey === 'lux' ? 'lux' : 'royal';
+  notifyTierChange(tier);
 
   // Keep Royal's 2K badge material bound strictly to Royal's albedo (dedicated materials handle Lux & Cloud)
   if (resolvedKey === 'royal') {

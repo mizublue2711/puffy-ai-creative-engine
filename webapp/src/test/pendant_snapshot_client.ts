@@ -65,7 +65,6 @@ async function initPendantSnapshot() {
   });
   sanctuary.dockMattress(mattressDockGroup);
   scene.add(sanctuary.group);
-  scene.add(mattressDockGroup);
 
   // Warm up and render frames for shader compilation and shadow maps
   for (let i = 0; i < 5; i++) {

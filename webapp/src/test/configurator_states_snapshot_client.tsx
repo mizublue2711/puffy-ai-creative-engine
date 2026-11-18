@@ -102,7 +102,6 @@ async function initConfiguratorTestHarness() {
   woolPad.setFloatingEnabled(false, 0.238);
   sanctuary.dockMattress(mattressDockGroup);
   scene.add(sanctuary.group);
-  scene.add(mattressDockGroup);
 
   const camera = new THREE.PerspectiveCamera(48, width / height, 0.05, 100);
   camera.position.set(1.65, 1.25, 1.55);

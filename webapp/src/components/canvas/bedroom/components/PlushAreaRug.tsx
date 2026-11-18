@@ -50,14 +50,16 @@ function loadJuteRugTextures(): {
 
 /**
  * LEGO Component 2A: Natural Jute & Chunky Wool Area Rug
- * Physical 10mm beveled slab: width 3.20m, depth 3.60m, thickness 0.010m.
+ * Physical 10mm beveled slab: width 4.0m, depth 3.6m, thickness 0.010m.
  * Positioned at [0, 0.005, 0.35] (bottom flush on floor y = 0, top at y = 0.010m).
  */
 export function createPlushAreaRug(options: PlushAreaRugOptions = {}): StyleableBedroomAsset {
-  const width = options.width ?? 3.20;
-  const length = options.length ?? 3.60;
+  const finalWidth = 4.0;
+  const finalLength = 3.6;
+  const width = finalWidth;
+  const length = finalLength;
   const thickness = options.thickness ?? 0.010;
-  const trimWidth = options.trimWidth ?? 0.08;
+  const trimWidth = 0.15;
   const centerZ = options.centerZ ?? 0.35;
 
   const group = new THREE.Group();

@@ -27,6 +27,10 @@ import {
   type BedroomSanctuaryInstance,
 } from '../bedroom/BedroomSanctuaryScene.tsx';
 import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
+import {
+  type BedroomRoomId,
+  DEFAULT_BEDROOM_ROOM_ID,
+} from '../../../config/bedroomRooms.config.ts';
 import { useBedroomConfigStore } from '../../../store/useBedroomConfigStore.ts';
 import { createDawnLensFlare, type DawnLensFlareRig } from './dawnLensFlare.ts';
 import { GroundMistLayer } from './GroundMistLayer.ts';
@@ -122,6 +126,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private bedroomGroup: THREE.Group | null = null;
   private bedroomSanctuary: BedroomSanctuaryInstance | null = null;
   private bedroomStyle: BedroomStyle = 'nordic-coastal';
+  private bedroomRoomId: BedroomRoomId = DEFAULT_BEDROOM_ROOM_ID;
   private meadowLights: THREE.Light[] = [];
   private sunLight: THREE.DirectionalLight | null = null;
   private dawnFlare: DawnLensFlareRig | null = null;
@@ -133,7 +138,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private cameraPosition = new THREE.Vector3().copy(CAMERA_PRESETS.hero45.position);
 
   private isLabPaused = false;
-  private readonly bedSurfaceHeight = 0.36;
+  private readonly bedSurfaceHeight = 0.478;
 
   private raycaster = new THREE.Raycaster();
   private pointerNdc = new THREE.Vector2();
@@ -456,10 +461,11 @@ export class WoolMeadowSceneModule implements ISceneModule {
         floatingWoolPad: this.floatingWoolPad,
         sheepFlock: this.sheepFlock,
         initialStyle: this.bedroomStyle,
+        roomId: this.bedroomRoomId,
         castShadow: !this.context.isSoftwareGl,
       });
-      // Align slat height (0.32m) with FloatingWoolPad docked bottom (0.36 - 0.238 = 0.122m)
-      this.bedroomSanctuary.group.position.set(0, -0.20, 0);
+      // Align bedroom room floor & carpet at world y = 0 with bed frame and docked mattress
+      this.bedroomSanctuary.group.position.set(0, 0, 0);
       // Respect current independent isExploded state
       this.bedroomSanctuary.setBedDecorVisible(!this.isExploded);
       // Sync pillows and throw blanket immediately to the active mattress height
@@ -477,9 +483,13 @@ export class WoolMeadowSceneModule implements ISceneModule {
       scene.background = new THREE.Color('#EFEAE1');
       scene.fog = new THREE.FogExp2('#EFEAE1', 0.012);
 
-      this.targetCameraPos.copy(BEDROOM_CAMERA_POSE.position);
-      this.targetLookAt.copy(BEDROOM_CAMERA_POSE.target);
-      this.cameraPosition.copy(BEDROOM_CAMERA_POSE.position);
+      // Frame camera around active room mattress anchor
+      const anchor = this.bedroomSanctuary.activeRoomConfig.mattressAnchor.position;
+      const targetPos = new THREE.Vector3(anchor[0] + 2.75, anchor[1] + 1.40, anchor[2] + 3.35);
+      const targetLook = new THREE.Vector3(anchor[0], anchor[1] + 0.36, anchor[2]);
+      this.targetCameraPos.copy(targetPos);
+      this.targetLookAt.copy(targetLook);
+      this.cameraPosition.copy(targetPos);
       this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
       this.isTransitioningCamera = true;
     } else if (mode === 'studio') {
@@ -573,6 +583,24 @@ export class WoolMeadowSceneModule implements ISceneModule {
     this.bedroomStyle = style;
     this.bedroomSanctuary?.setStyle(style, 0.5);
     useBedroomConfigStore.getState().setEnvironment(style as any);
+  }
+
+  public setBedroomRoom(roomId: BedroomRoomId): void {
+    this.bedroomRoomId = roomId;
+    useBedroomConfigStore.getState().setRoomId(roomId);
+    if (this.bedroomSanctuary) {
+      this.bedroomSanctuary.setRoomId(roomId);
+      const anchor = this.bedroomSanctuary.activeRoomConfig.mattressAnchor.position;
+      const targetPos = new THREE.Vector3(anchor[0] + 2.75, anchor[1] + 1.40, anchor[2] + 3.35);
+      const targetLook = new THREE.Vector3(anchor[0], anchor[1] + 0.36, anchor[2]);
+      this.targetCameraPos.copy(targetPos);
+      this.targetLookAt.copy(targetLook);
+      this.isTransitioningCamera = true;
+    }
+  }
+
+  public getBedroomRoomId(): BedroomRoomId {
+    return this.bedroomRoomId;
   }
 
   /**
@@ -998,6 +1026,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
         this.floatingWoolPad.setFloatingEnabled(true);
       }
     }
+    this.bedroomSanctuary?.snapAccessoriesToSurface();
     this.bedroomSanctuary?.syncMattressHeight(
       this.floatingWoolPad?.getHeightDeltaFromRoyal() ?? 0,
     );

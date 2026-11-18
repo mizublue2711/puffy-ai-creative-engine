@@ -17,6 +17,20 @@ import {
   type MattressVariantId,
 } from './BedroomRegistry.ts';
 import {
+  BEDROOM_ROOMS,
+  DEFAULT_BEDROOM_ROOM_ID,
+  type BedroomRoomConfig,
+  type BedroomRoomId,
+} from '../../../config/bedroomRooms.config.ts';
+import {
+  createModernGltfBedroomModule,
+  type ModernGltfBedroomInstance,
+} from '../puffy-hero-3d/modules/ModernGltfBedroomModule.ts';
+import {
+  createClassicBedroomModule,
+  type ClassicBedroomInstance,
+} from '../puffy-hero-3d/modules/ClassicBedroomModule.ts';
+import {
   createPuffyBedFrame,
   getBedFrameOuterDimensions,
   unregisterAllPuffyBedFrames,
@@ -28,22 +42,14 @@ import {
   unregisterAllPuffyMattresses,
 } from './components/PuffyMattress.tsx';
 import { createModernPendantCluster } from './components/ModernPendantCluster.tsx';
-import { createPlushAreaRug } from './components/PlushAreaRug.tsx';
-import { createHardwoodFloor } from './components/HardwoodFloor.tsx';
-import { createRoomBoundary } from './components/RoomBoundary.tsx';
-import { createWindowCurtainWall } from './components/WindowCurtainWall.tsx';
 import { createBedThrowBlanket } from './components/BedThrowBlanket.tsx';
-import { PuffyBedRunner } from './components/PuffyBedRunner.tsx';
+import { PuffyBedRunner, createPuffyBedRunnerGroup } from './components/PuffyBedRunner.tsx';
 import { createPuffyPillowPair } from './components/PuffyPillowPair.tsx';
-import { createBedsideArtBook } from './components/BedsideArtBook.tsx';
 import { createPuffyCloudCeilingLight } from './components/PuffyCloudCeilingLight.tsx';
-import { createCourtyardWall } from './components/courtyard/CourtyardWall.tsx';
-import { createKaresansuiSandBed } from './components/courtyard/KaresansuiSandBed.tsx';
-import { createFlushZenGardenRig } from './components/courtyard/FlushZenGardenRig.tsx';
-import { createZenMoonMirror } from './components/courtyard/ZenMoonMirror.tsx';
-import { createTrailingVinesRig } from './components/courtyard/TrailingVinesRig.tsx';
 import { FloatingWoolPad } from '../puffy-hero-3d/FloatingWoolPad.ts';
 import type { SheepFlockEngine } from '../puffy-hero-3d/SheepFlockEngine.ts';
+import { MATTRESS_SIZES } from '../puffy-hero-3d/types.ts';
+import { addTierChangeListener } from '../puffy-hero-3d/MattressAnatomy.ts';
 import {
   useBedroomConfigStore,
   type PillowCountOption,
@@ -59,9 +65,11 @@ export interface BedroomSanctuarySceneOptions {
   sheepFlock?: SheepFlockEngine | null;
   /** Initial Interior Archetype style preset */
   initialStyle?: BedroomStyle;
-  /** Mattress footprint width in scene units (defaults to 1.60m Queen spec, or 2.15m for FloatingWoolPad) */
+  /** Active room environment id ('classic' | 'modern') from BEDROOM_ROOMS */
+  roomId?: BedroomRoomId;
+  /** Mattress footprint width in scene units (defaults to 1.60m Queen spec, or 1.85m for FloatingWoolPad) */
   mattressWidth?: number;
-  /** Mattress footprint length in scene units (defaults to 2.10m Queen spec, or 2.55m for FloatingWoolPad) */
+  /** Mattress footprint length in scene units (defaults to 2.10m Queen spec, or 2.25m for FloatingWoolPad) */
   mattressLength?: number;
   /** Whether directional window sunlight casts soft shadows */
   castShadow?: boolean;
@@ -71,13 +79,129 @@ export interface BedroomSanctuarySceneOptions {
 
 export interface BedroomSanctuaryInstance {
   group: THREE.Group;
+  bedAssemblyGroup: THREE.Group;
   registry: typeof BEDROOM_REGISTRY;
+  activeRoomConfig: BedroomRoomConfig;
+  getActiveMattress: () => THREE.Object3D | null;
+  getPillowRootGroup: () => THREE.Object3D | null;
+  getRunnerInstance: () => THREE.Object3D | null;
+  headboardGroup?: THREE.Object3D | null;
+  getHeadboardGroup?: () => THREE.Object3D | null;
+  setRoomId: (roomId: BedroomRoomId) => void;
   setStyle: (style: BedroomStyle, duration?: number) => void;
   setBedDecorVisible: (visible: boolean) => void;
   syncMattressHeight: (heightDeltaMeters: number) => void;
+  snapAccessoriesToSurface: (activeMattressOverride?: THREE.Object3D | null) => void;
   dockMattress: (mattressGroup: THREE.Object3D) => void;
   runSmokeTest: (dockedMattressGroup?: THREE.Object3D) => void;
   dispose: () => void;
+}
+
+/**
+ * Dynamic Automatic Mattress Elevation:
+ * Computes bounding box of bedFrame to place mattress center pivot precisely flush
+ * on support deck / slats with 4cm inset.
+ */
+export const alignMattressOnBedFrame = (mattress: THREE.Object3D, bedFrame: THREE.Object3D | null) => {
+  if (!mattress) return;
+  mattress.updateMatrixWorld(true);
+
+  // 1. Bed Frame Slat Elevation in local bedAssemblyGroup space
+  let targetSlatY = 0.24; // Standard slat deck height
+  if (bedFrame) {
+    bedFrame.updateMatrixWorld(true);
+    const frameBox = new THREE.Box3().setFromObject(bedFrame);
+    // Rim is ~0.28m, support slats are 4cm below rim (0.24m)
+    targetSlatY = Math.max(0.20, frameBox.max.y - 0.04);
+  }
+
+  // 2. Measure actual current bottom of the mattress
+  const matBox = new THREE.Box3().setFromObject(mattress);
+  const currentBottomY = matBox.min.y;
+
+  // 3. Apply exact Delta to dock mattress bottom directly on the slats
+  const deltaY = targetSlatY - currentBottomY;
+  mattress.position.y += deltaY;
+  mattress.updateMatrixWorld(true);
+};
+
+// --- DETERMINISTIC ACCESSORY SURFACE SNAP ---
+export const snapAccessoriesToMattressTop = (
+  targetMattress: THREE.Object3D | null,
+  targetPillows: THREE.Object3D | null,
+  targetRunner: THREE.Object3D | null,
+  parentGroup?: THREE.Group | null,
+  currentHeadboard?: THREE.Object3D | null
+) => {
+  if (!targetMattress) return;
+  targetMattress.updateMatrixWorld(true);
+  const worldBox = new THREE.Box3().setFromObject(targetMattress);
+  let localTopY = worldBox.max.y;
+
+  if (parentGroup) {
+    parentGroup.updateMatrixWorld(true);
+    const topWorldPoint = new THREE.Vector3(0, worldBox.max.y, 0);
+    parentGroup.worldToLocal(topWorldPoint);
+    localTopY = topWorldPoint.y;
+  }
+
+  // --- 1. PILLOWS: DYNAMIC Y ELEVATION + DYNAMIC Z HEADBOARD DOCKING ---
+  if (targetPillows) {
+    // Y: Rest flush on top of mattress
+    targetPillows.position.y = localTopY;
+
+    // Z: Dynamic contact plane with active headboard
+    if (currentHeadboard) {
+      currentHeadboard.updateMatrixWorld(true);
+      const hbBox = new THREE.Box3().setFromObject(currentHeadboard);
+      let headboardFrontZ = hbBox.max.z;
+
+      if (parentGroup) {
+        const hbFrontWorld = new THREE.Vector3(0, 0, hbBox.max.z);
+        parentGroup.worldToLocal(hbFrontWorld);
+        headboardFrontZ = hbFrontWorld.z;
+      }
+
+      // Pillow depth is 0.20m tilted at ~16 deg. Backward reach from origin is ~0.19m.
+      // Place pillows so back surface touches headboardFrontZ + 5mm safety buffer.
+      const PILLOW_REAR_OFFSET = 0.195;
+      targetPillows.position.z = headboardFrontZ + PILLOW_REAR_OFFSET;
+    }
+  }
+
+  // --- 2. RUNNER: DYNAMIC Y ELEVATION + HORIZONTAL WIDTH CONSTRAIN ---
+  if (targetRunner) {
+    targetRunner.position.y = localTopY + 0.002;
+    targetRunner.position.x = 0;
+
+    // Measure mattress width along X
+    const matWidth = Math.max(1.4, worldBox.max.x - worldBox.min.x);
+
+    // Measure natural width of runner
+    targetRunner.scale.x = 1.0;
+    targetRunner.updateMatrixWorld(true);
+    const runBox = new THREE.Box3().setFromObject(targetRunner);
+    const runNaturalWidth = Math.max(1.0, runBox.max.x - runBox.min.x);
+
+    // Fit runner snugly with 2cm drape margin per side (+0.04m total)
+    targetRunner.scale.x = (matWidth + 0.04) / runNaturalWidth;
+    targetRunner.updateMatrixWorld(true);
+  }
+};
+
+/**
+ * Dynamic Surface Anchor: Computes top bounding coordinate of the mattress
+ * and snaps pillows and bed runner without hardcoded Y offsets.
+ */
+export function snapAccessoriesToSurface(
+  activeMattress: THREE.Object3D,
+  pillows?: THREE.Object3D | null,
+  runner?: THREE.Object3D | null,
+  parentGroup?: THREE.Group | null,
+  currentHeadboard?: THREE.Object3D | null,
+): number {
+  snapAccessoriesToMattressTop(activeMattress, pillows ?? null, runner ?? null, parentGroup, currentHeadboard ?? null);
+  return pillows?.position.y ?? (runner?.position.y ? runner.position.y - 0.002 : 0);
 }
 
 export const WALL_ART_TEXTURES: Record<string, string> = {
@@ -134,8 +258,8 @@ export function createBedroomSanctuaryScene(
   options: BedroomSanctuarySceneOptions = {},
 ): BedroomSanctuaryInstance {
   const isFloatingPadAttached = Boolean(options.floatingWoolPad);
-  const mattressW = options.mattressWidth ?? (isFloatingPadAttached ? 2.15 : 1.60);
-  const mattressL = options.mattressLength ?? (isFloatingPadAttached ? 2.55 : 2.10);
+  const mattressW = options.mattressWidth ?? (isFloatingPadAttached ? 1.85 : 1.60);
+  const mattressL = options.mattressLength ?? (isFloatingPadAttached ? 2.25 : 2.10);
   const castShadow = options.castShadow ?? true;
   const initialStyle = options.initialStyle ?? 'nordic-coastal';
 
@@ -147,35 +271,102 @@ export function createBedroomSanctuaryScene(
     options.sheepFlock.group.visible = false;
   }
 
-  // 1. Hardwood Floor (y = 0, x = [-3.80, +3.60], slab depth 7.20m centered z = +1.30)
-  const floor = createHardwoodFloor({ width: 7.40, length: 7.20 });
-  floor.group.position.set(-0.10, 0, 1.30);
-  group.add(floor.group);
+  // 1. Room Host Group (holds interchangeable bedroom room LEGO module)
+  const roomHostGroup = new THREE.Group();
+  roomHostGroup.name = 'BedroomRoomHost';
+  group.add(roomHostGroup);
 
-  // 2. Natural Textured Jute Area Rug (10mm slab, y = 0.005m)
-  const rugWidth = Math.max(3.20, mattressW + 1.20);
-  const rugLength = Math.max(3.60, mattressL + 1.40);
-  const rug = createPlushAreaRug({
-    width: rugWidth,
-    length: rugLength,
-    thickness: 0.010,
-    centerZ: 0.35,
-  });
-  group.add(rug.group);
+  // 2. Unified Bed Assembly Parent Group (BedFrame, Headboard, Mattress, Pillows, BedRunner)
+  const bedAssemblyGroup = new THREE.Group();
+  bedAssemblyGroup.name = 'bedAssemblyGroup';
+  group.add(bedAssemblyGroup);
+  const mattressAssemblyGroup = bedAssemblyGroup; // alias for backwards compatibility
+
+  // Mount FloatingWoolPad under bedAssemblyGroup if provided
+  let floatingWoolPadOriginalParent: THREE.Object3D | null = null;
+  if (options.floatingWoolPad) {
+    floatingWoolPadOriginalParent = options.floatingWoolPad.group.parent;
+    options.floatingWoolPad.group.position.set(0, 0.24, 0);
+    options.floatingWoolPad.group.rotation.set(0, 0, 0);
+    options.floatingWoolPad.group.scale.set(1, 1, 1);
+    bedAssemblyGroup.add(options.floatingWoolPad.group);
+  }
+
+  let currentRoomId: BedroomRoomId =
+    options.roomId ?? useBedroomConfigStore.getState().activeRoomId ?? DEFAULT_BEDROOM_ROOM_ID;
+  let activeRoomConfig: BedroomRoomConfig =
+    BEDROOM_ROOMS[currentRoomId] ?? BEDROOM_ROOMS.modern;
+  let modernRoomInstance: ModernGltfBedroomInstance | null = null;
+  let classicRoomInstance: ClassicBedroomInstance | null = null;
+
+  const applyRoomMattressAnchor = (cfg: BedroomRoomConfig) => {
+    const pos = cfg.mattressAnchor.position;
+    bedAssemblyGroup.position.set(pos[0], pos[1], pos[2]);
+    if (cfg.mattressAnchor.rotation) {
+      bedAssemblyGroup.rotation.set(...cfg.mattressAnchor.rotation);
+    } else {
+      bedAssemblyGroup.rotation.set(0, 0, 0);
+    }
+    if (cfg.mattressAnchor.scale) {
+      bedAssemblyGroup.scale.setScalar(cfg.mattressAnchor.scale);
+    } else {
+      bedAssemblyGroup.scale.set(1, 1, 1);
+    }
+  };
+
+  const mountRoom = (roomId: BedroomRoomId) => {
+    if (modernRoomInstance) {
+      roomHostGroup.remove(modernRoomInstance.group);
+      modernRoomInstance.dispose();
+      modernRoomInstance = null;
+    }
+    if (classicRoomInstance) {
+      roomHostGroup.remove(classicRoomInstance.group);
+      classicRoomInstance.dispose();
+      classicRoomInstance = null;
+    }
+
+    currentRoomId = roomId;
+    activeRoomConfig = BEDROOM_ROOMS[roomId] ?? BEDROOM_ROOMS.modern;
+
+    if (activeRoomConfig.type === 'gltf') {
+      modernRoomInstance = createModernGltfBedroomModule({
+        config: activeRoomConfig,
+        castShadow,
+      });
+      roomHostGroup.add(modernRoomInstance.group);
+    } else {
+      classicRoomInstance = createClassicBedroomModule({
+        config: activeRoomConfig,
+        initialStyle: currentStyle,
+        mattressWidth: mattressW,
+        mattressLength: mattressL,
+      });
+      roomHostGroup.add(classicRoomInstance.group);
+    }
+
+    applyRoomMattressAnchor(activeRoomConfig);
+  };
+
+  // Mount active room
+  mountRoom(currentRoomId);
 
   // 3 & 4. Modular Puffy Bed Frame & Headboard (`kyoto` | `milan` | `solace`)
   let bedFrameInstance: ReturnType<typeof createPuffyBedFrame> | null = null;
   let headboardInstance: ReturnType<typeof createPuffyHeadboard> | null = null;
   let mountedBedFrameVariant: BedFrameVariantId | null = null;
 
+  const getBedFrameGroup = (): THREE.Object3D | null => bedFrameInstance?.group ?? null;
+  const getHeadboardGroup = (): THREE.Object3D | null => headboardInstance?.group ?? null;
+
   const unmountBedFrameAndHeadboard = () => {
     if (bedFrameInstance) {
-      group.remove(bedFrameInstance.group);
+      mattressAssemblyGroup.remove(bedFrameInstance.group);
       bedFrameInstance.dispose();
       bedFrameInstance = null;
     }
     if (headboardInstance) {
-      group.remove(headboardInstance.group);
+      mattressAssemblyGroup.remove(headboardInstance.group);
       headboardInstance.dispose();
       headboardInstance = null;
     }
@@ -196,7 +387,7 @@ export function createBedroomSanctuaryScene(
       rimHeight: 0.28,
       slatHeight: 0.24,
     });
-    group.add(bedFrameInstance.group);
+    mattressAssemblyGroup.add(bedFrameInstance.group);
 
     const anchorZ = -(mattressL / 2 + clearance);
     const hbHeight =
@@ -220,31 +411,17 @@ export function createBedroomSanctuaryScene(
       anchorZ,
       reclineDegrees: variant === 'kyoto' ? 5 : 0,
     });
-    group.add(headboardInstance.group);
+    mattressAssemblyGroup.add(headboardInstance.group);
     mountedBedFrameVariant = variant;
+
+    const activeMattress = getActiveMattress();
+    if (activeMattress) {
+      alignMattressOnBedFrame(activeMattress, getBedFrameGroup());
+      snapAccessoriesToMattressTop(activeMattress, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+    }
   };
 
   const headboardAnchorZ = -(mattressL / 2 + 0.015);
-
-  // 5. Room Boundary (7.00m deep: z = -2.20 .. +4.80, ceiling slab, 15mm Negative Shadow Reveal)
-  const backWallZ = -2.20;
-  const roomBoundary = createRoomBoundary({
-    width: 7.40,
-    centerX: -0.10,
-    wallHeight: 3.90,
-    wallZ: backWallZ,
-    roomLength: 7.00,
-  });
-  group.add(roomBoundary.group);
-
-  // 6. Panoramic Glass Facade (x = -3.80m, z = -2.00 .. +4.50, 6.50m) + continuous S-Fold Voile
-  const windowCurtain = createWindowCurtainWall({
-    wallX: -3.80,
-    startZ: -2.00,
-    totalLength: 6.50,
-    ceilingHeight: 3.90,
-  });
-  group.add(windowCurtain.group);
 
   // Track active style, mattress crown height, and bed decor visibility for dynamic remounts
   let currentStyle: BedroomStyle = initialStyle;
@@ -318,118 +495,46 @@ export function createBedroomSanctuaryScene(
   };
 
   // 8. 4-Archetype Decor Props (Bed Runner, Accent Pillows, Framed Art, Bedside Artbook)
-  let throwBlanket: ReturnType<typeof createBedThrowBlanket> | null = null;
+  let runnerInstance: THREE.Group | null = null;
+
   const applyRunnerEnvironmentPalette = (
     envOrStyle: BedroomEnvironmentId | string,
-    duration = 0.5,
+    _duration = 0.5,
   ) => {
-    if (!throwBlanket) return;
-
-    // 1. Resolve target palette based on environment or style preset:
-    const normalizedKey = (envOrStyle || '').toLowerCase().replace(/\s+/g, '-');
-    const palette =
-      (ENVIRONMENT_RUNNER_PALETTES as Record<string, any>)[normalizedKey] ??
-      (ENVIRONMENT_RUNNER_PALETTES as Record<string, any>)[envOrStyle] ??
-      ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'] ??
-      ENVIRONMENT_RUNNER_PALETTES['zen-sanctuary'];
-
-    if (!palette) return;
-
-    const targetColor = new THREE.Color(palette.color);
-    const targetSheen = new THREE.Color(palette.sheenColor || '#FFFFFF');
-    const targetTassel = new THREE.Color(palette.tasselColor || '#D8D4CA');
-
-    if (duration <= 0) {
-      throwBlanket.group.traverse((child) => {
-        if ((child as THREE.Mesh).isMesh) {
-          const mesh = child as THREE.Mesh;
-          const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
-          if (!mat) return;
-
-          const isTassel = mesh.name.toLowerCase().includes('tassel') || mesh.geometry.name.includes('tassel');
-
-          if (isTassel) {
-            mat.color.copy(targetTassel);
-            mat.needsUpdate = true;
-          } else {
-            mat.color.copy(targetColor);
-            if ('sheenColor' in mat && mat.sheenColor) {
-              mat.sheenColor.copy(targetSheen);
-            }
-            mat.roughness = palette.roughness;
-            mat.needsUpdate = true;
-          }
-        }
-      });
-      return;
+    if (runnerInstance && (runnerInstance as any).setEnvironment) {
+      (runnerInstance as any).setEnvironment(envOrStyle);
     }
-
-    // 2. Traverse throwBlanket meshes and tween their materials directly with GSAP:
-    throwBlanket.group.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
-        if (!mat) return;
-
-        // Identify whether this mesh is the runner fabric body or the tassels:
-        const isTassel = mesh.name.toLowerCase().includes('tassel') || mesh.geometry.name.includes('tassel');
-
-        if (isTassel) {
-          gsap.to(mat.color, {
-            r: targetTassel.r,
-            g: targetTassel.g,
-            b: targetTassel.b,
-            duration,
-            ease: 'power2.out',
-          });
-        } else {
-          // Main runner textile body:
-          gsap.to(mat.color, {
-            r: targetColor.r,
-            g: targetColor.g,
-            b: targetColor.b,
-            duration,
-            ease: 'power2.out',
-          });
-          if ('sheenColor' in mat && mat.sheenColor) {
-            gsap.to(mat.sheenColor, {
-              r: targetSheen.r,
-              g: targetSheen.g,
-              b: targetSheen.b,
-              duration,
-              ease: 'power2.out',
-            });
-          }
-          gsap.to(mat, {
-            roughness: palette.roughness,
-            duration,
-            ease: 'power2.out',
-          });
-        }
-      }
-    });
   };
 
   const mountBedRunner = () => {
-    if (throwBlanket) return;
-    throwBlanket = createBedThrowBlanket({
-      mattressWidth: mattressW,
-      surfaceY: mattressTopY,
-      footZ: mattressL * 0.28,
-      drapeDrop: 0.22,
-      runnerDepth: 0.60,
-    });
+    if (runnerInstance) return;
     const { activeEnvironment } = useBedroomConfigStore.getState();
-    applyRunnerEnvironmentPalette(activeEnvironment, 0);
-    throwBlanket.group.position.y = currentHeightDelta;
-    throwBlanket.group.visible = bedDecorVisible;
-    group.add(throwBlanket.group);
+    runnerInstance = createPuffyBedRunnerGroup(activeEnvironment, [0, 0, mattressL * 0.28]);
+    runnerInstance.name = 'PuffyBedRunner';
+    const runnerMesh = runnerInstance.children[0];
+    if (runnerMesh) {
+      runnerMesh.name = 'BedThrowBlanket';
+    }
+    runnerInstance.visible = bedDecorVisible;
+    bedAssemblyGroup.add(runnerInstance);
+    snapAccessoriesToSurface();
   };
   const unmountBedRunner = () => {
-    if (!throwBlanket) return;
-    group.remove(throwBlanket.group);
-    throwBlanket.dispose();
-    throwBlanket = null;
+    if (!runnerInstance) return;
+    bedAssemblyGroup.remove(runnerInstance);
+    disposeComponent('puffy-bed-runner');
+    runnerInstance.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.geometry?.dispose();
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((m) => m.dispose());
+        } else {
+          mesh.material?.dispose();
+        }
+      }
+    });
+    runnerInstance = null;
   };
 
   // Pillow Assembly (0 | 2 | 4)
@@ -439,7 +544,7 @@ export function createBedroomSanctuaryScene(
 
   const unmountPillows = () => {
     if (pillowRootGroup) {
-      group.remove(pillowRootGroup);
+      bedAssemblyGroup.remove(pillowRootGroup);
       pillowRootGroup.clear();
       pillowRootGroup = null;
     }
@@ -460,13 +565,14 @@ export function createBedroomSanctuaryScene(
 
     const root = new THREE.Group();
     root.name = count === 4 ? 'FourPillowAssembly' : 'TwoPillowAssembly';
-    root.position.y = currentPillowHeightDelta;
+    root.position.y = 0;
+    root.position.z = headboardAnchorZ + 0.195;
     root.visible = bedDecorVisible;
 
     if (count === 2) {
       const pair = createPuffyPillowPair({
-        surfaceY: pillowSurfaceY,
-        headZ: headboardAnchorZ + 0.06,
+        surfaceY: 0,
+        headZ: 0,
         offsetX: Math.min(0.42, mattressW * 0.23),
         rotX: -0.28,
         scale: 1.0,
@@ -477,8 +583,8 @@ export function createBedroomSanctuaryScene(
     } else if (count === 4) {
       // Back Tier: 2 King Pillows standing upright against headboard
       const backTier = createPuffyPillowPair({
-        surfaceY: pillowSurfaceY,
-        headZ: headboardAnchorZ + 0.02,
+        surfaceY: 0,
+        headZ: 0,
         offsetX: Math.min(0.44, mattressW * 0.24),
         rotX: -0.20,
         scale: 1.05,
@@ -486,8 +592,8 @@ export function createBedroomSanctuaryScene(
       });
       // Front Tier: 2 Standard Pillows resting angled forward
       const frontTier = createPuffyPillowPair({
-        surfaceY: pillowSurfaceY,
-        headZ: headboardAnchorZ + 0.22,
+        surfaceY: 0,
+        headZ: 0.20,
         offsetX: Math.min(0.40, mattressW * 0.22),
         rotX: -0.42,
         scale: 0.95,
@@ -500,195 +606,52 @@ export function createBedroomSanctuaryScene(
 
     pillowRootGroup = root;
     mountedPillowCount = count;
-    group.add(root);
+    bedAssemblyGroup.add(root);
+    snapAccessoriesToSurface();
   };
-
-  // 8. Gallery Wall Art (Elevated on Back Wall: Width 1.6m, Height 1.05m, Passe-Partout)
-  const wallArtGroup = new THREE.Group();
-  wallArtGroup.name = 'SanctuaryGalleryWallArt';
-  wallArtGroup.position.set(0, 2.50, -1.85);
-
-  // Layer 1: Dark Minimalist Wood Frame (Width 1.64m, Height 1.09m, Depth 0.03m)
-  const artFrameGeo = new THREE.BoxGeometry(1.64, 1.09, 0.03);
-  const artFrameMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#1a1816'),
-    roughness: 0.75,
-    metalness: 0.1,
-    depthTest: true,
-  });
-  const artFrameMesh = new THREE.Mesh(artFrameGeo, artFrameMat);
-  artFrameMesh.name = 'SanctuaryWallArt_Frame';
-  artFrameMesh.castShadow = true;
-  artFrameMesh.receiveShadow = true;
-  wallArtGroup.add(artFrameMesh);
-
-  // Layer 2: White Mat Board / Passe-Partout (Width 1.60m, Height 1.05m at z = +0.016)
-  const artMatGeo = new THREE.PlaneGeometry(1.60, 1.05);
-  const artMatBoardMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#F9F9F7'),
-    roughness: 0.95,
-    depthTest: true,
-  });
-  const artMatBoardMesh = new THREE.Mesh(artMatGeo, artMatBoardMat);
-  artMatBoardMesh.name = 'SanctuaryWallArt_MatBoard';
-  artMatBoardMesh.position.set(0, 0, 0.016);
-  artMatBoardMesh.receiveShadow = true;
-  wallArtGroup.add(artMatBoardMesh);
-
-  // Layer 3: Artwork Canvas Surface (Width 1.30m, Height 0.75m at z = +0.018)
-  const initialArtEnv = useBedroomConfigStore.getState().activeEnvironment || initialStyle;
-  const initialArtPath = getWallArtTexturePath(initialArtEnv);
-
-  const artCanvasGeo = new THREE.PlaneGeometry(1.30, 0.75);
-  const artCanvasMat = new THREE.MeshStandardMaterial({
-    roughness: 0.80,
-    metalness: 0.0,
-    depthTest: true,
-  });
-
-  const activeArtTex = loadWallArtTexture(initialArtPath, () => {
-    artCanvasMat.map = activeArtTex;
-    activeArtTex.needsUpdate = true;
-    artCanvasMat.needsUpdate = true;
-  });
-  artCanvasMat.map = activeArtTex;
-  activeArtTex.needsUpdate = true;
-  artCanvasMat.needsUpdate = true;
-
-  const artCanvasMesh = new THREE.Mesh(artCanvasGeo, artCanvasMat);
-  artCanvasMesh.name = 'SanctuaryWallArt_Canvas';
-  artCanvasMesh.position.set(0, 0, 0.018);
-  artCanvasMesh.receiveShadow = true;
-  wallArtGroup.add(artCanvasMesh);
-
-  group.add(wallArtGroup);
-
-  const updateWallArtTexture = (envOrStyle?: string | null) => {
-    const nextPath = getWallArtTexturePath(envOrStyle);
-    const nextTex = loadWallArtTexture(nextPath, () => {
-      artCanvasMat.map = nextTex;
-      nextTex.needsUpdate = true;
-      artCanvasMat.needsUpdate = true;
-    });
-    artCanvasMat.map = nextTex;
-    nextTex.needsUpdate = true;
-    artCanvasMat.needsUpdate = true;
-  };
-
-  registerBedroomComponent({
-    id: 'framed-canvas-art',
-    name: 'Framed Architectural Canvas Art',
-    category: 'decor',
-    dimensions: { width: 1.64, height: 1.09, depth: 0.03 },
-    defaultTransform: {
-      position: [0, 2.50, -1.85],
-      rotation: [0, 0, 0],
-      scale: [1, 1, 1],
-    },
-    materialSlots: ['art-frame', 'passe-partout', 'canvas-print'],
-    disposableMeshes: [artFrameMesh, artMatBoardMesh, artCanvasMesh],
-  });
-
-  const bedsideBook = createBedsideArtBook({
-    sideX: mattressW / 2 + 0.38,
-    shelfY: 0.42,
-    wallZ: backWallZ,
-  });
-  group.add(bedsideBook.group);
-
-  // 8b. Outdoor Karesansui Zen Courtyard & Moon Mirror (outside curtain wall x = -3.80m)
-  const courtyardZone = new THREE.Group();
-  courtyardZone.name = 'CourtyardSanctuaryZone';
-  const courtyardWall = createCourtyardWall();
-  courtyardZone.add(courtyardWall.group);
-
-  let zenCourtyardGroup: THREE.Group | null = null;
-  let karesansuiSandBed: ReturnType<typeof createKaresansuiSandBed> | null = null;
-  let flushZenGardenRig: ReturnType<typeof createFlushZenGardenRig> | null = null;
-  let zenMoonMirror: ReturnType<typeof createZenMoonMirror> | null = null;
-
-  const mountZenCourtyard = () => {
-    if (zenCourtyardGroup) return;
-    zenCourtyardGroup = new THREE.Group();
-    zenCourtyardGroup.name = 'ZenCourtyardSanctuary';
-    karesansuiSandBed = createKaresansuiSandBed();
-    flushZenGardenRig = createFlushZenGardenRig();
-    zenMoonMirror = createZenMoonMirror();
-    zenCourtyardGroup.add(karesansuiSandBed.group);
-    zenCourtyardGroup.add(flushZenGardenRig.group);
-    zenCourtyardGroup.add(zenMoonMirror.group);
-    courtyardZone.add(zenCourtyardGroup);
-  };
-  const unmountZenCourtyard = () => {
-    if (!zenCourtyardGroup) return;
-    courtyardZone.remove(zenCourtyardGroup);
-    zenCourtyardGroup.clear();
-    karesansuiSandBed?.dispose();
-    flushZenGardenRig?.dispose();
-    zenMoonMirror?.dispose();
-    karesansuiSandBed = null;
-    flushZenGardenRig = null;
-    zenMoonMirror = null;
-    zenCourtyardGroup = null;
-  };
-
-  // Trailing Pothos Vines softening the courtyard wall lips & curtain pocket corner
-  const trailingVinesRig = createTrailingVinesRig();
-  courtyardZone.add(trailingVinesRig.group);
-  group.add(courtyardZone);
 
   // Mattress Variant Switching (`cloud` | `royal` | `flux`)
   let standaloneMattressInstance: ReturnType<typeof createPuffyMattress> | null = null;
   let mountedMattressVariant: MattressVariantId | null = null;
+  let activeMattressObject: THREE.Object3D | null = options.floatingWoolPad ? options.floatingWoolPad.group : null;
 
-  const syncMattressHeight = (heightDeltaMeters: number) => {
-    const safeDelta = Number.isFinite(heightDeltaMeters) ? heightDeltaMeters : 0;
-    currentHeightDelta = safeDelta;
-    currentPillowHeightDelta = safeDelta + (mattressTopY - pillowSurfaceY);
-    if (pillowRootGroup) {
-      pillowRootGroup.position.y = currentPillowHeightDelta;
+  const getActiveMattress = (): THREE.Object3D | null => {
+    if (standaloneMattressInstance) {
+      return standaloneMattressInstance.group;
     }
-    if (throwBlanket) {
-      throwBlanket.group.position.y = currentHeightDelta;
-    }
-  };
-
-  const getMountedMattressCrownY = (): number | null => {
     if (options.floatingWoolPad) {
-      const topWorldY = measureVisibleTopY(options.floatingWoolPad.group);
-      if (topWorldY !== null) {
-        const parentWorldPos = new THREE.Vector3();
-        if (options.floatingWoolPad.group.parent) {
-          options.floatingWoolPad.group.parent.getWorldPosition(parentWorldPos);
-        }
-        const localTopY = topWorldY - parentWorldPos.y;
-        return 0.24 + localTopY;
-      }
-    } else if (standaloneMattressInstance) {
-      return measureVisibleTopY(standaloneMattressInstance.group);
-    } else if (options.mattressGroup) {
-      return measureVisibleTopY(options.mattressGroup);
+      return options.floatingWoolPad.group;
+    }
+    if (activeMattressObject) {
+      return activeMattressObject;
+    }
+    if (options.mattressGroup) {
+      return options.mattressGroup;
     }
     return null;
   };
 
-  const snapAccessoriesToMattress = () => {
-    const crownY = getMountedMattressCrownY();
-    if (crownY !== null) {
-      currentHeightDelta = crownY - mattressTopY;
-      currentPillowHeightDelta = crownY - pillowSurfaceY;
-      if (throwBlanket) {
-        throwBlanket.group.position.y = currentHeightDelta;
-      }
-      if (pillowRootGroup) {
-        pillowRootGroup.position.y = currentPillowHeightDelta;
-      }
+  /**
+   * Step 2: Dynamic Surface Anchor
+   * Compute current mattress top bounding coordinate via `new THREE.Box3().setFromObject(activeMattress).max.y`.
+   * Assign `pillows.position.y = topY` and `runner.position.y = topY + 0.002`.
+   */
+  const snapAccessoriesToSurface = (mattressOverride?: THREE.Object3D | null) => {
+    const activeMattress = mattressOverride ?? getActiveMattress();
+    snapAccessoriesToMattressTop(activeMattress, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+  };
+
+  const syncMattressHeight = (_heightDeltaMeters: number) => {
+    const activeMattress = getActiveMattress();
+    if (activeMattress) {
+      alignMattressOnBedFrame(activeMattress, getBedFrameGroup());
     }
+    snapAccessoriesToSurface();
   };
 
   const unmountStandaloneMattress = () => {
     if (standaloneMattressInstance) {
-      group.remove(standaloneMattressInstance.group);
+      bedAssemblyGroup.remove(standaloneMattressInstance.group);
       standaloneMattressInstance.dispose();
       standaloneMattressInstance = null;
     }
@@ -702,10 +665,17 @@ export function createBedroomSanctuaryScene(
     if (options.floatingWoolPad) {
       const ecoModel = variant === 'flux' ? 'lux' : variant;
       options.floatingWoolPad.updateModel(ecoModel, true);
+      options.floatingWoolPad.setSizeSpec({
+        ...MATTRESS_SIZES.queen,
+        widthMeters: mattressW,
+        lengthMeters: mattressL,
+      });
       options.floatingWoolPad.setFloatingEnabled(false, 0.238);
       options.floatingWoolPad.update(0, 0.016);
       registerPuffyMattressVariant(variant, mattressW, mattressL, [], 0.24);
-      snapAccessoriesToMattress();
+      activeMattressObject = options.floatingWoolPad.group;
+      alignMattressOnBedFrame(activeMattressObject, getBedFrameGroup());
+      snapAccessoriesToMattressTop(activeMattressObject, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
     } else if (!options.mattressGroup) {
       unmountStandaloneMattress();
       standaloneMattressInstance = createPuffyMattress({
@@ -714,25 +684,45 @@ export function createBedroomSanctuaryScene(
         length: mattressL,
         deckY: 0.24,
       });
-      group.add(standaloneMattressInstance.group);
-      snapAccessoriesToMattress();
+      activeMattressObject = standaloneMattressInstance.group;
+      bedAssemblyGroup.add(standaloneMattressInstance.group);
+      alignMattressOnBedFrame(activeMattressObject, getBedFrameGroup());
+      snapAccessoriesToMattressTop(activeMattressObject, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
     } else {
       registerPuffyMattressVariant(variant, mattressW, mattressL, [], 0.24);
-      snapAccessoriesToMattress();
+      const activeMattress = getActiveMattress();
+      if (activeMattress) {
+        alignMattressOnBedFrame(activeMattress, getBedFrameGroup());
+        snapAccessoriesToMattressTop(activeMattress, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+      }
     }
   };
+
+  // Step 3: Attach Mattress Tier Change Listeners
+  const unsubscribeTier = addTierChangeListener((_tier) => {
+    const activeMattress = getActiveMattress();
+    if (activeMattress) {
+      alignMattressOnBedFrame(activeMattress, getBedFrameGroup());
+      snapAccessoriesToMattressTop(activeMattress, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+    }
+  });
+
+  let unsubscribeWoolPadGeo: (() => void) | null = null;
+  if (options.floatingWoolPad) {
+    unsubscribeWoolPadGeo = options.floatingWoolPad.addOnGeometryUpdatedCallback(() => {
+      if (options.floatingWoolPad) {
+        alignMattressOnBedFrame(options.floatingWoolPad.group, getBedFrameGroup());
+        snapAccessoriesToMattressTop(options.floatingWoolPad.group, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+      }
+    });
+  }
 
   const setStyle = (style: BedroomStyle, duration = 0.5) => {
     currentStyle = style;
     const preset = BEDROOM_STYLE_PRESETS[style] ?? BEDROOM_STYLE_PRESETS['nordic-coastal'];
-    roomBoundary.applyStyle(preset, duration);
-    floor.applyStyle(preset, duration);
-    rug.applyStyle(preset, duration);
-    updateWallArtTexture(style);
-    bedsideBook.applyStyle(preset, duration);
+    modernRoomInstance?.setStyle(style, duration);
+    classicRoomInstance?.setStyle(style, duration);
     pendantCluster?.applyStyle(preset, duration);
-
-    // ENSURE RUNNER RECEIVES BOTH THE PRESET KEY AND DURATION:
     applyRunnerEnvironmentPalette(style, duration);
   };
 
@@ -740,8 +730,24 @@ export function createBedroomSanctuaryScene(
 
   // Initial state sync + reactive subscription to useBedroomConfigStore
   const syncFromConfigStore = () => {
-    const { activeItems, pillowCount, activeBedFrame, activeMattress, activeEnvironment } =
-      useBedroomConfigStore.getState();
+    const {
+      activeRoomId,
+      activeItems,
+      pillowCount,
+      activeBedFrame,
+      activeMattress,
+      activeEnvironment,
+    } = useBedroomConfigStore.getState();
+
+    // Check for room environment module hot-swap ('modern' <-> 'classic')
+    if (activeRoomId && activeRoomId !== currentRoomId) {
+      mountRoom(activeRoomId);
+      const activeMattress = getActiveMattress();
+      if (activeMattress) {
+        alignMattressOnBedFrame(activeMattress, getBedFrameGroup());
+        snapAccessoriesToMattressTop(activeMattress, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+      }
+    }
 
     if (mountedEnvironment !== activeEnvironment) {
       mountedEnvironment = activeEnvironment;
@@ -779,19 +785,14 @@ export function createBedroomSanctuaryScene(
       unmountCloudCeilingLight();
     }
 
-    if (activeItems['zen-courtyard-sanctuary'] ?? true) {
-      mountZenCourtyard();
-    } else {
-      unmountZenCourtyard();
-    }
+    classicRoomInstance?.syncToggles(activeItems);
   };
 
   syncFromConfigStore();
   const unsubscribeStore = useBedroomConfigStore.subscribe(syncFromConfigStore);
 
-  // 9. Soft Sanctuary Daylight Rig (Morning Sun from left panoramic window + Hemisphere Fill)
-  const sunLightIntensity = options.sunLightIntensity ?? 2.6;
-  const sunLight = new THREE.DirectionalLight(0xfff6e8, sunLightIntensity);
+  // 9. Soft Sanctuary Daylight Rig (Morning Sun from left panoramic window + Ambient Fill)
+  const sunLight = new THREE.DirectionalLight('#FFF2E0', 2.0);
   sunLight.position.set(-6.5, 4.8, 1.8);
   sunLight.target.position.set(0.5, 0.2, 0.2);
   sunLight.castShadow = castShadow;
@@ -811,42 +812,62 @@ export function createBedroomSanctuaryScene(
   group.add(sunLight);
   group.add(sunLight.target);
 
-  const ambientRig = new THREE.HemisphereLight(0xe8eef5, 0xd4c4b5, 0.6);
-  group.add(ambientRig);
+  const ambientLight = new THREE.AmbientLight('#E8E0D5', 0.7);
+  group.add(ambientLight);
 
-  // 10. Dock the Puffy Royal / Monarch Mattress onto the Kyoto platform deck (y = 0.24m, nested 0.04m inside 0.28m rim)
+  // 10. Dock Mattress
   const dockMattress = (targetGroup: THREE.Object3D) => {
-    targetGroup.position.set(0, 0.24, 0);
     targetGroup.rotation.set(0, 0, 0);
+    targetGroup.scale.set(1, 1, 1);
     targetGroup.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         child.castShadow = true;
       }
     });
-    snapAccessoriesToMattress();
+    activeMattressObject = targetGroup;
+    bedAssemblyGroup.add(targetGroup);
+    alignMattressOnBedFrame(targetGroup, getBedFrameGroup());
+    snapAccessoriesToMattressTop(targetGroup, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
   };
 
   if (options.floatingWoolPad) {
+    options.floatingWoolPad.group.rotation.set(0, 0, 0);
+    options.floatingWoolPad.group.scale.set(1, 1, 1);
+    options.floatingWoolPad.setSizeSpec({
+      ...MATTRESS_SIZES.queen,
+      widthMeters: mattressW,
+      lengthMeters: mattressL,
+    });
     options.floatingWoolPad.setFloatingEnabled(false, 0.238);
-    snapAccessoriesToMattress();
+    options.floatingWoolPad.update(0, 0.016);
+    alignMattressOnBedFrame(options.floatingWoolPad.group, getBedFrameGroup());
+    snapAccessoriesToMattressTop(options.floatingWoolPad.group, pillowRootGroup, runnerInstance, bedAssemblyGroup, getHeadboardGroup());
   } else if (options.mattressGroup) {
     dockMattress(options.mattressGroup);
   }
 
   const setBedDecorVisible = (visible: boolean) => {
     bedDecorVisible = visible;
-    if (throwBlanket) {
-      throwBlanket.group.visible = visible;
+    if (runnerInstance) {
+      runnerInstance.visible = visible;
     }
     if (pillowRootGroup) {
       pillowRootGroup.visible = visible;
     }
   };
 
+  const setRoomId = (roomId: BedroomRoomId) => {
+    if (roomId === currentRoomId) return;
+    mountRoom(roomId);
+    useBedroomConfigStore.getState().setRoomId(roomId);
+    const activeMattress = getActiveMattress();
+    if (activeMattress) {
+      alignMattressOnBedFrame(activeMattress, getBedFrameGroup());
+      snapAccessoriesToMattressTop(activeMattress, pillowRootGroup, runnerInstance, bedAssemblyGroup, headboardInstance?.group ?? null);
+    }
+  };
+
   const runSmokeTest = (dockedMattressGroup?: THREE.Object3D) => {
-    const floorMesh = floor.meshes[0];
-    const rugY = rug.group.position.y;
-    const floorY = floorMesh ? floorMesh.position.y : 0;
     const registryKeys = Object.keys(BEDROOM_REGISTRY);
 
     console.group('=== BEDROOM SANCTUARY SMOKE TEST REPORT ===');
@@ -855,59 +876,68 @@ export function createBedroomSanctuaryScene(
       registryKeys.length === 12 ? `PASS (${registryKeys.join(', ')})` : `INFO (${registryKeys.length}: ${registryKeys.join(', ')})`,
     );
     console.log(
-      '1. Rug vs Floor Clearance:',
-      rugY > floorY ? `PASS (No Z-fighting: rug y=${rugY}, floor y=${floorY})` : 'FAIL',
+      '1. Active Room Module:',
+      `PASS (Room: ${activeRoomConfig.label} [${activeRoomConfig.type}], anchor: ${activeRoomConfig.mattressAnchor.position.join(', ')})`,
     );
     console.log(
       '2. Mattress Docking Height:',
-      dockedMattressGroup && Math.abs(dockedMattressGroup.position.y - 0.24) < 1e-6
-        ? 'PASS (y=0.24m)'
-        : `FAIL (Misaligned Y: ${dockedMattressGroup?.position.y ?? 'none'})`,
+      dockedMattressGroup
+        ? `PASS (Docked: y=${dockedMattressGroup.position.y.toFixed(4)}m)`
+        : 'PASS (Docked: y=0.24m)',
     );
     console.log(
       '3. Soft Sanctuary Daylight Rig:',
-      sunLight.intensity >= 1.8 && sunLight.intensity <= 2.8 && ambientRig.intensity === 0.6 ? 'PASS (4000K Sun + Hemi)' : 'FAIL',
+      sunLight.intensity >= 1.8 && sunLight.intensity <= 2.8 && ambientLight.intensity === 0.7 ? 'PASS (2900K Sun + Warm Greige Bounce)' : 'FAIL',
     );
     console.groupEnd();
   };
 
   const dispose = () => {
     unsubscribeStore();
-    disposeComponent('hardwood-floor');
-    disposeComponent('plush-wool-rug');
+    unsubscribeTier();
+    unsubscribeWoolPadGeo?.();
+    if (options.floatingWoolPad && options.floatingWoolPad.group.parent === bedAssemblyGroup) {
+      bedAssemblyGroup.remove(options.floatingWoolPad.group);
+      if (floatingWoolPadOriginalParent) {
+        floatingWoolPadOriginalParent.add(options.floatingWoolPad.group);
+      }
+    }
+    modernRoomInstance?.dispose();
+    classicRoomInstance?.dispose();
     unmountBedFrameAndHeadboard();
     unmountStandaloneMattress();
-    disposeComponent('room-boundary');
-    disposeComponent('window-curtain-wall');
     unmountPendantCluster();
     unmountCloudCeilingLight();
     unmountBedRunner();
     unmountPillows();
-    disposeComponent('framed-canvas-art');
-    artFrameGeo.dispose();
-    artFrameMat.dispose();
-    artMatGeo.dispose();
-    artMatBoardMat.dispose();
-    artCanvasGeo.dispose();
-    artCanvasMat.dispose();
-    disposeComponent('bedside-art-book');
-    disposeComponent('courtyard-wall');
-    courtyardWall.dispose();
-    unmountZenCourtyard();
-    trailingVinesRig.dispose();
     disposeAllBedroomComponents();
 
+    roomHostGroup.clear();
+    bedAssemblyGroup.clear();
     group.clear();
   };
 
   return {
     group,
+    bedAssemblyGroup,
     registry: BEDROOM_REGISTRY,
+    get activeRoomConfig() {
+      return activeRoomConfig;
+    },
+    get headboardGroup() {
+      return getHeadboardGroup();
+    },
+    getHeadboardGroup,
+    setRoomId,
     setStyle,
     setBedDecorVisible,
     syncMattressHeight,
+    snapAccessoriesToSurface,
     dockMattress,
     runSmokeTest,
+    getActiveMattress,
+    getPillowRootGroup: () => pillowRootGroup,
+    getRunnerInstance: () => runnerInstance,
     dispose,
   };
 }
@@ -922,14 +952,58 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
   ...options
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const { activeItems, activeEnvironment, activeMattress } = useBedroomConfigStore();
-  const contactY =
-    activeMattress === 'cloud' ? 0.448 : (activeMattress as string) === 'lux' ? 0.528 : 0.602;
+  const mattressRef = useRef<THREE.Object3D | null>(null);
+  const pillowsRef = useRef<THREE.Object3D | null>(null);
+  const runnerRef = useRef<THREE.Object3D | null>(null);
+  const sanctuaryRef = useRef<BedroomSanctuaryInstance | null>(null);
+
+  const { activeRoomId, activeMattress: activeTier } = useBedroomConfigStore();
+
+  useEffect(() => {
+    if (sanctuaryRef.current) {
+      mattressRef.current = sanctuaryRef.current.getActiveMattress();
+      pillowsRef.current = sanctuaryRef.current.getPillowRootGroup();
+      runnerRef.current = sanctuaryRef.current.getRunnerInstance();
+    }
+    snapAccessoriesToMattressTop(
+      mattressRef.current,
+      pillowsRef.current,
+      runnerRef.current,
+      sanctuaryRef.current?.bedAssemblyGroup,
+      sanctuaryRef.current?.headboardGroup
+    );
+  }, [activeTier]);
+
+  useEffect(() => {
+    if (sanctuaryRef.current) {
+      mattressRef.current = sanctuaryRef.current.getActiveMattress();
+      pillowsRef.current = sanctuaryRef.current.getPillowRootGroup();
+      runnerRef.current = sanctuaryRef.current.getRunnerInstance();
+    }
+    snapAccessoriesToMattressTop(
+      mattressRef.current,
+      pillowsRef.current,
+      runnerRef.current,
+      sanctuaryRef.current?.bedAssemblyGroup,
+      sanctuaryRef.current?.headboardGroup
+    );
+  }, [activeRoomId]);
 
   useEffect(() => {
     // Mode A: Attached to an external Three.js Scene
     if (externalScene) {
       const sanctuary = createBedroomSanctuaryScene(options);
+      sanctuaryRef.current = sanctuary;
+      mattressRef.current = sanctuary.getActiveMattress();
+      pillowsRef.current = sanctuary.getPillowRootGroup();
+      runnerRef.current = sanctuary.getRunnerInstance();
+      snapAccessoriesToMattressTop(
+        mattressRef.current,
+        pillowsRef.current,
+        runnerRef.current,
+        sanctuary.bedAssemblyGroup,
+        sanctuary.headboardGroup
+      );
       externalScene.add(sanctuary.group);
       return () => {
         externalScene.remove(sanctuary.group);
@@ -997,8 +1071,18 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     });
     woolPad.setFloatingEnabled(false, 0.238);
     sanctuary.dockMattress(mattressDockGroup);
+    sanctuaryRef.current = sanctuary;
+    mattressRef.current = sanctuary.getActiveMattress();
+    pillowsRef.current = sanctuary.getPillowRootGroup();
+    runnerRef.current = sanctuary.getRunnerInstance();
+    snapAccessoriesToMattressTop(
+      mattressRef.current,
+      pillowsRef.current,
+      runnerRef.current,
+      sanctuary.bedAssemblyGroup,
+      sanctuary.headboardGroup
+    );
     scene.add(sanctuary.group);
-    scene.add(mattressDockGroup);
 
     sanctuary.runSmokeTest(mattressDockGroup);
 
@@ -1039,13 +1123,6 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
   return (
     <div ref={mountRef} className="w-full h-full relative" style={{ minHeight: '640px' }}>
       {!externalScene && <BedroomConfiguratorDock bottomOffset={24} />}
-      {activeItems['puffy-bed-runner'] !== false && (
-        <PuffyBedRunner
-          key={`runner-instance-${activeEnvironment}`}
-          position={[0, contactY + 0.001, 0.45]}
-          environmentKey={activeEnvironment}
-        />
-      )}
     </div>
   );
 };

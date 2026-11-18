@@ -5,44 +5,40 @@ import {
   registerBedroomComponent,
   disposeComponent,
   type BedroomStylePreset,
+  BEDROOM_STYLE_PRESETS,
 } from '../BedroomRegistry.ts';
 import { useBedroomConfigStore } from '../../../../store/useBedroomConfigStore.ts';
 
 export const WALL_ENVIRONMENT_MATERIALS = {
-  // 1. Mid-Century Modern: Warm Sand Walnut / Muted Honey Teak
   'mid-century': {
-    color: '#8E7558',
-    roughness: 0.72,
-    metalness: 0.0,
-    revealGapColor: '#1A1816',
-  },
-
-  // 2. Zen Courtyard: Natural Light Ash / Bleached Bamboo Slat Plaster
-  'zen': {
-    color: '#D2CBBF',
+    color: '#6E5840',
     roughness: 0.88,
     metalness: 0.0,
-    revealGapColor: '#2B2824',
+    revealGapColor: '#151311',
+  },
+  'zen': {
+    color: '#BDB4A5',
+    roughness: 0.95,
+    metalness: 0.0,
+    revealGapColor: '#24211D',
   },
   'zen-sanctuary': {
-    color: '#D2CBBF',
-    roughness: 0.88,
+    color: '#BDB4A5',
+    roughness: 0.95,
     metalness: 0.0,
-    revealGapColor: '#2B2824',
+    revealGapColor: '#24211D',
   },
-
-  // 3. Modern Minimalist: Warm Mineral Greige Limewash Slat
   'modern': {
-    color: '#E4DFD6',
-    roughness: 0.92,
+    color: '#C8C2B7',
+    roughness: 0.96,
     metalness: 0.0,
-    revealGapColor: '#363430',
+    revealGapColor: '#2C2925',
   },
   'modern-sanctuary': {
-    color: '#E4DFD6',
-    roughness: 0.92,
+    color: '#C8C2B7',
+    roughness: 0.96,
     metalness: 0.0,
-    revealGapColor: '#363430',
+    revealGapColor: '#2C2925',
   },
 } as const;
 
@@ -302,7 +298,7 @@ export function createBedroomWalls(options: BedroomWallsOptions = {}): BedroomWa
   // CEILING SLAB: y = wallHeight, leaving pocket gap at left for curtain facade
   // =========================================================================
   const ceilingMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#EFEBE4'),
+    color: new THREE.Color('#D5D0C7'),
     roughness: 0.95,
     metalness: 0.0,
     side: THREE.FrontSide,
@@ -325,7 +321,7 @@ export function createBedroomWalls(options: BedroomWallsOptions = {}): BedroomWa
   // =========================================================================
   const slatGroup = new THREE.Group();
   slatGroup.name = 'ArchitecturalWallSlats';
-  slatGroup.visible = false;
+  slatGroup.visible = true;
   const slatGeo = new THREE.BoxGeometry(0.028, plasterWallHeight, 0.022);
   for (let i = 0; i < 10; i++) {
     const slat = new THREE.Mesh(slatGeo, accentSlatMat);
@@ -378,7 +374,7 @@ export function createBedroomWalls(options: BedroomWallsOptions = {}): BedroomWa
     const isMidCentury = resolvedKey === 'mid-century';
     rightWallMesh.material = isMidCentury ? warmPlasterMat : limewashPlasterMat;
     if (!isMidCentury) {
-      const rightWallColor = resolvedKey.includes('zen') ? '#DEDAD3' : '#E6E3DC';
+      const rightWallColor = resolvedKey.includes('zen') ? '#C2BCB1' : '#CCC6BC';
       if (duration > 0) {
         gsap.to(limewashPlasterMat.color, {
           r: new THREE.Color(rightWallColor).r,
@@ -401,20 +397,44 @@ export function createBedroomWalls(options: BedroomWallsOptions = {}): BedroomWa
       const preset = presetOrEnv as BedroomStylePreset;
       const sc = new THREE.Color(preset.wall.accentSlatColor);
       if (duration > 0) {
-        gsap.to(accentSlatMat.color, { r: sc.r, g: sc.g, b: sc.b, duration, ease: 'power2.out' });
+        gsap.to(accentSlatMat.color, {
+          r: sc.r,
+          g: sc.g,
+          b: sc.b,
+          duration: 0.8,
+          ease: 'power2.out',
+        });
         gsap.to(accentSlatMat, {
           metalness: preset.wall.accentSlatMetalness,
-          duration,
+          duration: 0.8,
           ease: 'power2.out',
         });
       } else {
         accentSlatMat.color.copy(sc);
         accentSlatMat.metalness = preset.wall.accentSlatMetalness;
       }
-      slatGroup.visible = Boolean(preset.wall.accentSlatVisible);
-    } else {
-      slatGroup.visible = resolvedKey === 'mid-century';
+    } else if (typeof presetOrEnv === 'string' && presetOrEnv in BEDROOM_STYLE_PRESETS) {
+      const preset = BEDROOM_STYLE_PRESETS[presetOrEnv as keyof typeof BEDROOM_STYLE_PRESETS];
+      const sc = new THREE.Color(preset.wall.accentSlatColor);
+      if (duration > 0) {
+        gsap.to(accentSlatMat.color, {
+          r: sc.r,
+          g: sc.g,
+          b: sc.b,
+          duration: 0.8,
+          ease: 'power2.out',
+        });
+        gsap.to(accentSlatMat, {
+          metalness: preset.wall.accentSlatMetalness,
+          duration: 0.8,
+          ease: 'power2.out',
+        });
+      } else {
+        accentSlatMat.color.copy(sc);
+        accentSlatMat.metalness = preset.wall.accentSlatMetalness;
+      }
     }
+    slatGroup.visible = true;
   };
 
   const setEnvironment = (env: WallEnvironmentKey | string, duration = 0.5) => {

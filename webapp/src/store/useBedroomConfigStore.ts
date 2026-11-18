@@ -4,6 +4,7 @@ import {
   type BedroomDockCategory,
   type BedroomEnvironmentId,
 } from '../components/canvas/bedroom/BedroomRegistry.ts';
+import type { BedroomRoomId } from '../config/bedroomRooms.config.ts';
 
 export type PillowCountOption = 0 | 2 | 4;
 export type MattressVariant = 'cloud' | 'lux' | 'royal';
@@ -11,6 +12,9 @@ export type BedFrameVariant = 'kyoto' | 'milan' | 'solace';
 export type CuratedSetPreset = 'zen-kyoto' | 'modern-milan' | 'warm-solace';
 
 export interface BedroomConfigState {
+  // Config-driven interchangeable room environment ('modern' | 'classic')
+  activeRoomId: BedroomRoomId;
+
   // Room Environment / Space Theme (drives walls, floor, rug, and bed runner palette)
   activeEnvironment: BedroomEnvironmentId;
 
@@ -25,6 +29,7 @@ export interface BedroomConfigState {
   isDockExpanded: boolean;
 
   // Actions
+  setRoomId: (roomId: BedroomRoomId) => void;
   setEnvironment: (env: BedroomEnvironmentId) => void;
   applyCuratedSet: (set: CuratedSetPreset) => void;
   setMattress: (m: MattressVariant) => void;
@@ -38,6 +43,7 @@ export interface BedroomConfigState {
 }
 
 export const useBedroomConfigStore = create<BedroomConfigState>((set) => ({
+  activeRoomId: 'modern',
   activeEnvironment: 'zen-sanctuary',
   activeMattress: 'cloud',
   activeBedFrame: 'kyoto',
@@ -52,6 +58,8 @@ export const useBedroomConfigStore = create<BedroomConfigState>((set) => ({
   pillowCount: 2,
   activeCategory: 'bedding',
   isDockExpanded: true,
+
+  setRoomId: (activeRoomId) => set({ activeRoomId }),
 
   setEnvironment: (activeEnvironment) => set({ activeEnvironment }),
 

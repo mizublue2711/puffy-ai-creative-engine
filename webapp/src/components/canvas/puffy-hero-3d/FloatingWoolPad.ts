@@ -104,6 +104,24 @@ export class FloatingWoolPad {
   private isMorphingModel = false;
   private pendingMorphStart = false;
   private isExplodedStackMode = false;
+  private onGeometryUpdatedCallbacks: Array<() => void> = [];
+
+  public addOnGeometryUpdatedCallback(cb: () => void): () => void {
+    this.onGeometryUpdatedCallbacks.push(cb);
+    return () => {
+      this.onGeometryUpdatedCallbacks = this.onGeometryUpdatedCallbacks.filter((c) => c !== cb);
+    };
+  }
+
+  private notifyGeometryUpdated(): void {
+    for (const cb of this.onGeometryUpdatedCallbacks) {
+      try {
+        cb();
+      } catch (e) {
+        console.warn('[FloatingWoolPad] Error in geometry update callback:', e);
+      }
+    }
+  }
 
   // 10-Layer Puffy Royal Interactive Stack (indexed 0..9 matching PUFFY_10_LAYERS)
   public readonly layerMeshes: THREE.Object3D[] = [];
@@ -212,10 +230,11 @@ export class FloatingWoolPad {
     const coreLength = refLength - wallThick * 2 - 0.024;
 
     // Invisible simplified collision box for fast raycasting
-    const hitGeo = new THREE.BoxGeometry(refWidth, 0.58, refLength);
+    const hitGeo = new THREE.BoxGeometry(refWidth, 0.471, refLength);
     const hitMat = new THREE.MeshBasicMaterial({visible: false});
     this.hitProxyMesh = new THREE.Mesh(hitGeo, hitMat);
     this.hitProxyMesh.name = 'WoolPadHitProxy';
+    this.hitProxyMesh.position.y = this.baseGripBottomY + 0.471 * 0.5;
     this.group.add(this.hitProxyMesh);
     this.disposables.push(hitGeo, hitMat);
 
@@ -560,6 +579,7 @@ export class FloatingWoolPad {
           this.layerMeshes[i].rotation.set(kin.currentRotX, 0, 0);
         }
       }
+      this.notifyGeometryUpdated();
     }
   }
 
@@ -601,12 +621,17 @@ export class FloatingWoolPad {
     }
 
     if (this.hitProxyMesh) {
-      const proxyScaleY = Math.max(
-        0.1,
-        (0.077 + this.baseSidewallHeight * clampedRatio) / 0.471,
-      );
-      this.hitProxyMesh.scale.y = proxyScaleY;
-      this.hitProxyMesh.position.y = this.baseGripBottomY + 0.471 * proxyScaleY * 0.5;
+      const targetSidewallH = this.baseSidewallHeight * clampedRatio;
+      const targetCasingTopY = this.baseSidewallBottomY + targetSidewallH;
+      const topY = targetCasingTopY + 0.045;
+      const botY = this.baseGripBottomY;
+      const totalH = Math.max(0.01, topY - botY);
+      if (this.hitProxyMesh.geometry) {
+        this.hitProxyMesh.geometry.dispose();
+      }
+      this.hitProxyMesh.geometry = new THREE.BoxGeometry(2.15, totalH, 2.55);
+      this.hitProxyMesh.scale.set(1, 1, 1);
+      this.hitProxyMesh.position.y = botY + totalH * 0.5;
     }
   }
 
@@ -1803,6 +1828,9 @@ export class FloatingWoolPad {
 
       if (t >= 1) {
         this.isMorphingModel = false;
+        this.notifyGeometryUpdated();
+      } else {
+        this.notifyGeometryUpdated();
       }
     }
 

@@ -57,7 +57,6 @@ async function initKaresansuiSnapshot() {
   });
   sanctuary.dockMattress(mattressDockGroup);
   scene.add(sanctuary.group);
-  scene.add(mattressDockGroup);
 
   // Camera 1: Inside bedroom looking through sheer curtain toward sand ripples & moon mirror
   const camBedroom = new THREE.PerspectiveCamera(48, width / height, 0.1, 100);

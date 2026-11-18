@@ -306,6 +306,28 @@ export const tasselFringeGeometry: THREE.BufferGeometry = createTasselFringeGeom
 export interface PuffyBedRunnerProps {
   environmentKey?: string;
   position?: [number, number, number];
+  activeMattress?: THREE.Object3D | null;
+}
+
+/**
+ * Dynamic Surface Anchor: Computes top bounding coordinate of the mattress
+ * and snaps pillows and bed runner without hardcoded Y offsets.
+ */
+export function snapAccessoriesToSurface(
+  activeMattress: THREE.Object3D,
+  pillows?: THREE.Object3D | null,
+  runner?: THREE.Object3D | null,
+): number {
+  activeMattress.updateWorldMatrix(true, true);
+  const box = new THREE.Box3().setFromObject(activeMattress);
+  const topY = box.max.y;
+  if (pillows) {
+    pillows.position.y = topY;
+  }
+  if (runner) {
+    runner.position.y = topY + 0.002;
+  }
+  return topY;
 }
 
 /**
@@ -315,12 +337,30 @@ export interface PuffyBedRunnerProps {
 export const PuffyBedRunner: React.FC<PuffyBedRunnerProps> = ({
   environmentKey = 'japandi-sanctuary',
   position = [0, 0, 0.45],
+  activeMattress,
 }) => {
   const normalizedKey = (environmentKey || '').toLowerCase().replace(/\s+/g, '-');
   const palette = ENVIRONMENT_RUNNER_PALETTES[normalizedKey] || ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'];
 
   const matRef = React.useRef<THREE.MeshPhysicalMaterial>(null);
   const tasselMatRef = React.useRef<THREE.MeshStandardMaterial>(null);
+
+  const dynamicY = React.useMemo(() => {
+    if (activeMattress) {
+      activeMattress.updateWorldMatrix(true, true);
+      const box = new THREE.Box3().setFromObject(activeMattress);
+      if (Number.isFinite(box.max.y)) {
+        return box.max.y + 0.002;
+      }
+    }
+    return position[1];
+  }, [activeMattress, position]);
+
+  const effectivePosition: [number, number, number] = [
+    position[0],
+    dynamicY,
+    position[2],
+  ];
 
   React.useEffect(() => {
     if (matRef.current) {
@@ -336,7 +376,7 @@ export const PuffyBedRunner: React.FC<PuffyBedRunnerProps> = ({
   }, [palette]);
 
   return (
-    <group name="PuffyBedRunner" position={position} visible={true}>
+    <group name="PuffyBedRunner" position={effectivePosition} visible={true}>
       <mesh geometry={runnerDrapedGeometry} castShadow receiveShadow>
         {/* Adding key={palette.color} forces Three.js / R3F to instantly update shader color without delay! */}
         <meshPhysicalMaterial
@@ -369,6 +409,7 @@ export const PuffyBedRunner: React.FC<PuffyBedRunnerProps> = ({
 export function createPuffyBedRunnerGroup(
   environmentKey = 'japandi-sanctuary',
   position: [number, number, number] = [0, 0, 0.45],
+  activeMattress?: THREE.Object3D | null,
 ): THREE.Group {
   const normalizedKey = (environmentKey || '').toLowerCase().replace(/\s+/g, '-');
   const palette =
@@ -377,6 +418,13 @@ export function createPuffyBedRunnerGroup(
   const group = new THREE.Group();
   group.name = 'PuffyBedRunner';
   group.position.set(...position);
+  if (activeMattress) {
+    activeMattress.updateWorldMatrix(true, true);
+    const box = new THREE.Box3().setFromObject(activeMattress);
+    if (Number.isFinite(box.max.y)) {
+      group.position.y = box.max.y + 0.002;
+    }
+  }
   group.visible = true;
 
   const runnerMat = new THREE.MeshPhysicalMaterial({
@@ -416,9 +464,17 @@ export function createPuffyBedRunnerGroup(
     const p = ENVIRONMENT_RUNNER_PALETTES[k] || ENVIRONMENT_RUNNER_PALETTES['japandi-sanctuary'];
     setPalette(p);
   };
+  const snapToSurface = (targetMattress: THREE.Object3D) => {
+    targetMattress.updateWorldMatrix(true, true);
+    const box = new THREE.Box3().setFromObject(targetMattress);
+    if (Number.isFinite(box.max.y)) {
+      group.position.y = box.max.y + 0.002;
+    }
+  };
   Object.assign(group, {
     setEnvironment,
     setPalette,
+    snapToSurface,
     runnerMesh,
     tasselMesh,
     runnerMat,

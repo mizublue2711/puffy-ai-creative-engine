@@ -79,7 +79,6 @@ async function initCeilingCloudSnapshot() {
   });
   sanctuary.dockMattress(mattressDockGroup);
   scene.add(sanctuary.group);
-  scene.add(mattressDockGroup);
 
   // Warm up and render frames for shader compilation and transmission pass
   for (let i = 0; i < 5; i++) {

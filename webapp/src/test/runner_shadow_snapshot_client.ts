@@ -57,7 +57,6 @@ async function initRunnerShadowSnapshots() {
   });
   sanctuary.dockMattress(mattressDockGroup);
   scene.add(sanctuary.group);
-  scene.add(mattressDockGroup);
 
   // Measure world bounds of throw blanket
   scene.updateMatrixWorld(true);
