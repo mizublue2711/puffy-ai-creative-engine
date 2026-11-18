@@ -113,7 +113,7 @@ function evaluateDrapeOverhang(
 function createKnottedTasselGeometry(): THREE.BufferGeometry {
   const parts: THREE.BufferGeometry[] = [];
 
-  // Hand-tied top knot ("đầu thắt nút")
+  // Hand-tied top knot
   const knot = new THREE.SphereGeometry(0.0068, 8, 6);
   knot.scale(1.0, 0.85, 1.0);
   knot.translate(0, -0.005, 0);

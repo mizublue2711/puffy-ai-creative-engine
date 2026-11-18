@@ -1,160 +1,187 @@
-# CENTRALIZED ASSET VAULT PIPELINE PROTOCOL (CAVP-v1.0)
-**Universal Component Casting & Multi-Target Asset Specification**  
-*Applicable Targets: Interactive WebGL (Three.js) & Automated 2D Graphics (Python/Pillow)*
+# CENTRALIZED ASSET VAULT PIPELINE PROTOCOL (CAVP-v2.0)
+**Universal Component Casting, Mesh Isolation & Multi-Target Asset Specification**  
+*Applicable Targets: Interactive WebGL (Three.js), Craft Studio Pass B, and Automated 2D Graphics*
 
 ---
 
-## 1. CORE OPERATING PRINCIPLES
+## 1. Executive Protocol Mandate & Scope
 
-1. **Vector As Immutable Truth (Source of Truth)**:
-   - The input vector file (`.svg`) is the absolute and immutable geometric definition of all logos, paths, and patterns.
-   - The Agent **MUST NEVER regenerate, redraw, or synthesize** paths or text from scratch.
-   - Vectors function strictly as **Alpha Masks / Stencils** for PBR height generation, embossing, and material routing.
+This protocol establishes the single, authoritative technical standard for authoring, registering, organizing, and consuming 3D and 2D brand assets across the repository. Every human engineer and AI worker (including autonomous agents, coding assistants, and sub-agents) must read and strictly adhere to this protocol before creating, exporting, editing, or referencing any logo, badge, textile material, or mattress component.
 
-2. **Preserve Native Aspect Ratio**:
-   - The component bounding box is strictly derived from the vector's `viewBox` (width:height ratio $W:H$).
-   - **FORBIDDEN**: Forcing rectangular vector components into a 1:1 square canvas, or mapping them onto cubic `BoxGeometry` meshes. Such distortion is a critical pipeline violation.
-
-3. **Neutral Master Asset (Dual-Consumption)**:
-   - Cast assets must be orthographic front-facing with clean, delit albedo (no baked shadows), allowing:
-     - **3D Engine (Three.js)**: Real-time dynamic lighting, specular sheen, and contact shadow calculation at 60 FPS.
-     - **2D Automation (Python)**: Artifact-free placement, arbitrary rotation, and dynamic contact shadow rendering on marketing banners.
-
-4. **RULE: STRICT PBR ALBEDO SAFETY RANGE (NO PURE #FFFFFF)**:
-   - Strictly ban pure `#FFFFFF` for any white fabric, quilt surface, or `baseColor` maps.
-   - The maximum allowable brightness for white fabric must be clamped to 80%–85% reflectance (Hex range: `#DCE4EC` to `#EDF2F7`).
-   - In Three.js materials, set `color: new THREE.Color('#E2E8F0')` and ensure `renderer.toneMapping = THREE.ACESFilmicToneMapping` with `toneMappingExposure = 1.0`.
+The protocol reconciles the demands of real-time WebGL rendering with high-resolution 2D marketing compositing by enforcing a dual-consumption pipeline. It guarantees zero visual distortion, deterministic file discovery, and instantaneous brand substitution without breaking runtime shader compilation.
 
 ---
 
-## 2. STANDARD OUTPUT ARTIFACT PACKAGE (6-FILE CONTRACT)
+## 2. Core Operating Principles
 
-Every component cast into `shared_assets/lego/components/<component_id>/` must output exactly these 6 standard files:
+### 2.1. Vector as Immutable Geometric Truth
+The input vector asset (`.svg`) serves as the immutable geometric definition of all brand typography, contours, and emblems.
+* Autonomous agents and workers are strictly prohibited from redrawing, synthesizing, or approximating paths or fonts.
+* Vector assets function strictly as alpha stencils and height drivers for procedural displacement, stitching generation, and material masking in MaterialCraft and TextureCraft.
 
-| File Name | Format | Color Space | Pipeline Consumer & Purpose |
+### 2.2. Enforceable 2:1 Aspect Ratio (Anti-Distortion Standard)
+Mattress badges and brand labels possess an inherent rectangular proportion.
+* All texture maps and render outputs for rectangular decals must strictly adhere to a **2:1 aspect ratio** (e.g., $2048 \times 1024$ or $4096 \times 2048$).
+* **Strict Prohibition**: Baking rectangular vector emblems into 1:1 square canvas textures (e.g., $2048 \times 2048$) is classified as a critical pipeline failure. Square textures force artists to artificially stretch UV coordinates in Three.js, causing isolated 2D extractions to appear squashed and disfigured.
+
+### 2.3. PBR Albedo Safety Clamp (No Pure White)
+Real-time physical lighting breaks when surface albedo reaches pure `#FFFFFF`.
+* For any white embroidery, satin thread, or mattress quilting, maximum reflectance must be clamped between 80% and 85% (hexadecimal range: `#DCE4EC` to `#EDF2F7`).
+* In Three.js material configurations, set `color: new THREE.Color('#E2E8F0')` and ensure `renderer.toneMapping = THREE.ACESFilmicToneMapping` with `toneMappingExposure = 1.0`.
+
+---
+
+## 3. Standard Output Artifact Package (6-File Contract)
+
+To balance WebGL runtime lightweight efficiency with high-fidelity embroidery details, every badge or component cast via MaterialCraft or TextureCraft must output exactly six standardized files within its designated package:
+
+| File Name | Format | Color Space | Pipeline Consumer & Operational Function |
 | :--- | :--- | :--- | :--- |
-| `01_baseColor.png` | PNG-32 (Alpha) | `sRGB` | Delit albedo surface color. Used in Three.js `material.map`. Strictly no baked shadows. |
-| `02_normal.png` | PNG-24/32 | `Linear / NoColorSpace` | OpenGL Tangent Space Normal (+Y up). Recreates puff bevels and thread/surface micro-relief. |
-| `03_roughness.png` | PNG-8/24 (Grayscale) | `Linear / NoColorSpace` | Roughness mask: Matte background substrate vs. lustrous satin thread/details. |
-| `04_height.png` | PNG-16/24 (Grayscale) | `Linear / NoColorSpace` | Displacement / Bump map: Micro-elevation and geometric relief data. |
-| `05_ambientOcclusion.png`| PNG-8/24 (Grayscale) | `Linear / NoColorSpace` | Contact ambient occlusion in stitch crevices and base contours. |
-| `06_beauty_render_4k.png` | PNG-32 (Alpha 100%) | `sRGB` | **2D Banner Exclusive**: 4K front orthographic studio render with lighting + clean alpha cutout. |
+| `01_baseColor.png` | PNG-32 (Alpha) | sRGB | Delit diffuse albedo. Mapped to Three.js `material.map`. Strictly zero baked cast shadows. |
+| `02_normal.png` | PNG-24/32 | Linear | OpenGL Tangent Space Normal (+Y up). Recreates embossed bevels, micro-stitching, and textile relief. |
+| `03_roughness.png` | PNG-8/24 (Grayscale) | Linear | Roughness distribution: Matte fabric base substrate versus lustrous satin sheen threads. |
+| `04_height.png` | PNG-16/24 (Grayscale) | Linear | Micro-elevation height displacement map for procedural embossing depth. |
+| `05_ambientOcclusion.png` | PNG-8/24 (Grayscale) | Linear | Contact ambient occlusion in embroidery crevices and stitch perimeters. |
+| `06_beauty_render_4k.png` | PNG-32 (100% Alpha) | sRGB | **2D Banner & Slot Fallback**: 4K front orthographic master render with clean alpha transparency cutout. |
 
 ---
 
-## 3. AGENT WORKFLOW VIA ARTCRAFT MCP / CLI
+## 4. Centralized Directory Architecture & Mirror Protocol
 
-[Master Vector .SVG] │ ├─────────────────────────────────────────┐ ▼ ▼ [Phase 1: Mask Isolation] [Phase 2: Substrate & Thread Shader] Extract Grayscale Alpha Masks at W:H Build PBR material (.mcmat) via MaterialCraft │ │ └────────────────────┬────────────────────┘ ▼ [Phase 3: GPU Baking & Embossing] Apply displacement & bake maps via TextureCraft │ ┌────────────────────┴────────────────────┐ ▼ ▼ [Target A: 3D Runtime Integration] [Target B: 2D Graphic Automation]
-Geometry: PlaneGeometry (W:H thin) - Read 06_beauty_render_4k.png
-Material: MeshPhysicalMaterial - Pillow Lanczos resize + Soft Shadow
+Historical asset fragmentation—where files were scattered across ad-hoc directories—is permanently deprecated. The repository operates under a strict two-tier directory model: Master Vault vs. Webapp Public Mirror.
 
-### Execution Details:
-* **Phase 1 (Mask Preparation)**: Read `viewBox` dimensions and export masks matching native aspect ratio (e.g. 2:1 ratio $\rightarrow$ `2048 x 1024` or `4096 x 2048`).
-* **Phase 2 (MaterialCraft Graph)**: Build procedural substrate (woven fabric, leather, or synthetic base) and detail material (satin threads with anisotropic sheen). Export as `.mcmat`.
-* **Phase 3 (TextureCraft Bake & Render)**: Apply `.mcmat` through extracted masks. Apply bevel/height displacement. Bake GPU maps (`normal`, `ambientOcclusion`). Execute `render` command to produce `06_beauty_render_4k.png` with clean transparency.
-
----
-
-## 4. CLIENT INTEGRATION SPECIFICATIONS
-
-### 4.1. Three.js WebGL Runtime
-1. **Geometry**:
-   - Use `THREE.PlaneGeometry(width, height, segments, segments)` or `THREE.DecalGeometry`.
-   - Maintain physical real-world metric dimensions (e.g., `0.12m x 0.06m` for 12cm x 6cm tags).
-   - **Do not use thick `BoxGeometry`** for flat surface tags/decals.
-2. **Material Configuration**:
-   ```typescript
-   const material = new THREE.MeshPhysicalMaterial({
-     map: baseColorMap,              // colorSpace: THREE.SRGBColorSpace
-     normalMap: normalMap,          // colorSpace: THREE.NoColorSpace
-     normalScale: new THREE.Vector2(1.2, 1.2),
-     roughnessMap: roughnessMap,    // colorSpace: THREE.NoColorSpace
-     aoMap: aoMap,                  // colorSpace: THREE.NoColorSpace
-     aoMapIntensity: 1.0,
-     sheen: 1.0,                    // Microfiber / thread scattering
-     sheenRoughness: 0.4,
-     sheenColor: new THREE.Color(0xffffff),
-     polygonOffset: true,           // Prevents Z-fighting on mattress surfaces
-     polygonOffsetFactor: -1.0,
-     transparent: true
-   });
-4.2. Python 2D Banner Automation Pipeline
-Ingest only 06_beauty_render_4k.png.
-Downscale using Image.Resampling.LANCZOS for maximum clarity without aliasing.
-Generate dynamic contact drop shadow from the alpha mask using ImageFilter.GaussianBlur.
-
-5. QUALITY GATES & ACCEPTANCE CRITERIA
-Before registering any component into shared_assets/lego/REGISTRY.json, verify:
-[ ] Aspect Ratio: Output image dimensions strictly match vector viewBox ratio within 0.5%.
-[ ] Albedo Neutrality: 01_baseColor.png contains zero baked hard shadows or non-ambient lighting gradients.
-[ ] Alpha Integrity: 06_beauty_render_4k.png has a fully transparent background outside component boundaries.
-[ ] Registry Entry: Component ID, source SVG path, physical scale (meters), and artifact paths are committed to REGISTRY.json.
-
----
-
-## ADDENDUM: TEXTURE BUDGET QUOTA & SEAMLESS TILING PROTOCOL (CAVP-ADDENDUM-v1.1)
-
-### 1. The Core Principle: "Bake Atomic Tile — Multiply at Runtime"
-To prevent repository bloat, eliminate Git LFS threshold warnings (< 50 MB), and avoid GPU VRAM exhaustion on client browsers, **no asset shall ever be baked as a monolithic, full-scale continuous canvas** (e.g., entire mattress walls, full floors, or room-spanning wall plaster).
-All repeating patterns, textile weaves, quilting, and wood grains must be authored as **compact, seamless tiling unit cells** in MaterialCraft / TextureCraft and tiled dynamically in Three.js via `THREE.RepeatWrapping`.
-
-### 2. Standardized Aspect Ratios & Quota Limits by Component Class
-| Component Class | Target Ratio | Master Resolution | Max Disk Size (.mcmat) | Max Packed Maps (WebP/KTX2) | Mandatory Registry Metadata |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Class A: Micro-Weave & Tiling Fill** | **1:1 (Square)** | `512 x 512` or `1024 x 1024` | `< 2.5 MB` | `< 500 KB / map` | `physical_unit_meters: [w, h]` |
-| **Class B: Longitudinal Bands & Borders**| **4:1 or 2:1 (Strip)** | `2048 x 512` or `2048 x 1024` | `< 6.0 MB` | `< 1.0 MB / map` | `physical_unit_meters: [w, h]` |
-| **Class C: Decal Badges & Brand Patches** | **2:1 (Bounded)** | `2048 x 1024` (Non-repeating) | `< 8.0 MB` | `< 1.5 MB / map` | `anchor_point`, `decal_scale` |
-| **Class D: Straps & Vertical Handles** | **1:4 (Vertical)** | `512 x 2048` | `< 4.0 MB` | `< 800 KB / map` | `physical_unit_meters: [w, h]` |
-
-> **Strict Quota Gate:** Any single `.mcmat` file exceeding **10.0 MB** or individual texture map exceeding **2.0 MB** will be rejected automatically by CI/CD pre-commit hooks.
-
-### 3. Dynamic Runtime Metric Calculation (Prevent Squashing)
-Do not hardcode arbitrary integers into `repeat.set()`. Always compute texture repeat factors dynamically from physical metric dimensions:
-```typescript
-// Metric Calculation Standard:
-const repeatX = meshPhysicalWidth / componentMetadata.physical_unit_meters[0];
-const repeatY = meshPhysicalHeight / componentMetadata.physical_unit_meters[1];
-
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = componentMetadata.is_strip ? THREE.ClampToEdgeWrapping : THREE.RepeatWrapping;
-texture.repeat.set(repeatX, repeatY);
+### 4.1. Master Vault (Source of Truth)
+All source vectors, procedural `.mcmat` files, and raw 4K PBR texture stacks reside permanently in:
+```
+shared_assets/lego/components/<component_id>/
+├── source.svg
+├── material.mcmat
+├── 01_baseColor.png
+├── 02_normal.png
+├── 03_roughness.png
+├── 04_height.png
+├── 05_ambientOcclusion.png
+└── 06_beauty_render_4k.png
 ```
 
-### 4. Immediate Remediation & Pre-Bake Safety Gate
-- **Pre-Bake Sanity Check**: If a target surface exceeds `1.0m x 1.0m` in 3D space, it is strictly illegal to bake as one canvas. It must be decomposed into a Class A or Class B modular tile.
-- **Purge Monolithic Commits**: Any uncompressed `.mcmat` or texture exceeding 50 MB must be stripped from Git history using `git rm --cached` before rebaking.
-
-- 
-# 🚨 5 CRITICAL DIRECTIVE: PRODUCTION MATTRESS PROTOTYPE LOCKDOWN
-
-## A. STATUS: LOCKED & IMMUTABLE (PRODUCTION-FROZEN)
-The core mattress prototypes registered in `shared_assets/lego/REGISTRY.json` are **officially completed, approved, and frozen**:
-- **`Cloud`** (Puffy Cloud Mattress)
-- **`Lux`** (Puffy Lux Hybrid)
-- **`Royal`** (Puffy Royal Hybrid)
-
-Their visual aesthetics, 3D meshes/geometry, PBR texture maps (Albedo, Normal, Roughness, Height, AO), shader parameters, physical dimensions, anchor points, and internal 10-layer anatomy structures are strictly **PRODUCTION-READY**.
+### 4.2. Webapp Public Mirror & Plug-and-Play Brand Slots
+Web browsers cannot access files outside `webapp/public/`. Assets required by the runtime application must be mirrored into deterministic public slots:
+* **Active Brand Decals**: `webapp/public/assets/branding/`
+  * `badge_cloud.png`
+  * `badge_lux.png`
+  * `badge_royal.png`
+* **WebGL PBR Textures**: `webapp/public/textures/badge/` (Stores the active 5-layer PBR maps for real-time Three.js rendering).
 
 ---
 
-## B. STRICT PROHIBITIONS FOR ALL AGENTS & WORKERS
-Unless explicitly instructed by the User with an authorized bypass, **ALL AGENTS MUST ADHERE TO THE FOLLOWING ZERO-TOLERANCE RULES**:
+## 5. Three.js Runtime Integration & Mesh Isolation Protocol
 
-1. **DO NOT MODIFY GEOMETRY OR MESHES**: Never alter, optimize, decimate, subdivide, or deform the 3D meshes of `Cloud`, `Lux`, or `Royal`.
-2. **DO NOT MODIFY MATERIALS OR SHADERS**: Never change color palettes, hex codes, PBR texture bindings, roughness/metalness values, or custom shader code associated with these three models.
-3. **DO NOT OVERWRITE OR RENAME ASSETS**: Never touch, delete, rename, or overwrite files in `shared_assets/lego/components/` or textures assigned to these models.
-4. **DO NOT ALTER REGISTRY BINDINGS**: Never modify the coordinate anchors, UV placements, scale factors, or SKU identifiers defined in `shared_assets/lego/REGISTRY.json`.
-5. **NO UNINTENDED SIDE EFFECTS**: When implementing room environments (e.g., Bedroom, Meadow), camera animations, lighting rigs, or UI controls, you must treat the mattress models as **READ-ONLY BLACK BOXES**.
+To resolve the root cause of 3D capture failures (where Pass B returned empty images because the badge was baked into the mattress skin), the brand badge must exist as an independent, identifiable mesh element.
+
+### 5.1. Geometric Construction & Precise Placement
+1. **Geometry**: Use `THREE.PlaneGeometry(0.12, 0.06)` adhering to the physical metric dimensions ($12\text{ cm} \times 6\text{ cm}$) and the exact 2:1 ratio.
+2. **Deterministic Mesh Naming**: The mesh must be assigned an immutable name:
+   ```typescript
+   badgeMesh.name = 'BrandBadgePlane';
+   ```
+3. **Offsetting**: Position the badge plane with an elevation delta of $+0.001\text{ m}$ ($1\text{ mm}$) along the outward normal of the mattress border. Enable `polygonOffset: true` and `polygonOffsetFactor: -1.0` in the material to eliminate Z-fighting.
+
+### 5.2. Material Configuration
+```typescript
+const badgeMaterial = new THREE.MeshPhysicalMaterial({
+  map: baseColorTexture,          // THREE.SRGBColorSpace
+  normalMap: normalTexture,       // THREE.NoColorSpace
+  normalScale: new THREE.Vector2(1.2, 1.2),
+  roughnessMap: roughnessTexture, // THREE.NoColorSpace
+  aoMap: aoTexture,               // THREE.NoColorSpace
+  aoMapIntensity: 1.0,
+  sheen: 1.0,                     // Microfiber thread scattering
+  sheenRoughness: 0.4,
+  sheenColor: new THREE.Color(0xffffff),
+  transparent: true,
+  polygonOffset: true,
+  polygonOffsetFactor: -1.0
+});
+```
+
+### 5.3. Synchronous Two-Pass Studio Capture Dock
+When the user captures a perspective camera angle from the 3D bedroom:
+1. **Pass A (Full Environment)**: Render the entire scene (room, lighting, mattress, linens).
+2. **Pass B (Isolated 3D Badge Perspective)**:
+   * Temporarily hide all scene meshes except `BrandBadgePlane` and its parent transformation nodes.
+   * Retain active scene directional lights to maintain photorealistic specular reflection on the embroidery.
+   * Set `renderer.setClearColor(0x000000, 0)` for complete alpha channel transparency.
+   * Render with the active perspective camera: the resulting image captures the badge with authentic perspective foreshortening and orientation.
+   * Restore all scene object visibilities immediately following capture.
 
 ---
 
-## C. MANDATORY STOP-AND-ASK PROTOCOL (ESCALATION GATEWAY)
-If any assigned task (e.g., UI refactoring, camera spline tuning, dynamic lighting, layer exploding) appears to require changes to `Cloud`, `Lux`, or `Royal`:
+## 6. Plug-and-Play Brand Slot Architecture (1-Minute Rebranding)
 
-1. **HALT IMMEDIATELY**: Do not attempt to refactor or "fix" the mattress code.
-2. **DO NOT ASSUME OR ESTIMATE**: Never make autonomous modifications to locked assets.
-3. **ESCALATE TO THE USER**: Post an explicit warning in the chat before executing any command:
+The application code must never hardcode specific brand model filenames. All components consume assets via a centralized registry abstraction.
 
-> **"⚠️ LOCKDOWN VIOLATION ALERT:** The requested task requires modifying the production-frozen mattress prototype `[Cloud / Lux / Royal]` at file `[path/to/file]`. According to `Agent.md`, this model is locked. Please confirm whether you explicitly authorize this modification before I proceed."
+### 6.1. Registry Contract (`brandConfig.ts`)
+```typescript
+export const BRAND_BADGE_SLOTS = {
+  lux: '/assets/branding/badge_lux.png',
+  cloud: '/assets/branding/badge_cloud.png',
+  royal: '/assets/branding/badge_royal.png',
+} as const;
 
-D. **AWAIT WRITTEN CONFIRMATION**: Only proceed if the user grants unambiguous, explicit written consent.
+export type MattressBrandVariant = keyof typeof BRAND_BADGE_SLOTS;
+
+export const getBrandBadgeUrl = (variant: string = 'lux'): string => {
+  const key = variant.toLowerCase() as MattressBrandVariant;
+  return BRAND_BADGE_SLOTS[key] || BRAND_BADGE_SLOTS.lux;
+};
+```
+
+### 6.2. 60-Second Brand Switching Procedure
+To rebrand the entire 3D showroom and Craft Studio to an alternate manufacturer (e.g., Tempur, Casper):
+1. Place the new brand's transparent 2:1 PNG renders into `webapp/public/assets/branding/` using the standard slot names (`badge_cloud.png`, `badge_lux.png`, `badge_royal.png`).
+2. Refresh the browser. Both 3D Bedroom, camera capture, and Craft Studio automatically consume the updated brand identity without modifying application source code.
+
+---
+
+## 7. Texture Budget Quotas & Seamless Tiling Protocol
+
+To prevent repository bloat, eliminate Git LFS threshold warnings (< 50 MB), and avoid GPU VRAM exhaustion on client browsers, repeating patterns must adhere to strict modular quotas:
+
+| Component Class | Target Ratio | Master Resolution | Max File Size (.mcmat) | Max Packed Maps | Mandatory Metadata |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Class A: Micro-Weave & Tiling Fill** | 1:1 (Square) | $512 \times 512$ or $1024 \times 1024$ | $< 2.5\text{ MB}$ | $< 500\text{ KB}$ / map | `physical_unit_meters: [w, h]` |
+| **Class B: Longitudinal Bands & Borders** | 4:1 or 2:1 (Strip) | $2048 \times 512$ or $2048 \times 1024$ | $< 6.0\text{ MB}$ | $< 1.0\text{ MB}$ / map | `physical_unit_meters: [w, h]` |
+| **Class C: Decal Badges & Brand Patches** | 2:1 (Bounded) | $2048 \times 1024$ (Non-repeating) | $< 8.0\text{ MB}$ | $< 1.5\text{ MB}$ / map | `anchor_point`, `decal_scale` |
+| **Class D: Straps & Vertical Handles** | 1:4 (Vertical) | $512 \times 2048$ | $< 4.0\text{ MB}$ | $< 800\text{ KB}$ / map | `physical_unit_meters: [w, h]` |
+
+---
+
+## 8. Production Prototype Lockdown & Safety Gateway
+
+### 8.1. Frozen Mattress Prototypes
+The core mattress models registered in `shared_assets/lego/REGISTRY.json` are frozen:
+* **Cloud** (Puffy Cloud Mattress)
+* **Lux** (Puffy Lux Hybrid)
+* **Royal** (Puffy Royal Hybrid)
+
+Their underlying internal 10-layer anatomy, primary geometries, and base mattress shaders are read-only production black boxes.
+
+### 8.2. Zero-Tolerance Prohibitions
+1. **No Geometry Deletion**: Do not decimate, deform, or delete the base mattress meshes.
+2. **No Arbitrary Renaming**: Do not alter asset paths registered in `REGISTRY.json`.
+3. **Escalation Protocol**: If an assigned task appears to require modifying locked mattress models, the agent must halt and request explicit user confirmation before proceeding.
+
+---
+
+## 9. Worker Pre-Flight Checklist & Acceptance Criteria
+
+Before marking any asset casting, texture update, or UI integration task complete, the worker must verify every item:
+
+| Verification Check | Pass Criteria | Verification Method |
+| :--- | :--- | :--- |
+| **Aspect Ratio Integrity** | Image dimensions strictly equal 2:1 ($W = 2H \pm 0.5\%$). | Inspection via image metadata / Node script. |
+| **PBR Albedo Range** | Pure `#FFFFFF` is absent; maximum brightness $\le 85\%$. | Pixel histogram check on `01_baseColor.png`. |
+| **6-File Package Completeness** | Exactly 6 files exist in `shared_assets/lego/components/<id>/`. | Directory listing check. |
+| **Deterministic Mesh Name** | Badge mesh has `obj.name === 'BrandBadgePlane'`. | Scene graph inspection in Three.js runtime. |
+| **Public Mirror Alignment** | Matching files are copied to `webapp/public/assets/branding/`. | Static asset file path check. |
+| **Zero Build Regressions** | `npm --prefix webapp run build` passes with 0 TypeScript errors. | Terminal compilation execution. |

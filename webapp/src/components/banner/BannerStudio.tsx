@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { ACTIVE_BRAND } from '../../config/brand.config';
+import { getBrandBadgeUrl } from '../../config/brandConfig';
 import { compositeLogoOntoScene } from '../../services/compositeStudioShot.ts';
 import { useBannerStore, type AspectRatio } from '../../store/useBannerStore';
+import { useBedroomConfigStore } from '../../store/useBedroomConfigStore';
 import { useShowroomViewStore } from '../../store/useShowroomViewStore.ts';
 
 const SIZES: Record<AspectRatio, { w: number; h: number }> = {
@@ -77,7 +79,7 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 
 export function BannerStudio() {
   const {
-    backgroundImage,
+    backgroundImage: uploadedImage,
     aspectRatio,
     headline,
     subtext,
@@ -92,8 +94,10 @@ export function BannerStudio() {
   } = useBannerStore();
   const studioPassA = useShowroomViewStore((state) => state.studioPassA);
   const studioPassB = useShowroomViewStore((state) => state.studioPassB);
+  const mattressVariant = useBedroomConfigStore((state) => state.activeMattress);
+  const activeLogoUrl = studioPassB || getBrandBadgeUrl(mattressVariant);
   const hasMatchingStudioCapture = Boolean(
-    studioPassA && studioPassB && backgroundImage === studioPassA,
+    studioPassA && studioPassB && uploadedImage === studioPassA,
   );
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -124,7 +128,7 @@ export function BannerStudio() {
     if (!canvas) return;
     let cancelled = false;
     const { w, h } = SIZES[aspectRatio];
-    const activeBackground = compositeResult ?? backgroundImage;
+    const activeBackground = compositeResult ?? uploadedImage;
 
     (async () => {
       const [bg, logo] = await Promise.all([
@@ -220,11 +224,11 @@ export function BannerStudio() {
     return () => {
       cancelled = true;
     };
-  }, [backgroundImage, compositeResult, aspectRatio, headline, subtext, selectedBadge, showLogo, fontsReady]);
+  }, [uploadedImage, compositeResult, aspectRatio, headline, subtext, selectedBadge, showLogo, fontsReady]);
 
   const handleStudioGenerate = async () => {
     if (!studioPassA || !studioPassB) {
-      setStudioError('Capture a two-pass studio scene before compositing the logo matte.');
+      setStudioError('Capture a two-pass studio scene before compositing the logo.');
       return;
     }
 
@@ -243,14 +247,9 @@ export function BannerStudio() {
   };
 
   const handleCompositeLogo = async () => {
-    if (!studioPassB) {
-      alert('Không tìm thấy dữ liệu Logo Pass B của góc chụp này.');
-      return;
-    }
-
-    const currentBaseImage = backgroundImage || studioPassA;
+    const currentBaseImage = uploadedImage || studioPassA;
     if (!currentBaseImage) {
-      alert('Vui lòng tải ảnh nền hoặc chụp trước.');
+      alert('Please upload or capture a background image first.');
       return;
     }
 
@@ -260,7 +259,7 @@ export function BannerStudio() {
       const baseImage = await loadImage(currentBaseImage);
       const finalImage = await compositeLogoOntoScene(
         currentBaseImage,
-        studioPassB,
+        activeLogoUrl,
         baseImage.naturalWidth,
         baseImage.naturalHeight,
       );
@@ -274,7 +273,7 @@ export function BannerStudio() {
   };
 
   const exportBanner = (type: 'image/png' | 'image/webp') => {
-    const sourceImage = compositeResult || backgroundImage || studioPassA;
+    const sourceImage = compositeResult || uploadedImage || studioPassA;
     if (sourceImage) {
       const exportImage = async () => {
         try {
@@ -449,7 +448,7 @@ export function BannerStudio() {
             rows={3}
             value={studioPrompt}
             onChange={(event) => setStudioPrompt(event.target.value)}
-            placeholder="Mô tả bối cảnh phòng ngủ AI mong muốn (ánh sáng, nội thất, phong cách)..."
+            placeholder="Describe the desired AI bedroom scene (lighting, furniture, style)..."
             aria-label="AI studio scene prompt"
             style={{
               ...field,
@@ -604,7 +603,7 @@ export function BannerStudio() {
           <button
             type="button"
             onClick={() => void handleCompositeLogo()}
-            disabled={isCompositing || !studioPassB}
+            disabled={isCompositing || !activeLogoUrl}
             aria-busy={isCompositing}
             style={{
               width: '100%',
@@ -620,7 +619,7 @@ export function BannerStudio() {
               boxShadow: isCompositing ? 'none' : '0 8px 24px rgba(255, 255, 255, 0.10)',
             }}
           >
-            {isCompositing ? '🪄 Đang dán logo...' : '✨ Dán Logo Nệm Gốc'}
+            {isCompositing ? 'Compositing logo...' : '✨ Composite Brand Logo'}
           </button>
         </section>
 
@@ -648,20 +647,20 @@ export function BannerStudio() {
                 textTransform: 'uppercase',
               }}
             >
-              🏷️ MATTRESS LOGO BADGE (PASS B)
+              🏷️ ISOLATED LOGO (PASS B)
             </span>
             <span
               style={{
                 flexShrink: 0,
                 padding: '2px 8px',
                 borderRadius: 999,
-                border: `1px solid ${studioPassB ? 'rgba(16, 185, 129, 0.30)' : 'rgba(245, 158, 11, 0.30)'}`,
-                background: studioPassB ? 'rgba(16, 185, 129, 0.20)' : 'rgba(245, 158, 11, 0.20)',
-                color: studioPassB ? '#6EE7B7' : '#FCD34D',
+                border: '1px solid rgba(16, 185, 129, 0.30)',
+                background: 'rgba(16, 185, 129, 0.20)',
+                color: '#6EE7B7',
                 fontSize: 10,
               }}
             >
-              {studioPassB ? '✓ Sẵn Sàng' : 'Chưa Chụp'}
+              ✓ Ready
             </span>
           </div>
 
@@ -680,32 +679,26 @@ export function BannerStudio() {
               backgroundSize: '12px 12px',
             }}
           >
-            {studioPassB ? (
-              <img
-                src={studioPassB}
-                alt="Isolated logo badge, Pass B"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55))',
-                }}
-              />
-            ) : (
-              <p style={{ margin: 0, padding: '0 16px', color: 'rgba(255, 255, 255, 0.40)', fontSize: 11, textAlign: 'center' }}>
-                Chưa có dữ liệu logo. Hãy bấm nút máy ảnh ở 3D Bedroom để trích xuất.
-              </p>
-            )}
+            <img
+              src={activeLogoUrl}
+              alt="Isolated brand logo badge, Pass B"
+              className="w-full h-full object-contain filter drop-shadow-md"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55))',
+              }}
+            />
           </div>
 
           <button
             type="button"
-            disabled={!studioPassB}
+            disabled={!activeLogoUrl}
             onClick={() => {
-              if (!studioPassB) return;
               const link = document.createElement('a');
-              link.href = studioPassB;
-              link.download = 'Puffy_Logo_Badge_Transparent.png';
+              link.href = activeLogoUrl;
+              link.download = 'Puffy_Brand_Badge.png';
               link.click();
             }}
             style={{
@@ -722,8 +715,8 @@ export function BannerStudio() {
               fontFamily: typography.body,
               fontSize: 11,
               fontWeight: 600,
-              cursor: studioPassB ? 'pointer' : 'not-allowed',
-              opacity: studioPassB ? 1 : 0.3,
+              cursor: activeLogoUrl ? 'pointer' : 'not-allowed',
+              opacity: activeLogoUrl ? 1 : 0.3,
               transition: 'background 0.2s ease',
             }}
           >
@@ -740,7 +733,7 @@ export function BannerStudio() {
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            Tải Logo PNG (Nền Trong Suốt)
+            Download Logo PNG (Transparent)
           </button>
         </section>
       </aside>
@@ -764,10 +757,10 @@ export function BannerStudio() {
             boxShadow: '0 18px 54px rgba(0, 0, 0, 0.30)',
           }}
         >
-          {compositeResult || backgroundImage || studioPassA ? (
+          {compositeResult || uploadedImage || studioPassA ? (
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', maxWidth: '100%', maxHeight: '100%' }}>
               <img
-                src={compositeResult || backgroundImage || studioPassA || ''}
+                src={compositeResult || uploadedImage || studioPassA || ''}
                 alt="Captured studio scene preview"
                 style={{
                   objectFit: 'contain',

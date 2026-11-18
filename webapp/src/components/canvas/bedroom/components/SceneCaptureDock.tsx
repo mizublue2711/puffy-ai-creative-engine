@@ -1,34 +1,8 @@
 import React from 'react';
 import * as THREE from 'three';
-import { useBedroomConfigStore, type MattressVariant } from '../../../../store/useBedroomConfigStore.ts';
+import { getBrandBadgeUrl } from '../../../../config/brandConfig';
+import { useBedroomConfigStore } from '../../../../store/useBedroomConfigStore.ts';
 import { useShowroomViewStore } from '../../../../store/useShowroomViewStore.ts';
-
-const fallbackBadgeAssets: Record<MattressVariant, string> = {
-  cloud: '/assets/lego/badges/puffy_cloud_badge_mask.png',
-  lux: '/assets/lego/badges/puffy_lux_badge_mask.png',
-  royal: '/textures/badge/06_beauty_render_4k.png',
-};
-
-const loadAssetAsDataUrl = async (assetPath: string): Promise<string> => {
-  const response = await fetch(assetPath);
-  if (!response.ok) {
-    throw new Error(`Failed to load fallback logo badge (${response.status}): ${assetPath}`);
-  }
-
-  const blob = await response.blob();
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result);
-      } else {
-        reject(new Error(`Failed to read fallback logo badge: ${assetPath}`));
-      }
-    };
-    reader.onerror = () => reject(reader.error ?? new Error(`Failed to read fallback logo badge: ${assetPath}`));
-    reader.readAsDataURL(blob);
-  });
-};
 
 const hasVisiblePixels = (dataUrl: string): Promise<boolean> =>
   new Promise((resolve) => {
@@ -281,7 +255,10 @@ export function downloadDataUrl(dataUrl: string, filename: string): void {
 /**
  * Traverse a Three.js scene to locate the active Puffy brand badge mesh or group.
  */
-export function findLogoBadgeObject(scene: THREE.Scene): THREE.Object3D | null {
+export function findLogoBadgeObject(
+  scene: THREE.Scene,
+  activeVariant?: string,
+): THREE.Object3D | null {
   const candidates: Array<{
     mesh: THREE.Mesh;
     material: THREE.Material | null;
@@ -351,12 +328,19 @@ export function findLogoBadgeObject(scene: THREE.Scene): THREE.Object3D | null {
       ancestor = ancestor.parent;
     }
 
+    const variantSignal = activeVariant
+      ? [meshName, bestMaterialMatch?.material?.name.toLowerCase(), bestMaterialMatch?.mapSrc]
+          .filter(Boolean)
+          .join(' ')
+          .includes(activeVariant.toLowerCase())
+      : false;
     const score =
       (meshName.includes('puffy-embroidered-badge') ? 16 : 0) +
       (meshName.includes('mat_brand_badge') ? 12 : 0) +
       (meshName.includes('badge') ? 8 : 0) +
       (meshName.includes('logo') ? 6 : 0) +
-      (bestMaterialMatch?.score ?? 0);
+      (bestMaterialMatch?.score ?? 0) +
+      (variantSignal ? 24 : 0);
     candidates.push({
       mesh,
       material: bestMaterialMatch?.material ?? null,
@@ -504,7 +488,8 @@ export function SceneCaptureDock({
     setIsCapturingStudioPasses(true);
     try {
       onStudioCaptureStart?.();
-      const activeBadge = logoBadgeGroup ?? findLogoBadgeObject(scene);
+      const activeVariant = useBedroomConfigStore.getState().activeMattress;
+      const activeBadge = findLogoBadgeObject(scene, activeVariant) ?? logoBadgeGroup ?? null;
       const captureResolution = resolution ?? { width: 2048, height: 2048 };
       const result = await executeTwoPassCapture(
         renderer,
@@ -516,16 +501,16 @@ export function SceneCaptureDock({
       let passB = result.passB;
       const passBIsTooSmall = !passB || new Blob([passB]).size < 1000;
       if (passBIsTooSmall || !(await hasVisiblePixels(passB))) {
-        const mattressValue = useBedroomConfigStore.getState().activeMattress;
-        const activeMattress: MattressVariant =
-          mattressValue === 'lux' || mattressValue === 'royal' ? mattressValue : 'cloud';
-        passB = await loadAssetAsDataUrl(fallbackBadgeAssets[activeMattress]);
+        passB = '';
       }
 
+      const resolvedPassB = passB && passB.length > 500
+        ? passB
+        : getBrandBadgeUrl(activeVariant);
       const timestamp = Date.now();
-      useShowroomViewStore.getState().setStudioPasses(result.passA, passB);
+      useShowroomViewStore.getState().setStudioPasses(result.passA, resolvedPassB);
       useShowroomViewStore.getState().setActiveView('banner-studio');
-      const captureResult = { passA: result.passA, passB, timestamp };
+      const captureResult = { passA: result.passA, passB: resolvedPassB, timestamp };
       await onStudioCapture?.(captureResult);
       onStudioCaptureComplete?.(captureResult);
     } catch (error) {
@@ -562,7 +547,7 @@ export function SceneCaptureDock({
               onDownloadSnapshot?.();
             }}
           >
-            Tải ảnh WebP
+            Download WebP
           </button>
           <button
             type="button"
@@ -578,7 +563,7 @@ export function SceneCaptureDock({
             }}
           >
             <PuffyGalleryIcon />
-            <span>Mở trong Banner Studio</span>
+            <span>Open in Banner Studio</span>
           </button>
           <button
             type="button"
@@ -595,7 +580,7 @@ export function SceneCaptureDock({
               onDismissSnapshot?.();
             }}
           >
-            Đóng
+            Close
           </button>
         </div>
       )}
@@ -610,7 +595,7 @@ export function SceneCaptureDock({
             padding: '8px 12px',
           }}
         >
-          <span>Đang quay Cinematic... {Math.round(recordingProgress * 100)}%</span>
+          <span>Recording Cinematic... {Math.round(recordingProgress * 100)}%</span>
           <div
             style={{
               height: 4,
@@ -643,8 +628,8 @@ export function SceneCaptureDock({
               color: '#38BDF8',
               opacity: isCaptureDisabled ? 0.5 : 1,
             }}
-            title={onSnapshot ? 'Chụp ảnh khoảnh khắc (.webp)' : 'Capture two-pass studio scene'}
-            aria-label={onSnapshot ? 'Chụp ảnh khoảnh khắc (.webp)' : 'Capture two-pass studio scene'}
+            title={onSnapshot ? 'Capture Snapshot (.webp)' : 'Capture two-pass studio scene'}
+            aria-label={onSnapshot ? 'Capture Snapshot (.webp)' : 'Capture two-pass studio scene'}
             disabled={isCaptureDisabled}
             onClick={(e) => {
               e.stopPropagation();
@@ -664,8 +649,8 @@ export function SceneCaptureDock({
               filter: isRecording ? 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.4))' : 'none',
               color: isRecording ? '#38BDF8' : 'rgba(255, 255, 255, 0.65)',
             }}
-            title="Quay video Cinematic 360° (.webm)"
-            aria-label="Quay video Cinematic 360° (.webm)"
+            title="Record Cinematic 360° (.webm)"
+            aria-label="Record Cinematic 360° (.webm)"
             disabled={isRecording}
             onClick={(e) => {
               e.stopPropagation();

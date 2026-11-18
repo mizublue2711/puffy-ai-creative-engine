@@ -3,6 +3,7 @@ import "./ShowroomHeader.css";
 import { BrandLogo } from "../../brand/components/BrandLogo";
 import { BRAND_TYPOGRAPHY } from "../../brand/tokens/typography";
 import { useShowroomViewStore } from "../../store/useShowroomViewStore";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 export type ShowroomTab =
   | "interactive"
@@ -132,9 +133,25 @@ export function ShowroomHeader({
   onOpenDocs,
   onSelectView,
 }: ShowroomHeaderProps) {
+  const { language, toggleLanguage, t } = useLanguage();
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const [isLogoHovered, setIsLogoHovered] = useState<boolean>(false);
   const activeDoor = useShowroomViewStore((st) => st.activeDoor);
+
+  const getTabLabel = (id: ShowroomTab): string => {
+    switch (id) {
+      case "meadow":
+        return t("navOutdoor");
+      case "bedroom":
+        return t("navBedroom");
+      case "indoor-lab":
+        return t("navIndoorLab");
+      case "studio":
+        return t("navCraftStudio");
+      default:
+        return id;
+    }
+  };
 
   const isTabActive = (tabId: ShowroomTab) => {
     if (tabId === activeDoor) return true;
@@ -293,7 +310,7 @@ export function ShowroomHeader({
               }}
             >
               {tab.icon}
-              <span>{tab.label}</span>
+              <span>{getTabLabel(tab.id)}</span>
               {tab.badge && (
                 <span
                   style={{
@@ -314,6 +331,47 @@ export function ShowroomHeader({
           );
         })}
       </nav>
+
+      {/* Subtle Vertical Hairline Separator */}
+      <div
+        className="w-px h-4 bg-white/10 shrink-0"
+        style={{
+          width: "1px",
+          height: "16px",
+          backgroundColor: "rgba(255, 255, 255, 0.12)",
+          flexShrink: 0,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Language Switcher Capsule Pill */}
+      <button
+        type="button"
+        onClick={toggleLanguage}
+        className="px-2.5 py-1 rounded-full text-xs font-medium border border-white/15 bg-white/5 hover:bg-white/10 text-white/90 backdrop-blur-md transition-all"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          padding: "4px 10px",
+          borderRadius: "9999px",
+          fontSize: "11px",
+          fontWeight: 600,
+          color: "rgba(255, 255, 255, 0.9)",
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          borderColor: "rgba(255, 255, 255, 0.15)",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          whiteSpace: "nowrap",
+        }}
+        title={`Switch Language (Current: ${language.toUpperCase()})`}
+        aria-label={`Switch Language (Current: ${language.toUpperCase()})`}
+      >
+        <span>🌐</span>
+        <span>{language.toUpperCase()}</span>
+      </button>
     </header>
   );
 }

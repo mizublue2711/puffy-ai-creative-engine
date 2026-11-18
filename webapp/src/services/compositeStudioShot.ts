@@ -25,8 +25,21 @@ export async function compositeLogoOntoScene(
       ctx.drawImage(imgScene, 0, 0, outputWidth, outputHeight);
 
       imgLogo.onload = () => {
+        if (!imgLogo.naturalWidth || !imgLogo.naturalHeight) {
+          reject(new Error('Pass B Logo Matte has invalid image dimensions'));
+          return;
+        }
+
         ctx.globalCompositeOperation = 'source-over';
-        ctx.drawImage(imgLogo, 0, 0, outputWidth, outputHeight);
+        const scale = Math.min(
+          outputWidth / imgLogo.naturalWidth,
+          outputHeight / imgLogo.naturalHeight,
+        );
+        const logoWidth = imgLogo.naturalWidth * scale;
+        const logoHeight = imgLogo.naturalHeight * scale;
+        const logoX = (outputWidth - logoWidth) / 2;
+        const logoY = (outputHeight - logoHeight) / 2;
+        ctx.drawImage(imgLogo, logoX, logoY, logoWidth, logoHeight);
         resolve(canvas.toDataURL('image/png', 1.0));
       };
 

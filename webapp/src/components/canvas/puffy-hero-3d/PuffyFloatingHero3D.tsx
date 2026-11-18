@@ -35,6 +35,7 @@ import { useBannerStore } from "../../../store/useBannerStore.ts";
 import { useShowroomViewStore } from "../../../store/useShowroomViewStore.ts";
 import { useSceneCapture, downloadSnapshotUrl } from "../../../hooks/useSceneCapture.ts";
 import { SceneCaptureDock } from "../../ui/SceneCaptureDock.tsx";
+import { useLanguage } from "../../../i18n/LanguageContext.tsx";
 import "./PuffyFloatingHero3D.css";
 
 export interface ActiveTrustOverlay {
@@ -232,6 +233,7 @@ export function PuffyFloatingHero3D({
   onTelemetryUpdate,
   onLayerSelect,
 }: PuffyFloatingHero3DProps) {
+  const { t } = useLanguage();
   const mountContainerRef = useRef<HTMLDivElement | null>(null);
   const sceneModuleRef = useRef<WoolMeadowSceneModule | null>(null);
   const [captureCtx, setCaptureCtx] = useState<{
@@ -247,6 +249,19 @@ export function PuffyFloatingHero3D({
   layerSelectCallbackRef.current = onLayerSelect;
 
   const [activePreset, setActivePreset] = useState<CameraAnglePreset>("hero45");
+
+  const getCameraPresetLabel = (id: CameraAnglePreset): string => {
+    switch (id) {
+      case "hero45":
+        return t("resetView");
+      case "dollyClose":
+        return t("dollyCloseUp");
+      case "topDown":
+        return t("topDown");
+      default:
+        return id;
+    }
+  };
   const [currentEnvironment, setCurrentEnvironment] =
     useState<SanctuaryEnvironmentMode>("meadow");
   const [isExploded, setIsExploded] = useState<boolean>(false);
@@ -911,9 +926,7 @@ export function PuffyFloatingHero3D({
             onClick={handleEnterDream}
             tabIndex={introPhase1Stage === "ready" ? 0 : -1}
           >
-            <span className="intro-cta-vi">Chạm để bước vào giấc mơ</span>
-            <span className="intro-cta-sep" aria-hidden="true">·</span>
-            <span className="intro-cta-en">Enter the Dream</span>
+            <span>{t("introTouchEnter")}</span>
           </button>
         </div>
       )}
@@ -924,9 +937,9 @@ export function PuffyFloatingHero3D({
           type="button"
           className="intro-skip-pill"
           onClick={handleSkipIntro}
-          aria-label="Skip Intro"
+          aria-label={t("introSkip")}
         >
-          Bỏ qua / Skip
+          {t("introSkip")}
         </button>
       )}
 
@@ -939,7 +952,7 @@ export function PuffyFloatingHero3D({
           aria-live="polite"
         >
           {introState === "FLYING" ? (
-            <span>[ 🖱️ Scroll to Drift · Cuộn chuột để bay ]</span>
+            <span>{t("introScrollHint")}</span>
           ) : (
             <span className="intro-orbit-hint-inner">
               <svg
@@ -959,7 +972,7 @@ export function PuffyFloatingHero3D({
                 <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
                 <path d="M6 14a2 2 0 0 0-2 2v1a6 6 0 0 0 6 6h4a6 6 0 0 0 6-6v-5a2 2 0 0 0-4 0" />
               </svg>
-              <span>[ 🔄 Drag to Orbit 360° · Giữ &amp; Rê chuột để xoay nệm 360° ]</span>
+              <span>{t("introOrbitHint")}</span>
             </span>
           )}
         </div>
@@ -1336,7 +1349,7 @@ export function PuffyFloatingHero3D({
               <span className="craft-toggle-track" aria-hidden="true">
                 <span className="craft-toggle-thumb" />
               </span>
-              <span>Exploded View</span>
+              <span>{t("explodedView")}</span>
             </button>
 
             <button
@@ -1344,7 +1357,7 @@ export function PuffyFloatingHero3D({
               className="craft-navy-reset-btn"
               onClick={handleResetLabView}
             >
-              Reset View
+              {t("resetView")}
             </button>
           </div>
         </div>
@@ -1374,7 +1387,7 @@ export function PuffyFloatingHero3D({
           data-visible={isExploded ? "true" : "false"}
           aria-hidden={!isExploded}
         >
-          <span className="canvas-cutaway-hud-label">3D Slide-Out Layer:</span>
+          <span className="canvas-cutaway-hud-label">{t("slideOutLayerLabel")}</span>
           {activeModelLayers.map((layer, idx) => {
             const masterIdx = layer.id - 1;
             const sequentialNum = idx + 1;
@@ -1570,7 +1583,7 @@ export function PuffyFloatingHero3D({
                       data-active={activePreset === "hero45" ? "true" : "false"}
                       aria-hidden="true"
                     />
-                    <span>Hero 45° (Default / Reset)</span>
+                    <span>{t("hero45DefaultReset")}</span>
                   </button>
 
                   <div className="dock-popover-divider my-1 h-px bg-white/10" aria-hidden="true" />
@@ -1603,7 +1616,7 @@ export function PuffyFloatingHero3D({
                           data-active={isActive ? "true" : "false"}
                           aria-hidden="true"
                         />
-                        <span>{preset.label}</span>
+                        <span>{getCameraPresetLabel(preset.id)}</span>
                       </button>
                     );
                   })}
@@ -1640,7 +1653,7 @@ export function PuffyFloatingHero3D({
                     <path d="m3.3 7 8.7 5 8.7-5" />
                     <path d="M12 22V12" />
                   </svg>
-                  <span>Assemble Mattress</span>
+                  <span>{t("assembleMattress")}</span>
                 </>
               ) : (
                 <>
@@ -1659,7 +1672,7 @@ export function PuffyFloatingHero3D({
                     <path d="m2 12 10 5 10-5" />
                     <path d="m2 17 10 5 10-5" />
                   </svg>
-                  <span>Explode {ecoModelConfig.layersCount} Layers</span>
+                  <span>{t("explodeLayers", { count: ecoModelConfig.layersCount })}</span>
                 </>
               )}
             </button>

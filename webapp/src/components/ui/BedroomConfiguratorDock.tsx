@@ -13,6 +13,7 @@ import {
   type PillowCountOption,
 } from '../../store/useBedroomConfigStore.ts';
 import { BedroomRoomSwitcher } from '../canvas/bedroom/components/BedroomRoomSwitcher.tsx';
+import { useLanguage } from '../../i18n/LanguageContext.tsx';
 import './BedroomConfiguratorDock.css';
 
 export interface BedroomConfiguratorDockProps {
@@ -134,6 +135,22 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
     toggleDockExpanded,
     setMattress,
   } = useBedroomConfigStore();
+  const { t } = useLanguage();
+
+  const getCategoryLabel = (id: BedroomDockCategory, fallback: string) => {
+    if (id === 'bedding') return t('bedding');
+    if (id === 'lighting') return t('lighting');
+    if (id === 'landscape') return t('landscape');
+    if (id === 'walls') return t('walls');
+    return fallback;
+  };
+
+  const getItemShortLabel = (label: string) => {
+    if (label === 'Runner' || label === 'Pillows' || label === 'Pendants' || label === 'Cloud Light' || label === 'Zen Garden') {
+      return t(label as any);
+    }
+    return label;
+  };
 
   useEffect(() => {
     if (activeRoomId === 'modern' && activeCategory !== 'bedding') {
@@ -171,21 +188,22 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
         }}
       >
         <CategoryIcon category={cat.id} />
-        <span>{cat.label}</span>
+        <span>{getCategoryLabel(cat.id, cat.label)}</span>
       </button>
     );
   };
 
   const renderControl = (item: BedroomDockItemConfig) => {
+    const localizedLabel = getItemShortLabel(item.shortLabel);
     if (item.variantKey === 'pillowCount' && Array.isArray(item.options)) {
       return (
         <div
           key={item.id}
           className="bedroom-stepper-group"
           role="group"
-          aria-label={`${item.shortLabel} count`}
+          aria-label={`${localizedLabel} count`}
         >
-          <span className="bedroom-stepper-label">{item.shortLabel}:</span>
+          <span className="bedroom-stepper-label">{localizedLabel}:</span>
           <div className="bedroom-stepper-segments">
             {item.options.map((opt) => {
               const count = Number(opt) as PillowCountOption;
@@ -227,8 +245,8 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
           toggleItem(item.id);
         }}
       >
-        <span>{item.shortLabel}:</span>
-        <span className="bedroom-toggle-status">{isOn ? 'ON' : 'OFF'}</span>
+        <span>{localizedLabel}:</span>
+        <span className="bedroom-toggle-status">{isOn ? t('on') : t('off')}</span>
       </button>
     );
   };
@@ -251,7 +269,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
                   role="group"
                   aria-label="Set Presets (1-Click Pairing)"
                 >
-                  <span className="bedroom-stepper-label">Set:</span>
+                  <span className="bedroom-stepper-label">{t('setLabel')}</span>
                   <div className="bedroom-stepper-segments">
                     {CURATED_SET_OPTIONS.map((setId) => {
                       const spec = CURATED_BEDROOM_PAIRINGS[setId];
@@ -282,7 +300,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
                   role="group"
                   aria-label="Mattress Model Variant"
                 >
-                  <span className="bedroom-stepper-label">Mattress:</span>
+                  <span className="bedroom-stepper-label">{t('mattressLabel')}</span>
                   <div className="bedroom-stepper-segments">
                     {(['cloud', 'lux', 'royal'] as const).map((variant) => {
                       const isSelected = String(activeMattress || '').toLowerCase() === variant;
@@ -311,7 +329,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
                   className="bedroom-explode-btn"
                   data-active={isExploded ? 'true' : 'false'}
                   aria-pressed={isExploded}
-                  title={isExploded ? 'Assemble Mattress' : 'Explode Layers'}
+                  title={isExploded ? t('explodeBtnTitleAssemble') : t('explodeBtnTitleExplode')}
                   onClick={(e) => {
                     e.stopPropagation();
                     onToggleExplode?.();
@@ -332,7 +350,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
                         <path d="m3.3 7 8.7 5 8.7-5" />
                         <path d="M12 22V12" />
                       </svg>
-                      <span>Assemble</span>
+                      <span>{t('assembleBtnShort')}</span>
                     </>
                   ) : (
                     <>
@@ -349,7 +367,7 @@ export const BedroomConfiguratorDock: React.FC<BedroomConfiguratorDockProps> = (
                         <path d="m2 12 10 5 10-5" />
                         <path d="m2 17 10 5 10-5" />
                       </svg>
-                      <span>Explode</span>
+                      <span>{t('explodeBtnShort')}</span>
                     </>
                   )}
                 </button>

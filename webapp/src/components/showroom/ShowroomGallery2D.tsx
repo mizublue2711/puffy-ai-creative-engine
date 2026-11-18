@@ -1,5 +1,6 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import "./ShowroomGallery2D.css";
+import { useLanguage } from "../../i18n/LanguageContext.tsx";
 
 type BannerCategory = "all" | "campaign" | "lifestyle" | "pbr";
 
@@ -116,7 +117,23 @@ const CATEGORY_FILTERS: Array<{ id: BannerCategory; label: string }> = [
 const ZOOM_LEVELS = [1, 1.5, 2, 3];
 
 export function ShowroomGallery2D() {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<BannerCategory>("all");
+
+  const getCategoryFilterLabel = (id: BannerCategory): string => {
+    switch (id) {
+      case "all":
+        return t("galleryAllRenders");
+      case "campaign":
+        return t("galleryCampaignBanners");
+      case "lifestyle":
+        return t("galleryLifestylePlacement");
+      case "pbr":
+        return t("galleryPbrInspection");
+      default:
+        return id;
+    }
+  };
   const [inspectedItem, setInspectedItem] = useState<GalleryRenderItem | null>(
     null
   );
@@ -212,7 +229,7 @@ export function ShowroomGallery2D() {
                 className={`gallery-filter-pill ${activeCategory === cat.id ? "is-active" : ""}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
-                {cat.label}
+                {getCategoryFilterLabel(cat.id)}
               </button>
             ))}
           </div>

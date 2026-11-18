@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { LanguageProvider } from "./i18n/LanguageContext";
 
 function mountApp() {
   const rootEl = document.getElementById("root");
@@ -11,7 +12,9 @@ function mountApp() {
   }
   createRoot(rootEl).render(
     <StrictMode>
-      <App />
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
     </StrictMode>
   );
 }
@@ -21,3 +24,4 @@ if (document.readyState === "loading") {
 } else {
   mountApp();
 }
+
