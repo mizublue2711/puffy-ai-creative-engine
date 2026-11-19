@@ -6,8 +6,11 @@ npm-debug.log*
 .secrets/
 auth_cookies.json
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+
+# Raw Pomelli HTML exports (contain embedded Google client keys & session metadata)
+assets/raw_mattress/*.html
 
 # Build & Cache Artifacts
 webapp/dist/*

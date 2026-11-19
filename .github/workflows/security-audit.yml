@@ -1,0 +1,22 @@
+name: Security & Secret Audit
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Secret Audit Gate
+        run: |
+          chmod +x ./scripts/secret-audit.sh
+          ./scripts/secret-audit.sh all

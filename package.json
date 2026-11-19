@@ -14,7 +14,10 @@
     "ingest:pomelli": "tsx scripts/scrape_pomelli.ts && tsx scripts/sync_github.ts",
     "typecheck": "tsc --noEmit",
     "prepreview": "npm run build",
-    "audit": "bash scripts/deployment-audit.sh"
+    "audit": "bash scripts/deployment-audit.sh",
+    "audit:secrets": "./scripts/secret-audit.sh all",
+    "audit:secrets:staged": "./scripts/secret-audit.sh --staged",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@octokit/rest": "^21.1.1",
@@ -23,6 +26,7 @@
   "devDependencies": {
     "@playwright/test": "^1.65.1",
     "@types/node": "^22.10.2",
+    "husky": "^9.1.7",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
