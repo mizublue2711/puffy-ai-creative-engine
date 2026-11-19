@@ -1,40 +1,8 @@
 import React from 'react';
 import * as THREE from 'three';
-import { getBrandBadgeUrl } from '../../../../config/brandConfig';
+import { useBannerStore } from '../../../../store/useBannerStore.ts';
 import { useBedroomConfigStore } from '../../../../store/useBedroomConfigStore.ts';
 import { useShowroomViewStore } from '../../../../store/useShowroomViewStore.ts';
-
-const hasVisiblePixels = (dataUrl: string): Promise<boolean> =>
-  new Promise((resolve) => {
-    const image = new Image();
-    image.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      const context = canvas.getContext('2d', { willReadFrequently: true });
-      if (!context) {
-        resolve(false);
-        return;
-      }
-
-      try {
-        context.drawImage(image, 0, 0);
-        const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
-        for (let alphaIndex = 3; alphaIndex < pixels.length; alphaIndex += 4) {
-          if (pixels[alphaIndex] > 0) {
-            resolve(true);
-            return;
-          }
-        }
-        resolve(false);
-      } catch (error) {
-        console.warn('Unable to inspect captured logo pass; using the mattress badge asset.', error);
-        resolve(false);
-      }
-    };
-    image.onerror = () => resolve(false);
-    image.src = dataUrl;
-  });
 
 export interface SceneCaptureDockProps {
   // Classic snapshot & video recording props
@@ -143,13 +111,14 @@ export const PuffyVideoRecordIcon = ({ className = 'w-5 h-5', active = false }: 
 );
 
 /**
- * Execute Two-Pass Synchronous Studio Capture:
- * Pass A: Full bedroom/mattress 3D render with logo badge hidden (`logoMesh.visible = false`),
- *         preserving standard background and lighting for AI diffusion refinement.
- * Pass B: Isolated logo badge rendered with transparent alpha background (`renderer.setClearColor(0x000000, 0)`),
- *         with all other room/bed meshes temporarily hidden (`visible = false`).
+ * Execute Two-Pass Synchronous Studio Capture via Three.js Layers:
+ * Pass A: Complete bedroom/mattress 3D render with the brand badge intact (`camera.layers.enableAll()`),
+ *         preserving standard background and lighting.
+ * Pass B: Isolated 3D perspective brand badge rendered on Layer 1 (`camera.layers.set(1)`)
+ *         with scene lights enabled on Layer 1 and pure transparent alpha (`scene.background = null`,
+ *         `renderer.setClearColor(0x000000, 0)`).
  * Zero-drift guarantee: Both passes rendered synchronously in the same animation frame
- * before restoring scene visibility to ensure 0-pixel projection drift.
+ * before restoring camera layers, background, and clear state to ensure 0-pixel projection drift.
  */
 export const executeTwoPassCapture = async (
   renderer: THREE.WebGLRenderer,
@@ -177,8 +146,43 @@ export const executeTwoPassCapture = async (
   const perspectiveCamera = camera instanceof THREE.PerspectiveCamera ? camera : null;
   const originalAspect = perspectiveCamera?.aspect;
 
-  const originalVisibility = new Map<THREE.Object3D, boolean>();
-  scene.traverse((object) => originalVisibility.set(object, object.visible));
+  // Ensure main directional & ambient lights participate in Layer 1
+  scene.traverse((obj) => {
+    if ((obj as THREE.Light).isLight) {
+      obj.layers.enable(1);
+    }
+  });
+
+  // Safety net: ensure at least one visible mesh participates in Layer 1
+  const layer1 = new THREE.Layers();
+  layer1.set(1);
+  let hasVisibleLayer1Mesh = false;
+  scene.traverse((obj) => {
+    if (hasVisibleLayer1Mesh) return;
+    const mesh = obj as THREE.Mesh;
+    if (!mesh.isMesh || !mesh.layers.test(layer1)) return;
+    let ancestor: THREE.Object3D | null = mesh;
+    let visibleInHierarchy = true;
+    while (ancestor) {
+      if (!ancestor.visible) {
+        visibleInHierarchy = false;
+        break;
+      }
+      ancestor = ancestor.parent;
+    }
+    if (visibleInHierarchy) {
+      hasVisibleLayer1Mesh = true;
+    }
+  });
+
+  if (!hasVisibleLayer1Mesh && logoBadgeGroup) {
+    logoBadgeGroup.traverse((obj) => {
+      if ((obj as THREE.Mesh).isMesh) {
+        obj.layers.enable(0);
+        obj.layers.enable(1);
+      }
+    });
+  }
 
   let passADataUrl = '';
   let passBDataUrl = '';
@@ -194,36 +198,23 @@ export const executeTwoPassCapture = async (
 
     camera.updateMatrixWorld(true);
 
-    if (logoBadgeGroup) logoBadgeGroup.visible = false;
-    renderer.setClearColor(originalClearColor, originalClearAlpha);
+    // --- PASS A: COMPLETE BEDROOM SCENE ---
+    camera.layers.enableAll(); // Render room + mattress + badge
+    scene.background = originalBackground;
+    renderer.setClearColor(0x000000, 1);
     renderer.render(scene, camera);
     passADataUrl = renderer.domElement.toDataURL('image/png');
 
-    scene.children.forEach((child) => {
-      child.visible = false;
-    });
-
-    if (logoBadgeGroup) {
-      let current: THREE.Object3D | null = logoBadgeGroup;
-      while (current && current !== scene) {
-        current.visible = true;
-        current = current.parent;
-      }
-      logoBadgeGroup.traverse((object) => {
-        object.visible = true;
-      });
-    }
-
-    scene.background = null;
-    renderer.setClearColor(0x000000, 0);
+    // --- PASS B: ISOLATED 3D PERSPECTIVE BADGE ---
+    camera.layers.set(1); // ONLY render objects on Layer 1 (Badge + Lights)
+    scene.background = null; // Critical: prevent scene.background color from overwriting alpha=0
+    renderer.setClearColor(0x000000, 0); // Pure transparent alpha
     renderer.clear();
     renderer.render(scene, camera);
     passBDataUrl = renderer.domElement.toDataURL('image/png');
   } finally {
+    camera.layers.enableAll();
     scene.background = originalBackground;
-    originalVisibility.forEach((visible, object) => {
-      object.visible = visible;
-    });
     renderer.setClearColor(originalClearColor, originalClearAlpha);
 
     if (perspectiveCamera && originalAspect !== undefined) {
@@ -315,6 +306,7 @@ export function findLogoBadgeObject(
     }
 
     const meshHasBadgeSignal =
+      meshName === 'puffybrandbadgemesh' ||
       meshName.includes('puffy-embroidered-badge') ||
       meshName.includes('mat_brand_badge') ||
       meshName.includes('badge') ||
@@ -335,6 +327,7 @@ export function findLogoBadgeObject(
           .includes(activeVariant.toLowerCase())
       : false;
     const score =
+      (meshName === 'puffybrandbadgemesh' ? 32 : 0) +
       (meshName.includes('puffy-embroidered-badge') ? 16 : 0) +
       (meshName.includes('mat_brand_badge') ? 12 : 0) +
       (meshName.includes('badge') ? 8 : 0) +
@@ -478,39 +471,34 @@ export function SceneCaptureDock({
   const isCaptureDisabled = isStudioCapturing || isCapturingStudioPasses;
 
   const handleCameraClick = async () => {
-    if (onSnapshot) {
-      onSnapshot();
+    if (isCaptureDisabled) return;
+    if (!renderer || !scene || !camera) {
+      onSnapshot?.();
       return;
     }
-
-    if (!renderer || !scene || !camera || isCaptureDisabled) return;
 
     setIsCapturingStudioPasses(true);
     try {
       onStudioCaptureStart?.();
       const activeVariant = useBedroomConfigStore.getState().activeMattress;
-      const activeBadge = findLogoBadgeObject(scene, activeVariant) ?? logoBadgeGroup ?? null;
+      const activeBadge =
+        scene.getObjectByName('PuffyBrandBadgeMesh') ??
+        findLogoBadgeObject(scene, activeVariant) ??
+        logoBadgeGroup ??
+        null;
       const captureResolution = resolution ?? { width: 2048, height: 2048 };
-      const result = await executeTwoPassCapture(
+      const { passA, passB } = await executeTwoPassCapture(
         renderer,
         scene,
         camera,
         activeBadge,
         captureResolution,
       );
-      let passB = result.passB;
-      const passBIsTooSmall = !passB || new Blob([passB]).size < 1000;
-      if (passBIsTooSmall || !(await hasVisiblePixels(passB))) {
-        passB = '';
-      }
-
-      const resolvedPassB = passB && passB.length > 500
-        ? passB
-        : getBrandBadgeUrl(activeVariant);
       const timestamp = Date.now();
-      useShowroomViewStore.getState().setStudioPasses(result.passA, resolvedPassB);
-      useShowroomViewStore.getState().setActiveView('banner-studio');
-      const captureResult = { passA: result.passA, passB: resolvedPassB, timestamp };
+      useShowroomViewStore.getState().setStudioPasses(passA, passB);
+      useBannerStore.getState().setBackgroundImage(passA);
+      useShowroomViewStore.getState().setActiveView('studio');
+      const captureResult = { passA, passB, timestamp };
       await onStudioCapture?.(captureResult);
       onStudioCaptureComplete?.(captureResult);
     } catch (error) {

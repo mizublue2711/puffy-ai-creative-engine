@@ -414,6 +414,30 @@ export class FloatingWoolPad {
     this.updateModel('royal', true);
   }
 
+  private syncActiveBadgeIdentity(activeBadge: THREE.Mesh): void {
+    const badges = [
+      this.badgeRoyalMesh,
+      this.badgeLuxMesh,
+      this.badgeCloudMesh,
+      this.badgeMonarchMesh,
+    ];
+    for (const badge of badges) {
+      if (!badge) continue;
+      badge.layers.enable(0); // Visible in normal scene
+      badge.layers.enable(1); // Visible in isolated Pass B
+      if (badge === activeBadge) {
+        badge.visible = true;
+        badge.name = 'PuffyBrandBadgeMesh';
+      } else {
+        badge.visible = false;
+        if (typeof badge.userData.variantBadgeName === 'string') {
+          badge.name = badge.userData.variantBadgeName;
+        }
+      }
+    }
+    this.badgeMesh = activeBadge;
+  }
+
   /**
    * Updates the 3D mattress to the selected Puffy ecosystem model (`cloud` 10", `lux` 12", `royal` 14"):
    * toggles active layers, recomputes zero-gap vertical cavity stacking, updates badge & sidewall UVs,
@@ -453,16 +477,15 @@ export class FloatingWoolPad {
       }
     }
 
-    if (this.badgeRoyalMesh) this.badgeRoyalMesh.visible = resolvedKey === 'royal';
-    if (this.badgeLuxMesh) this.badgeLuxMesh.visible = resolvedKey === 'lux';
-    if (this.badgeCloudMesh) this.badgeCloudMesh.visible = resolvedKey === 'cloud';
-    if (this.badgeMonarchMesh) this.badgeMonarchMesh.visible = false;
-    this.badgeMesh =
+    const nextBadge =
       resolvedKey === 'cloud'
         ? this.badgeCloudMesh
         : resolvedKey === 'lux'
           ? this.badgeLuxMesh
           : this.badgeRoyalMesh;
+    if (nextBadge) {
+      this.syncActiveBadgeIdentity(nextBadge);
+    }
 
     const showHybridExtras = resolvedKey !== 'cloud';
     for (const handle of this.handleMeshes) {
@@ -666,11 +689,10 @@ export class FloatingWoolPad {
     switchMattressModel(modelKey, this.loadedAssets);
 
     const isMonarch = modelKey === 'puffy-monarch';
-    if (this.badgeRoyalMesh) this.badgeRoyalMesh.visible = !isMonarch;
-    if (this.badgeLuxMesh) this.badgeLuxMesh.visible = false;
-    if (this.badgeCloudMesh) this.badgeCloudMesh.visible = false;
-    if (this.badgeMonarchMesh) this.badgeMonarchMesh.visible = isMonarch;
-    this.badgeMesh = isMonarch ? this.badgeMonarchMesh : this.badgeRoyalMesh;
+    const nextBadge = isMonarch ? this.badgeMonarchMesh : this.badgeRoyalMesh;
+    if (nextBadge) {
+      this.syncActiveBadgeIdentity(nextBadge);
+    }
     for (const handle of this.handleMeshes) {
       handle.visible = true;
     }
@@ -1097,9 +1119,12 @@ export class FloatingWoolPad {
       visible: boolean,
     ): THREE.Mesh => {
       const mesh = new THREE.Mesh(unifiedBadgeGeo, mat);
+      mesh.userData.variantBadgeName = name;
       mesh.name = name;
       mesh.position.set(0, charcoalY, length / 2 + 0.0018);
       mesh.visible = visible;
+      mesh.layers.enable(0); // Visible in normal scene
+      mesh.layers.enable(1); // Visible in isolated Pass B
       this.encasementTrayGroup.add(mesh);
       return mesh;
     };
@@ -1112,7 +1137,7 @@ export class FloatingWoolPad {
       matBadgeMonarch,
       false,
     );
-    this.badgeMesh = this.badgeRoyalMesh;
+    this.syncActiveBadgeIdentity(this.badgeRoyalMesh);
 
     // 4. Symmetrical Vertical Fabric Loop Handles flush against the front wall (x = ±width * 0.28)
     const handleTex = this.createFlushHandleStrapTexture(maxAnisotropy);

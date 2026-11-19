@@ -77,6 +77,14 @@ export function createPuffyMattress(
   woolPad.setFloatingEnabled(false, 0.238);
   woolPad.update(0, 0.016);
 
+  const badgeMesh = woolPad.getActiveBadgeMesh();
+  if (badgeMesh) {
+    // Explicit name and layer binding
+    badgeMesh.name = 'PuffyBrandBadgeMesh';
+    badgeMesh.layers.enable(0); // Visible in normal scene
+    badgeMesh.layers.enable(1); // Visible in isolated Pass B
+  }
+
   const group = new THREE.Group();
   group.name = `PuffyMattress_${variant}`;
   group.position.set(0, deckY, 0);
