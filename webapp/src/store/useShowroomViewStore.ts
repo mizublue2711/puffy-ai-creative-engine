@@ -29,7 +29,22 @@ interface ShowroomViewState {
 
 export const useShowroomViewStore = create<ShowroomViewState>((set) => ({
   activeView: 'interactive',
-  setActiveView: (activeView) => set({ activeView }),
+  setActiveView: (activeView) =>
+    set((state) => {
+      if (activeView === 'studio' || activeView === 'banner-studio') {
+        return { activeView, activeDoor: 'studio' };
+      }
+      if (activeView === 'bedroom') {
+        return { activeView, activeDoor: 'bedroom' };
+      }
+      if (activeView === 'indoor-lab') {
+        return { activeView, activeDoor: 'indoor-lab' };
+      }
+      if (activeView === 'meadow' || activeView === 'interactive') {
+        return { activeView, activeDoor: 'meadow' };
+      }
+      return { activeView, activeDoor: state.activeDoor };
+    }),
   studioPassA: readStoredStudioPass('puffy_studio_passA'),
   studioPassB: readStoredStudioPass('puffy_studio_passB'),
   setStudioPasses: (studioPassA, studioPassB) => {

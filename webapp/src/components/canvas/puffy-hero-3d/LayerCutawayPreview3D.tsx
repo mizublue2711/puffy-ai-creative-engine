@@ -8,6 +8,7 @@ import {
   resolvePuffyModelKey,
   type PuffyModelKey,
 } from "./puffyLayersData.ts";
+import { getOptimalPixelRatio } from "../../../utils/webglPerf.ts";
 
 export interface LayerCutawayPreview3DProps {
   activeLayerIndex: number;
@@ -81,7 +82,7 @@ export function LayerCutawayPreview3D({
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.08;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(getOptimalPixelRatio(false));
     renderer.setSize(lastW, lastH, false);
     renderer.domElement.className = "w-full h-full block cursor-pointer";
     renderer.domElement.style.width = "100%";
@@ -196,6 +197,7 @@ export function LayerCutawayPreview3D({
           lastH = ch;
           camera.aspect = cw / ch;
           camera.updateProjectionMatrix();
+          renderer.setPixelRatio(getOptimalPixelRatio(false));
           renderer.setSize(cw, ch, false);
         }
       }

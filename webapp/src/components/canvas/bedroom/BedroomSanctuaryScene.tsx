@@ -56,6 +56,11 @@ import {
 } from '../../../store/useBedroomConfigStore.ts';
 import { BedroomConfiguratorDock } from '../../ui/BedroomConfiguratorDock.tsx';
 import { SceneCaptureDock } from './components/SceneCaptureDock.tsx';
+import {
+  getOptimalAnisotropy,
+  getOptimalPixelRatio,
+  getShadowMapSize,
+} from '../../../utils/webglPerf.ts';
 
 export interface BedroomSanctuarySceneOptions {
   /** Optional existing FloatingWoolPad whose encasementTrayGroup will be docked onto the bed slats */
@@ -798,8 +803,9 @@ export function createBedroomSanctuaryScene(
   sunLight.target.position.set(0.5, 0.2, 0.2);
   sunLight.castShadow = castShadow;
   if (castShadow) {
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
+    const shadowSize = getShadowMapSize();
+    sunLight.shadow.mapSize.width = shadowSize;
+    sunLight.shadow.mapSize.height = shadowSize;
     sunLight.shadow.camera.near = 0.5;
     sunLight.shadow.camera.far = 22;
     sunLight.shadow.camera.left = -7.5;
@@ -1035,7 +1041,7 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.08;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(getOptimalPixelRatio(false));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setSize(width, height, false);
@@ -1064,7 +1070,7 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
     controls.enableDamping = true;
     controls.update();
 
-    const maxAniso = renderer.capabilities.getMaxAnisotropy();
+    const maxAniso = getOptimalAnisotropy(renderer);
     const woolPad = new FloatingWoolPad(maxAniso);
     woolPad.setFloatingEnabled(false, 0.238);
     woolPad.update(0, 0.016);
@@ -1108,6 +1114,7 @@ export const BedroomSanctuaryScene: React.FC<BedroomSanctuarySceneProps> = ({
       const ch = container.clientHeight || height;
       camera.aspect = cw / ch;
       camera.updateProjectionMatrix();
+      renderer.setPixelRatio(getOptimalPixelRatio(false));
       renderer.setSize(cw, ch, false);
     };
     window.addEventListener('resize', handleResize);

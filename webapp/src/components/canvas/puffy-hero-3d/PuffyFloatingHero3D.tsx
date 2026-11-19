@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { ViewportMode } from "../../../types/pdp";
 import { type MattressModelId } from "./mattressPresets.ts";
@@ -12,7 +12,6 @@ import {
   type MattressModelConfig as PuffyEcoModelConfig,
   type PuffyModelKey,
 } from "./puffyLayersData.ts";
-import { LayerCutawayPreview3D } from "./LayerCutawayPreview3D.tsx";
 import {
   resolveMattressSizeSpec,
   type CameraAnglePreset,
@@ -31,12 +30,18 @@ import {
 } from "../bedroom/BedroomRegistry.ts";
 import { BedroomConfiguratorDock } from "../../ui/BedroomConfiguratorDock.tsx";
 import { useBedroomConfigStore } from "../../../store/useBedroomConfigStore.ts";
-import { useBannerStore } from "../../../store/useBannerStore.ts";
 import { useShowroomViewStore } from "../../../store/useShowroomViewStore.ts";
-import { useSceneCapture, downloadSnapshotUrl } from "../../../hooks/useSceneCapture.ts";
+import { useSceneCapture } from "../../../hooks/useSceneCapture.ts";
 import { SceneCaptureDock } from "../../ui/SceneCaptureDock.tsx";
 import { useLanguage } from "../../../i18n/LanguageContext.tsx";
+import { getOptimalPixelRatio } from "../../../utils/webglPerf.ts";
 import "./PuffyFloatingHero3D.css";
+
+const LayerCutawayPreview3D = lazy(() =>
+  import("./LayerCutawayPreview3D.tsx").then((m) => ({
+    default: m.LayerCutawayPreview3D,
+  }))
+);
 
 export interface ActiveTrustOverlay {
   label: string;
@@ -327,6 +332,7 @@ export function PuffyFloatingHero3D({
 
   const isMobile = viewport === "mobile";
   const doorTrigger = useShowroomViewStore((st) => st.doorTrigger);
+  const isBedroomDockExpanded = useBedroomConfigStore((st) => st.isDockExpanded);
   const currentSizeSpec = useMemo(
     () => resolveMattressSizeSpec(selectedSize),
     [selectedSize]
@@ -408,9 +414,7 @@ export function PuffyFloatingHero3D({
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.95;
-    renderer.setPixelRatio(
-      isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2)
-    );
+    renderer.setPixelRatio(getOptimalPixelRatio(isSoftwareGl));
     renderer.shadowMap.enabled = !isSoftwareGl;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setSize(width, height, false);
@@ -857,12 +861,10 @@ export function PuffyFloatingHero3D({
     badgeSub = `${currentSizeSpec.label} (${currentSizeSpec.dimensions}) · Scroll to dolly · Click pad to test rebound`;
   }
 
-  const [pendingSnapshot, setPendingSnapshot] = useState<string | null>(null);
   const capture = useSceneCapture({
     renderer: captureCtx?.renderer ?? null,
     scene: captureCtx?.scene ?? null,
     camera: captureCtx?.camera ?? null,
-    onSnapshotReady: setPendingSnapshot,
   });
 
   const handleRecordTour = () =>
@@ -877,27 +879,17 @@ export function PuffyFloatingHero3D({
       className={`puffy-floating-hero-3d w-full h-full ${isMobile ? "mobile" : "desktop"}`}
       data-intro-state={introState}
       data-intro-phase1-stage={introPhase1Stage}
+      data-env={currentEnvironment}
+      data-exploded={isExploded ? "true" : "false"}
+      data-dock-collapsed={isDockCollapsed ? "true" : "false"}
+      data-bedroom-dock-expanded={isBedroomDockExpanded ? "true" : "false"}
       style={{ touchAction: "pan-y" }}
     >
       {introState !== "IDLE" && (
         <SceneCaptureDock
           isRecording={capture.isRecording}
           recordingProgress={capture.recordingProgress}
-          onSnapshot={capture.takeSnapshot}
           onRecord={handleRecordTour}
-          pendingSnapshot={pendingSnapshot}
-          onDownloadSnapshot={() => {
-            if (pendingSnapshot) downloadSnapshotUrl(pendingSnapshot);
-            setPendingSnapshot(null);
-          }}
-          onOpenInStudio={() => {
-            if (pendingSnapshot) {
-              useBannerStore.getState().setBackgroundImage(pendingSnapshot);
-              useShowroomViewStore.getState().setActiveView("banner-studio");
-            }
-            setPendingSnapshot(null);
-          }}
-          onDismissSnapshot={() => setPendingSnapshot(null)}
           renderer={sceneModuleRef.current?.getRenderer()}
           scene={sceneModuleRef.current?.getScene()}
           camera={sceneModuleRef.current?.getCamera()}
@@ -979,70 +971,72 @@ export function PuffyFloatingHero3D({
       )}
 
       {/* 1. Minimal Top-Left Spec Badge + 3-Model Ecosystem Switcher + 4-Archetype Bedroom Switcher */}
-      <div className="canvas-top-badge">
-        <span className="canvas-top-badge-kicker">{badgeKicker}</span>
-        <span className="canvas-top-badge-title">{badgeTitle}</span>
-        <span className="canvas-top-badge-sub tabular-nums">{badgeSub}</span>
+      <div className="canvas-top-bar">
+        <div className="canvas-top-badge">
+          <span className="canvas-top-badge-kicker">{badgeKicker}</span>
+          <span className="canvas-top-badge-title">{badgeTitle}</span>
+          <span className="canvas-top-badge-sub tabular-nums">{badgeSub}</span>
 
-        {/* Only render top mattress selector outside bedroom */}
-        {currentEnvironment !== "bedroom" && (
-          <div
-            className="puffy-model-switcher-pills"
-            role="group"
-            aria-label="3D Mattress Model Preset"
-          >
-            {PUFFY_MODEL_ORDER.map((modelKey) => {
-              const cfg = getModelConfig(modelKey);
-              const isSelected = modelKey === activeEcoModelKey;
-              return (
-                <button
-                  key={modelKey}
-                  type="button"
-                  className="puffy-model-pill"
-                  data-selected={isSelected ? "true" : "false"}
-                  aria-pressed={isSelected}
-                  onClick={() => handleSelectEcoModel(modelKey)}
-                >
-                  <span
-                    className="puffy-model-swatch"
-                    style={{ backgroundColor: ECO_MODEL_SWATCHES[modelKey] }}
-                    aria-hidden="true"
-                  />
-                  <span>{cfg.shortLabel}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
+          {/* Only render top mattress selector outside bedroom */}
+          {currentEnvironment !== "bedroom" && (
+            <div
+              className="puffy-model-switcher-pills no-scrollbar"
+              role="group"
+              aria-label="3D Mattress Model Preset"
+            >
+              {PUFFY_MODEL_ORDER.map((modelKey) => {
+                const cfg = getModelConfig(modelKey);
+                const isSelected = modelKey === activeEcoModelKey;
+                return (
+                  <button
+                    key={modelKey}
+                    type="button"
+                    className="puffy-model-pill"
+                    data-selected={isSelected ? "true" : "false"}
+                    aria-pressed={isSelected}
+                    onClick={() => handleSelectEcoModel(modelKey)}
+                  >
+                    <span
+                      className="puffy-model-swatch"
+                      style={{ backgroundColor: ECO_MODEL_SWATCHES[modelKey] }}
+                      aria-hidden="true"
+                    />
+                    <span>{cfg.shortLabel}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
-        {currentEnvironment === "bedroom" && (
-          <div
-            className="puffy-model-switcher-pills"
-            role="group"
-            aria-label="Bedroom Interior Archetype"
-          >
-            {BEDROOM_STYLE_ORDER.map((styleId) => {
-              const styleCfg = BEDROOM_STYLE_PRESETS[styleId];
-              const isSelected = styleId === bedroomStyle;
-              return (
-                <button
-                  key={styleId}
-                  type="button"
-                  className="puffy-model-pill"
-                  data-selected={isSelected ? "true" : "false"}
-                  onClick={() => handleSelectBedroomStyle(styleId)}
-                >
-                  <span
-                    className="puffy-model-swatch"
-                    style={{ backgroundColor: styleCfg.throwBlanket.color }}
-                    aria-hidden="true"
-                  />
-                  <span>{styleCfg.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
+          {currentEnvironment === "bedroom" && (
+            <div
+              className="puffy-model-switcher-pills no-scrollbar"
+              role="group"
+              aria-label="Bedroom Interior Archetype"
+            >
+              {BEDROOM_STYLE_ORDER.map((styleId) => {
+                const styleCfg = BEDROOM_STYLE_PRESETS[styleId];
+                const isSelected = styleId === bedroomStyle;
+                return (
+                  <button
+                    key={styleId}
+                    type="button"
+                    className="puffy-model-pill"
+                    data-selected={isSelected ? "true" : "false"}
+                    onClick={() => handleSelectBedroomStyle(styleId)}
+                  >
+                    <span
+                      className="puffy-model-swatch"
+                      style={{ backgroundColor: styleCfg.throwBlanket.color }}
+                      aria-hidden="true"
+                    />
+                    <span>{styleCfg.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 2. Optional Trust Badge Overlay */}
@@ -1175,14 +1169,18 @@ export function PuffyFloatingHero3D({
           {/* Cream Card Body: Left = Live 3D Layer Render, Right = Dynamic Layer Details */}
           <div className="craft-cream-card-body">
             <div className="craft-cream-visual-col">
-              <LayerCutawayPreview3D
-                activeLayerIndex={activeLayer.id - 1}
-                isExploded={isExploded}
-                activeModelKey={activeEcoModelKey}
-                isVisible={isCraftLabVisible}
-                resetSignal={previewResetSignal}
-                onSelectLayer={(idx) => handleSelectLayerIn3D(idx, true, false)}
-              />
+              {isCraftLabVisible && (
+                <Suspense fallback={null}>
+                  <LayerCutawayPreview3D
+                    activeLayerIndex={activeLayer.id - 1}
+                    isExploded={isExploded}
+                    activeModelKey={activeEcoModelKey}
+                    isVisible={isCraftLabVisible}
+                    resetSignal={previewResetSignal}
+                    onSelectLayer={(idx) => handleSelectLayerIn3D(idx, true, false)}
+                  />
+                </Suspense>
+              )}
               <div className="craft-cream-3d-caption tabular-nums">
                 Layer {activeSequentialNum} of {ecoModelConfig.layersCount} · Click any layer in 3D
               </div>
@@ -1383,7 +1381,7 @@ export function PuffyFloatingHero3D({
       {/* 5. Active-Layer Cutaway HUD Pill Strip */}
       {currentEnvironment === 'meadow' && isExploded && !isCraftLabVisible && (
         <div
-          className="canvas-cutaway-10layer-hud"
+          className="canvas-cutaway-10layer-hud no-scrollbar"
           data-visible={isExploded ? "true" : "false"}
           aria-hidden={!isExploded}
         >

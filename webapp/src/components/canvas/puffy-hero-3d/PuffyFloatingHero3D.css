@@ -74,28 +74,40 @@
   touch-action: pan-y !important;
 }
 
-/* Top-Left Minimal Spec Header Overlay inside 3D Viewport */
+/* Top-Left Minimal Spec Header Overlay inside 3D Viewport (Flex Flow Container) */
+.puffy-floating-hero-3d .canvas-top-bar {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 70px 16px 0;
+  box-sizing: border-box;
+}
+
 .puffy-floating-hero-3d .canvas-top-badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
+  position: relative;
+  top: auto;
+  left: auto;
   z-index: 10;
   display: flex;
   flex-direction: column;
   gap: 3px;
-  max-width: min(440px, calc(100% - 32px));
+  max-width: min(440px, 100%);
   background-color: rgba(255, 255, 255, 0.92);
   border: 1px solid var(--puffy3d-border-hairline);
   padding: 10px 14px;
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(43, 47, 68, 0.08);
   pointer-events: auto;
+  box-sizing: border-box;
 }
 
 .puffy-floating-hero-3d.mobile .canvas-top-badge {
-  top: 10px;
-  left: 10px;
-  max-width: calc(100% - 20px);
+  max-width: 100%;
   padding: 7px 10px;
 }
 
@@ -706,21 +718,8 @@
 }
 
 @media (max-width: 640px) {
-  .puffy-floating-hero-3d .canvas-top-badge {
-    top: 10px;
-    left: 10px;
-    max-width: calc(100% - 20px);
-    padding: 7px 10px;
-  }
-
   .puffy-floating-hero-3d .puffy-model-switcher-pills {
-    gap: 4px;
-  }
-
-  .puffy-floating-hero-3d .puffy-model-pill {
-    gap: 4px;
-    padding: 2px 7px;
-    font-size: 10px;
+    gap: 6px;
   }
 
   .puffy-floating-hero-3d .craft-model-stop-btn {
@@ -1314,13 +1313,15 @@
 }
 
 .puffy-floating-hero-3d[data-intro-state="IDLE"] .webgl-mount-container {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 15;
   pointer-events: none;
 }
 
 .puffy-floating-hero-3d[data-intro-state="FLYING"] .webgl-mount-container {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 15;
 }
 
@@ -1381,4 +1382,125 @@
 .puffy-floating-hero-3d .intro-cta-en {
   font-weight: 500;
   opacity: 0.8;
+}
+
+@media (min-width: 1024px) {
+  .puffy-floating-hero-3d .canvas-bottom-dock-wrapper {
+    position: absolute;
+    bottom: 20px;
+  }
+
+  .puffy-floating-hero-3d .reference-cutout-preview {
+    padding-top: 76px;
+  }
+}
+
+@media (min-width: 1520px) {
+  .puffy-floating-hero-3d .canvas-top-bar {
+    padding: 16px 16px 0;
+  }
+
+  .puffy-floating-hero-3d .canvas-top-badge {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .puffy-floating-hero-3d .canvas-top-bar {
+    padding: 8px 10px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .puffy-floating-hero-3d .canvas-top-badge {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px 10px;
+    gap: 3px;
+    border-radius: 10px;
+  }
+
+  .puffy-floating-hero-3d .canvas-top-badge-kicker {
+    font-size: 9.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .puffy-floating-hero-3d .canvas-top-badge-title {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .puffy-floating-hero-3d .canvas-top-badge-sub {
+    font-size: 10.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .puffy-floating-hero-3d .puffy-model-switcher-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    max-width: 100%;
+    width: 100%;
+    gap: 6px;
+    padding: 2px 0;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  .puffy-floating-hero-3d .puffy-model-pill {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 4px 9px;
+    font-size: 10.5px;
+  }
+
+  .puffy-floating-hero-3d .canvas-bottom-dock-wrapper {
+    position: absolute;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 16px);
+    max-width: 420px;
+  }
+
+  .puffy-floating-hero-3d .canvas-bottom-dock {
+    width: 100%;
+    padding: 6px 8px;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .puffy-floating-hero-3d .dock-btn {
+    font-size: 11px;
+    padding: 5px 8px;
+    gap: 4px;
+    min-height: 32px;
+  }
+
+  .puffy-floating-hero-3d .dock-popover {
+    max-width: calc(100vw - 24px);
+  }
+
+  .puffy-floating-hero-3d .canvas-cutaway-10layer-hud {
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100% - 16px);
+    scrollbar-width: none;
+  }
+
+  .puffy-floating-hero-3d .reference-cutout-preview {
+    padding: 12px 12px 24px;
+  }
+
+  .puffy-floating-hero-3d .intro-skip-pill {
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
 }

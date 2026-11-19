@@ -10,6 +10,7 @@ import {
 } from '../../services/compositeStudioShot.ts';
 import { useBannerStore, type AspectRatio } from '../../store/useBannerStore';
 import { useShowroomViewStore } from '../../store/useShowroomViewStore.ts';
+import './BannerStudio.css';
 
 const SIZES: Record<AspectRatio, { w: number; h: number }> = {
   '1:1': { w: 1080, h: 1080 },
@@ -143,6 +144,7 @@ export function BannerStudio() {
   const [compositeResult, setCompositeResult] = useState<string | null>(null);
   const [isCompositing, setIsCompositing] = useState(false);
   const [studioError, setStudioError] = useState<string | null>(null);
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
 
   const [badgeTransform, setBadgeTransform] = useState<BadgeTransform>(DEFAULT_BADGE_TRANSFORM);
   const [isFineTuneOpen, setIsFineTuneOpen] = useState(true);
@@ -573,36 +575,8 @@ export function BannerStudio() {
   };
 
   return (
-    <section
-      data-testid="banner-studio"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(280px, 360px) minmax(0, 1fr)',
-        gap: 16,
-        padding: 16,
-        height: '100%',
-        minHeight: 0,
-        boxSizing: 'border-box',
-        background: 'radial-gradient(ellipse at 50% 0%, rgba(80, 105, 130, 0.18), transparent 58%), #0b0d12',
-        color: '#fff',
-        overflow: 'auto',
-      }}
-    >
-      <aside
-        style={{
-          background: 'rgba(18, 20, 26, 0.90)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          borderRadius: 24,
-          padding: 20,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 16,
-          alignSelf: 'start',
-          boxShadow: '0 16px 48px rgba(0, 0, 0, 0.28)',
-        }}
-      >
+    <section data-testid="banner-studio" className="banner-studio-shell">
+      <aside className="banner-studio-sidebar">
         <section
           aria-label="AI studio scene generation"
           style={{
@@ -801,7 +775,13 @@ export function BannerStudio() {
 
           <div>
             <label style={label} htmlFor="banner-upload">Background photo</label>
-            <input id="banner-upload" type="file" accept="image/*" onChange={onUpload} />
+            <input
+              id="banner-upload"
+              type="file"
+              accept="image/*"
+              className="banner-studio-file-input"
+              onChange={onUpload}
+            />
           </div>
           <button
             type="button"
@@ -1318,71 +1298,53 @@ export function BannerStudio() {
         </section>
       </aside>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, minHeight: 0 }}>
-        <div
-          style={{
-            flex: 1,
-            minHeight: 0,
-            width: '100%',
-            padding: 14,
-            boxSizing: 'border-box',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
-            borderRadius: 24,
-            background: 'rgba(18, 20, 26, 0.72)',
-            backdropFilter: 'blur(20px) saturate(160%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(160%)',
-            boxShadow: '0 18px 54px rgba(0, 0, 0, 0.30)',
-          }}
-        >
+      <div
+        className="banner-studio-preview-col"
+        data-expanded={isPreviewExpanded ? 'true' : 'false'}
+      >
+        <div className="banner-studio-canvas-frame">
           <canvas
             ref={canvasRef}
             width={w}
             height={h}
             aria-label="Banner live preview"
+            className="banner-studio-canvas"
             style={{
-              maxWidth: '100%',
-              maxHeight: 'calc(100vh - 220px)',
-              width: 'auto',
-              height: 'auto',
               aspectRatio: `${w} / ${h}`,
-              borderRadius: 18,
-              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.32)',
-              transition: 'aspect-ratio 0.25s ease',
-              background: 'rgba(0, 0, 0, 0.35)',
             }}
           />
         </div>
-        <p
-          style={{
-            width: '100%',
-            maxWidth: 760,
-            margin: 0,
-            color: 'rgba(255, 255, 255, 0.48)',
-            fontSize: 10,
-            lineHeight: 1.5,
-          }}
-        >
+        <p className="banner-studio-caption">
           {hasMatchingStudioCapture
             ? 'Two-pass capture ready. This action composites the logo matte locally; AI scene generation is not connected yet.'
             : 'Capture a two-pass scene from the 3D showroom to enable local logo compositing.'}
         </p>
         {studioError && (
-          <p role="alert" style={{ width: '100%', maxWidth: 760, margin: 0, color: '#ffb4ab', fontSize: 12 }}>
+          <p role="alert" className="banner-studio-error">
             {studioError}
           </p>
         )}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="banner-studio-export-row">
+          <button
+            type="button"
+            onClick={() => setIsPreviewExpanded((prev) => !prev)}
+            className="banner-studio-preview-expand-btn"
+            style={{ ...pillBtn(isPreviewExpanded), minHeight: 32, padding: '4px 12px' }}
+          >
+            {isPreviewExpanded ? 'Compact Preview' : 'Expand Preview'}
+          </button>
           <button
             type="button"
             onClick={() => exportBanner('image/png')}
-            style={{ ...pillBtn(true), padding: '0 16px', background: '#fff', color: '#000' }}
+            style={{ ...pillBtn(true), minHeight: 32, padding: '4px 16px', background: '#fff', color: '#000' }}
           >
             Export PNG
           </button>
-          <button type="button" onClick={() => exportBanner('image/webp')} style={{ ...pillBtn(false), padding: '0 16px' }}>
+          <button
+            type="button"
+            onClick={() => exportBanner('image/webp')}
+            style={{ ...pillBtn(false), minHeight: 32, padding: '4px 16px' }}
+          >
             Export WebP
           </button>
         </div>

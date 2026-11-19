@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { HeroSplitSection } from "./components/sections/HeroSplitSection";
 import {
   ShowroomHeader,
   type ShowroomTab,
 } from "./components/showroom/ShowroomHeader";
-import { BannerStudio } from "./components/banner/BannerStudio";
 import { useShowroomViewStore } from "./store/useShowroomViewStore";
+
+const BannerStudio = lazy(() => import("./components/banner/BannerStudio"));
 
 export function App() {
   const activeTab: ShowroomTab = useShowroomViewStore((st) => st.activeView);
@@ -52,13 +53,20 @@ export function App() {
           className="showroom-view-panel"
           data-view={activeTab}
         >
-          {activeTab === "interactive" ||
+          {activeTab === "bedroom" ? (
+            <HeroSplitSection />
+          ) : activeTab === "studio" || activeTab === "banner-studio" ? (
+            <Suspense
+              fallback={
+                <div className="showroom-loading-state">Loading Craft Studio…</div>
+              }
+            >
+              <BannerStudio />
+            </Suspense>
+          ) : activeTab === "interactive" ||
           activeTab === "meadow" ||
-          activeTab === "bedroom" ||
           activeTab === "indoor-lab" ? (
             <HeroSplitSection />
-          ) : activeTab === "banner-studio" || activeTab === "studio" ? (
-            <BannerStudio />
           ) : null}
         </div>
       </main>

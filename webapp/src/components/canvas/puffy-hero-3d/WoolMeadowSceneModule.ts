@@ -22,10 +22,7 @@ import {
   type IntroPhase1Stage,
   type IntroState,
 } from './IntroSequence.ts';
-import {
-  createBedroomSanctuaryScene,
-  type BedroomSanctuaryInstance,
-} from '../bedroom/BedroomSanctuaryScene.tsx';
+import type { BedroomSanctuaryInstance } from '../bedroom/BedroomSanctuaryScene.tsx';
 import type { BedroomStyle } from '../bedroom/BedroomRegistry.ts';
 import {
   type BedroomRoomId,
@@ -34,6 +31,11 @@ import {
 import { useBedroomConfigStore } from '../../../store/useBedroomConfigStore.ts';
 import { createDawnLensFlare, type DawnLensFlareRig } from './dawnLensFlare.ts';
 import { GroundMistLayer } from './GroundMistLayer.ts';
+import {
+  getOptimalAnisotropy,
+  getOptimalPixelRatio,
+  getShadowMapSize,
+} from '../../../utils/webglPerf.ts';
 
 export type SanctuaryEnvironmentMode = 'bedroom' | 'meadow' | 'studio';
 export {FLIGHT_SPLINE, FLIGHT_SPLINE as CINEMATIC_FLIGHT_SPLINE};
@@ -125,6 +127,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
   private heroCloudlet: HeroCloudletGuide | null = null;
   private bedroomGroup: THREE.Group | null = null;
   private bedroomSanctuary: BedroomSanctuaryInstance | null = null;
+  private bedroomLoadToken = 0;
   private bedroomStyle: BedroomStyle = 'nordic-coastal';
   private bedroomRoomId: BedroomRoomId = DEFAULT_BEDROOM_ROOM_ID;
   private meadowLights: THREE.Light[] = [];
@@ -224,8 +227,9 @@ export class WoolMeadowSceneModule implements ISceneModule {
     sunLight.position.copy(SUN_POSITION);
     sunLight.target.position.set(0, 0.8, 0);
     sunLight.castShadow = !isSoftwareGl;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
+    const shadowSize = getShadowMapSize();
+    sunLight.shadow.mapSize.width = shadowSize;
+    sunLight.shadow.mapSize.height = shadowSize;
     sunLight.shadow.camera.near = 0.5;
     sunLight.shadow.camera.far = 110;
     const d = 10.5;
@@ -284,7 +288,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
     });
 
     // 5. Instantiate 3D Sub-Modules
-    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+    const maxAnisotropy = getOptimalAnisotropy(renderer);
     this.meadowTerrain = new MeadowTerrain(maxAnisotropy);
     scene.add(this.meadowTerrain.group);
 
@@ -457,24 +461,6 @@ export class WoolMeadowSceneModule implements ISceneModule {
         this.bedroomGroup = null;
       }
 
-      this.bedroomSanctuary = createBedroomSanctuaryScene({
-        floatingWoolPad: this.floatingWoolPad,
-        sheepFlock: this.sheepFlock,
-        initialStyle: this.bedroomStyle,
-        roomId: this.bedroomRoomId,
-        castShadow: !this.context.isSoftwareGl,
-      });
-      // Align bedroom room floor & carpet at world y = 0 with bed frame and docked mattress
-      this.bedroomSanctuary.group.position.set(0, 0, 0);
-      // Respect current independent isExploded state
-      this.bedroomSanctuary.setBedDecorVisible(!this.isExploded);
-      // Sync pillows and throw blanket immediately to the active mattress height
-      this.bedroomSanctuary.syncMattressHeight(
-        this.floatingWoolPad?.getHeightDeltaFromRoyal() ?? 0,
-      );
-      this.bedroomGroup = this.bedroomSanctuary.group;
-      scene.add(this.bedroomGroup);
-
       // Warm indoor sanctuary atmosphere with Soft Sanctuary Daylight Rig
       this.meadowLights.forEach((l) => {
         l.visible = false;
@@ -483,16 +469,58 @@ export class WoolMeadowSceneModule implements ISceneModule {
       scene.background = new THREE.Color('#EFEAE1');
       scene.fog = new THREE.FogExp2('#EFEAE1', 0.012);
 
-      // Frame camera around active room mattress anchor
-      const anchor = this.bedroomSanctuary.activeRoomConfig.mattressAnchor.position;
-      const targetPos = new THREE.Vector3(anchor[0] + 2.75, anchor[1] + 1.40, anchor[2] + 3.35);
-      const targetLook = new THREE.Vector3(anchor[0], anchor[1] + 0.36, anchor[2]);
-      this.targetCameraPos.copy(targetPos);
-      this.targetLookAt.copy(targetLook);
-      this.cameraPosition.copy(targetPos);
+      // Frame initial camera pose while bedroom module loads dynamically
+      this.targetCameraPos.copy(BEDROOM_CAMERA_POSE.position);
+      this.targetLookAt.copy(BEDROOM_CAMERA_POSE.target);
+      this.cameraPosition.copy(BEDROOM_CAMERA_POSE.position);
       this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
       this.isTransitioningCamera = true;
+
+      const loadToken = ++this.bedroomLoadToken;
+      void import('../bedroom/BedroomSanctuaryScene.tsx')
+        .then(({ createBedroomSanctuaryScene }) => {
+          if (
+            loadToken !== this.bedroomLoadToken ||
+            !this.context ||
+            this.currentEnvironment !== 'bedroom'
+          ) {
+            return;
+          }
+
+          this.bedroomSanctuary = createBedroomSanctuaryScene({
+            floatingWoolPad: this.floatingWoolPad,
+            sheepFlock: this.sheepFlock,
+            initialStyle: this.bedroomStyle,
+            roomId: this.bedroomRoomId,
+            castShadow: !this.context.isSoftwareGl,
+          });
+          // Align bedroom room floor & carpet at world y = 0 with bed frame and docked mattress
+          this.bedroomSanctuary.group.position.set(0, 0, 0);
+          // Respect current independent isExploded state
+          this.bedroomSanctuary.setBedDecorVisible(!this.isExploded);
+          // Sync pillows and throw blanket immediately to the active mattress height
+          this.bedroomSanctuary.syncMattressHeight(
+            this.floatingWoolPad?.getHeightDeltaFromRoyal() ?? 0,
+          );
+          this.bedroomGroup = this.bedroomSanctuary.group;
+          this.context.scene.add(this.bedroomGroup);
+
+          // Frame camera around active room mattress anchor
+          const anchor = this.bedroomSanctuary.activeRoomConfig.mattressAnchor.position;
+          const targetPos = new THREE.Vector3(anchor[0] + 2.75, anchor[1] + 1.40, anchor[2] + 3.35);
+          const targetLook = new THREE.Vector3(anchor[0], anchor[1] + 0.36, anchor[2]);
+          this.targetCameraPos.copy(targetPos);
+          this.targetLookAt.copy(targetLook);
+          this.cameraPosition.copy(targetPos);
+          this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
+          this.isTransitioningCamera = true;
+          this.sanitizeCameraAndControls();
+        })
+        .catch((err) => {
+          console.error('[WoolMeadowSceneModule] Failed to lazy-load BedroomSanctuaryScene:', err);
+        });
     } else if (mode === 'studio') {
+      this.bedroomLoadToken++;
       // 1. STRICT RESOURCE DISPOSAL of Bedroom meshes
       if (this.bedroomSanctuary) {
         scene.remove(this.bedroomSanctuary.group);
@@ -531,6 +559,7 @@ export class WoolMeadowSceneModule implements ISceneModule {
       this.onCameraPositionChangeCallback?.(this.cameraPosition.clone());
       this.isTransitioningCamera = true;
     } else {
+      this.bedroomLoadToken++;
       // 1. STRICT RESOURCE DISPOSAL of Bedroom meshes when switching back to Meadow
       if (this.bedroomSanctuary) {
         scene.remove(this.bedroomSanctuary.group);
@@ -1263,10 +1292,12 @@ export class WoolMeadowSceneModule implements ISceneModule {
     if (!this.context || width <= 0 || height <= 0) return;
     this.context.camera.aspect = width / height;
     this.context.camera.updateProjectionMatrix();
+    this.context.renderer.setPixelRatio(getOptimalPixelRatio(this.context.isSoftwareGl));
     this.context.renderer.setSize(width, height, false);
   }
 
   public dispose(): void {
+    this.bedroomLoadToken++;
     this.introSequence?.dispose();
     this.introSequence = null;
 

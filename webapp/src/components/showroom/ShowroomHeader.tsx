@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./ShowroomHeader.css";
 import { BrandLogo } from "../../brand/components/BrandLogo";
 import { BRAND_TYPOGRAPHY } from "../../brand/tokens/typography";
@@ -130,13 +130,29 @@ export interface ShowroomHeaderProps {
 export function ShowroomHeader({
   activeTab,
   onTabChange,
-  onOpenDocs,
+  onOpenDocs: _onOpenDocs,
   onSelectView,
 }: ShowroomHeaderProps) {
   const { language, toggleLanguage, t } = useLanguage();
-  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
-  const [isLogoHovered, setIsLogoHovered] = useState<boolean>(false);
   const activeDoor = useShowroomViewStore((st) => st.activeDoor);
+  const tabButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  useEffect(() => {
+    const activeTabKey =
+      activeDoor === "studio" || activeTab === "banner-studio" || activeTab === "studio"
+        ? "studio"
+        : activeDoor === "bedroom" || activeTab === "bedroom"
+          ? "bedroom"
+          : activeDoor === "indoor-lab" || activeTab === "indoor-lab"
+            ? "indoor-lab"
+            : "meadow";
+    const activeBtn = tabButtonRefs.current[activeTabKey];
+    activeBtn?.scrollIntoView({
+      behavior: "smooth",
+      inline: "nearest",
+      block: "nearest",
+    });
+  }, [activeDoor, activeTab]);
 
   const getTabLabel = (id: ShowroomTab): string => {
     switch (id) {
@@ -154,11 +170,12 @@ export function ShowroomHeader({
   };
 
   const isTabActive = (tabId: ShowroomTab) => {
-    if (tabId === activeDoor) return true;
-    if (activeDoor === "studio" && (tabId === "studio" || tabId === "banner-studio")) return true;
-    if (activeDoor === "meadow" && (tabId === "meadow" || tabId === "interactive")) return true;
-    if (activeTab === tabId) return true;
-    return false;
+    if (activeDoor) {
+      if (activeDoor === "studio") return tabId === "studio" || tabId === "banner-studio";
+      if (activeDoor === "meadow") return tabId === "meadow" || tabId === "interactive";
+      return tabId === activeDoor;
+    }
+    return activeTab === tabId;
   };
 
   const handleTabClick = (tabId: ShowroomTab) => {
@@ -193,25 +210,8 @@ export function ShowroomHeader({
 
   return (
     <header
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1.5 p-1.5 rounded-full bg-[#12151D]/70 backdrop-blur-xl border border-white/10 shadow-2xl"
-      style={{
-        position: "fixed",
-        top: "16px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 50,
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
-        padding: "6px",
-        borderRadius: "9999px",
-        backgroundColor: "rgba(18, 21, 29, 0.7)",
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-        fontFamily: BRAND_TYPOGRAPHY.fonts.functional,
-      }}
+      className="showroom-header-bar"
+      style={{ fontFamily: BRAND_TYPOGRAPHY.fonts.functional }}
     >
       {/* 1. Puffy Logo as Home / Reset */}
       <button
@@ -221,111 +221,42 @@ export function ShowroomHeader({
           useShowroomViewStore.getState().selectDoor("meadow");
           onTabChange?.("meadow" as ShowroomTab);
         }}
-        className="flex items-center justify-center px-2.5 py-1 rounded-full text-white hover:bg-white/5 transition-all focus:outline-none"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "2px 8px",
-          borderRadius: "9999px",
-          backgroundColor: isLogoHovered ? "rgba(255, 255, 255, 0.05)" : "transparent",
-          border: "none",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          height: "28px",
-          overflow: "hidden",
-        }}
+        className="showroom-header-logo-btn"
         title="Puffy Home / Reset (Outdoor Sanctuary)"
         aria-label="Puffy Home - Reset to Outdoor Meadow"
-        onMouseEnter={() => setIsLogoHovered(true)}
-        onMouseLeave={() => setIsLogoHovered(false)}
       >
         <BrandLogo width={80} variant="light" className="showroom-brand-logo" />
       </button>
 
       {/* Subtle Vertical Hairline Separator */}
-      <div
-        className="w-px h-4 bg-white/10 shrink-0"
-        style={{
-          width: "1px",
-          height: "16px",
-          backgroundColor: "rgba(255, 255, 255, 0.12)",
-          flexShrink: 0,
-        }}
-        aria-hidden="true"
-      />
+      <div className="showroom-header-sep" aria-hidden="true" />
 
       {/* 2. Navigation Tabs (4 Doors) */}
       <nav
-        className="flex items-center gap-1.5"
-        style={{ display: "flex", alignItems: "center", gap: "6px" }}
+        className="showroom-header-nav no-scrollbar"
         role="tablist"
         aria-label="Showroom Doors"
       >
         {NAV_TABS.map((tab) => {
           const active = isTabActive(tab.id);
-          const isHovered = hoveredTab === tab.id;
 
           return (
             <button
               key={tab.id}
+              ref={(el) => {
+                tabButtonRefs.current[tab.id] = el;
+              }}
               type="button"
               role="tab"
               aria-selected={active}
+              data-active={active ? "true" : "false"}
               onClick={() => handleTabClick(tab.id)}
-              onMouseEnter={() => setHoveredTab(tab.id)}
-              onMouseLeave={() => setHoveredTab(null)}
-              className={
-                active
-                  ? "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
-                  : "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all"
-              }
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 14px",
-                borderRadius: "9999px",
-                fontSize: "12px",
-                fontWeight: active ? 600 : 500,
-                color: active
-                  ? "#6ee7b7"
-                  : isHovered
-                  ? "#ffffff"
-                  : "rgba(255, 255, 255, 0.7)",
-                backgroundColor: active
-                  ? "rgba(16, 185, 129, 0.2)"
-                  : isHovered
-                  ? "rgba(255, 255, 255, 0.05)"
-                  : "transparent",
-                borderColor: active ? "rgba(16, 185, 129, 0.4)" : "transparent",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                boxShadow: active
-                  ? "0 0 12px rgba(16, 185, 129, 0.2)"
-                  : "none",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                whiteSpace: "nowrap",
-              }}
+              className="showroom-header-tab"
             >
               {tab.icon}
               <span>{getTabLabel(tab.id)}</span>
               {tab.badge && (
-                <span
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.5px",
-                    padding: "1px 5px",
-                    borderRadius: "9999px",
-                    backgroundColor: "rgba(16, 185, 129, 0.4)",
-                    color: "#ffffff",
-                    marginLeft: "2px",
-                  }}
-                >
-                  {tab.badge}
-                </span>
+                <span className="showroom-header-tab-badge">{tab.badge}</span>
               )}
             </button>
           );
@@ -333,39 +264,13 @@ export function ShowroomHeader({
       </nav>
 
       {/* Subtle Vertical Hairline Separator */}
-      <div
-        className="w-px h-4 bg-white/10 shrink-0"
-        style={{
-          width: "1px",
-          height: "16px",
-          backgroundColor: "rgba(255, 255, 255, 0.12)",
-          flexShrink: 0,
-        }}
-        aria-hidden="true"
-      />
+      <div className="showroom-header-sep" aria-hidden="true" />
 
       {/* Language Switcher Capsule Pill */}
       <button
         type="button"
         onClick={toggleLanguage}
-        className="px-2.5 py-1 rounded-full text-xs font-medium border border-white/15 bg-white/5 hover:bg-white/10 text-white/90 backdrop-blur-md transition-all"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-          padding: "4px 10px",
-          borderRadius: "9999px",
-          fontSize: "11px",
-          fontWeight: 600,
-          color: "rgba(255, 255, 255, 0.9)",
-          backgroundColor: "rgba(255, 255, 255, 0.05)",
-          borderColor: "rgba(255, 255, 255, 0.15)",
-          borderWidth: "1px",
-          borderStyle: "solid",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          whiteSpace: "nowrap",
-        }}
+        className="showroom-header-lang-btn"
         title={`Switch Language (Current: ${language.toUpperCase()})`}
         aria-label={`Switch Language (Current: ${language.toUpperCase()})`}
       >

@@ -77,14 +77,15 @@ export interface LoadedAssets {
     verticalFlutesNormal: THREE.CanvasTexture;
     verticalFlutesRoughness: THREE.CanvasTexture;
     verticalFlutesAo: THREE.CanvasTexture;
-    microDiamondsNormal: THREE.CanvasTexture;
-    microDiamondsRoughness: THREE.CanvasTexture;
-    microDiamondsAo: THREE.CanvasTexture;
+    microDiamondsNormal: THREE.CanvasTexture | null;
+    microDiamondsRoughness: THREE.CanvasTexture | null;
+    microDiamondsAo: THREE.CanvasTexture | null;
     badgeRoyal: THREE.Texture;
-    badgeMonarch: THREE.CanvasTexture;
-    badgeCloud: THREE.Texture;
-    badgeLux: THREE.Texture;
+    badgeMonarch: THREE.CanvasTexture | null;
+    badgeCloud: THREE.Texture | null;
+    badgeLux: THREE.Texture | null;
   };
+  ensureVariantAssets?: (variant: 'lux' | 'cloud' | 'monarch') => void;
 }
 
 interface ActiveColorTween {
@@ -109,6 +110,9 @@ const activeColorTweens: ActiveColorTween[] = [];
  * While keeping Shared Static Components (#FFFFFF Top Cover, #3B3E46 Large Diamond Lower Walls, #1A1A1A Braided Piping, #F8F9FA Pocket Coils) identical.
  */
 export function switchMattressModel(modelKey: MattressModelId, assets: LoadedAssets): void {
+  if (modelKey === 'puffy-monarch') {
+    assets.ensureVariantAssets?.('monarch');
+  }
   const config = PUFFY_FLAGSHIP_PRESETS[modelKey] ?? PUFFY_FLAGSHIP_PRESETS['puffy-royal'];
   const now = performance.now() * 0.001;
 
@@ -135,15 +139,18 @@ export function switchMattressModel(modelKey: MattressModelId, assets: LoadedAss
     upperMat.roughnessMap = assets.textures.verticalFlutesRoughness;
     upperMat.aoMap = assets.textures.verticalFlutesAo;
   } else {
-    upperMat.normalMap = assets.textures.microDiamondsNormal;
-    upperMat.roughnessMap = assets.textures.microDiamondsRoughness;
-    upperMat.aoMap = assets.textures.microDiamondsAo;
+    upperMat.normalMap = assets.textures.microDiamondsNormal ?? assets.textures.verticalFlutesNormal;
+    upperMat.roughnessMap =
+      assets.textures.microDiamondsRoughness ?? assets.textures.verticalFlutesRoughness;
+    upperMat.aoMap = assets.textures.microDiamondsAo ?? assets.textures.verticalFlutesAo;
   }
   upperMat.needsUpdate = true;
 
   // 3. Enforce Royal badge map stays bound on mat_brand_badge (separate badge materials handle Monarch/Lux/Cloud)
   assets.materials.brandBadge.map =
-    modelKey === 'puffy-royal' ? assets.textures.badgeRoyal : assets.textures.badgeMonarch;
+    modelKey === 'puffy-royal'
+      ? assets.textures.badgeRoyal
+      : (assets.textures.badgeMonarch ?? assets.textures.badgeRoyal);
   assets.materials.brandBadge.needsUpdate = true;
 
   // 4. Enforce Shared Static Components invariance
@@ -166,6 +173,9 @@ export function updateModelAnatomy(
   heightRatio = 1.0,
 ): void {
   const resolvedKey = resolvePuffyModelKey(modelKey);
+  if (resolvedKey === 'lux' || resolvedKey === 'cloud') {
+    assets.ensureVariantAssets?.(resolvedKey);
+  }
   const tier: MattressTier = resolvedKey === 'cloud' ? 'cloud' : resolvedKey === 'lux' ? 'lux' : 'royal';
   notifyTierChange(tier);
 
@@ -612,15 +622,10 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   materials.set('mat_sidewall_strip', sideWallMaterial);
   disposables.push(sideWallMaterial);
 
-  // 2C. Puffy Lux Hybrid Sidewall (`mat_sidewall_lux`)
-  // Shares sidewall normal/roughness/AO with Espresso Chocolate Brown (#43332B) upper band & Pure Matte Charcoal (#31343A) diamonds
-  const luxBundle = createLuxSidewallMaps(maxAnisotropy);
-  disposables.push(luxBundle.baseColorMap, luxBundle.sheenColorMap);
-
+  // 2C. Puffy Lux Hybrid Sidewall (`mat_sidewall_lux`) — textures lazily hydrated on switch
   const matSidewallLux = new THREE.MeshPhysicalMaterial({
     name: 'mat_sidewall_lux',
     color: new THREE.Color(0xffffff),
-    map: luxBundle.baseColorMap,
     normalMap: sideWallNormal,
     normalScale: new THREE.Vector2(2.0, 2.0),
     roughnessMap: sideWallRoughness,
@@ -630,67 +635,40 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
     sheen: 1.5,
     sheenRoughness: 0.4,
     sheenColor: new THREE.Color(0xffffff),
-    sheenColorMap: luxBundle.sheenColorMap,
     aoMap: sideWallAO,
     aoMapIntensity: 1.4,
   });
   materials.set('mat_sidewall_lux', matSidewallLux);
   disposables.push(matSidewallLux);
 
-  // 2D. Puffy Cloud (10") Front Foot Panel (`mat_sidewall_cloud_front`)
-  // Full-height pure matte charcoal grey (#31343A) diamond quilt with white top/bottom piping seams (#F2F2F0)
-  const cloudFrontBundle = createCloudFrontSidewallMaps(maxAnisotropy);
-  disposables.push(
-    cloudFrontBundle.albedoMap,
-    cloudFrontBundle.normalMap,
-    cloudFrontBundle.roughnessMap,
-    cloudFrontBundle.aoMap,
-  );
-
+  // 2D. Puffy Cloud (10") Front Foot Panel (`mat_sidewall_cloud_front`) — textures lazily hydrated on switch
   const matSidewallCloudFront = new THREE.MeshPhysicalMaterial({
     name: 'mat_sidewall_cloud_front',
     color: new THREE.Color(0xffffff),
-    map: cloudFrontBundle.albedoMap,
-    normalMap: cloudFrontBundle.normalMap,
     normalScale: new THREE.Vector2(1.4, 1.4),
-    roughnessMap: cloudFrontBundle.roughnessMap,
     roughness: 0.86,
     metalness: 0.0,
     clearcoat: 0.0,
     sheen: 1.0,
     sheenRoughness: 0.55,
     sheenColor: new THREE.Color('#5A5E66'),
-    aoMap: cloudFrontBundle.aoMap,
     aoMapIntensity: 1.15,
   });
   materials.set('mat_sidewall_cloud_front', matSidewallCloudFront);
   disposables.push(matSidewallCloudFront);
 
   // 2E. Puffy Cloud (10") 3-Side White Cloud Knit Wrap (`cloud_side_knit_embossed` / `mat_sidewall_cloud_wrap`)
-  // Off-white cloud knit (#F6F6F4) matching mat_top_cover with 5 embossed vertically-oriented Puffy cloud motifs
-  // and crisp white top/bottom piping seams (#FFFFFF).
-  const cloudWrapBundle = createCloudWrapSidewallMaps(maxAnisotropy);
-  disposables.push(
-    cloudWrapBundle.albedoMap,
-    cloudWrapBundle.normalMap,
-    cloudWrapBundle.roughnessMap,
-    cloudWrapBundle.aoMap,
-  );
-
+  // Textures lazily hydrated when switching to Cloud
   const matSidewallCloudWrap = new THREE.MeshPhysicalMaterial({
     name: 'cloud_side_knit_embossed',
     color: new THREE.Color('#FFFFFF'),
-    map: cloudWrapBundle.albedoMap,
-    normalMap: cloudWrapBundle.normalMap,
     normalScale: new THREE.Vector2(1.2, 1.2),
-    roughnessMap: cloudWrapBundle.roughnessMap,
     roughness: 0.9,
     metalness: 0.0,
     clearcoat: 0.0,
     sheen: 1.2,
     sheenRoughness: 0.45,
     sheenColor: new THREE.Color('#FFFFFF'),
-    aoMap: cloudWrapBundle.aoMap,
     aoMapIntensity: 1.25,
   });
   materials.set('mat_sidewall_cloud_wrap', matSidewallCloudWrap);
@@ -776,43 +754,7 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
     verticalFlutesMaps.aoMap,
   );
 
-  // 4B. Upper Band Normal Set 2: 'micro-diamonds' (Puffy Monarch Hybrid — #45382E Espresso/Mocha Bronze)
-  const microDiamondCanvas = document.createElement('canvas');
-  microDiamondCanvas.width = 256;
-  microDiamondCanvas.height = 64;
-  const mdCtx = microDiamondCanvas.getContext('2d');
-  if (mdCtx) {
-    mdCtx.fillStyle = '#F2F2F2';
-    mdCtx.fillRect(0, 0, 256, 64);
-    mdCtx.strokeStyle = '#282828';
-    mdCtx.lineWidth = 2.6;
-    const stepX = 12;
-    for (let x = -64; x < 320; x += stepX) {
-      mdCtx.beginPath();
-      mdCtx.moveTo(x, 0);
-      mdCtx.lineTo(x + 64, 64);
-      mdCtx.stroke();
-
-      mdCtx.beginPath();
-      mdCtx.moveTo(x + 64, 0);
-      mdCtx.lineTo(x, 64);
-      mdCtx.stroke();
-    }
-  }
-  const microDiamondsMaps = generatePBRMapsFromHeightCanvas(
-    microDiamondCanvas,
-    3.6,
-    0.75,
-    0.18,
-    5,
-    1,
-    maxAnisotropy,
-  );
-  disposables.push(
-    microDiamondsMaps.normalMap,
-    microDiamondsMaps.roughnessMap,
-    microDiamondsMaps.aoMap,
-  );
+  // 4B. Upper Band Normal Set 2 ('micro-diamonds') is lazily generated on switch to Puffy Monarch
 
   // 4C. B. Upper Accent Band (`mat_accent_strip` — MeshPhysicalMaterial with Velvet/Mocha Sheen)
   const royalPreset = PUFFY_FLAGSHIP_PRESETS['puffy-royal'];
@@ -834,39 +776,69 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   materials.set('mat_accent_strip', matAccentStrip);
   disposables.push(matAccentStrip);
 
-  // 5. Center Embroidered Brand Badges (`mat_brand_badge_royal` 2K PBR + dedicated clean PBR badges for LUX, CLOUD, MONARCH)
+  // 5. Center Embroidered Brand Badges (`mat_brand_badge_royal` 2K PBR + lazily hydrated badges for LUX, CLOUD, MONARCH)
   const {material: matBrandBadge, textures: badgeTextures} = createEmbroideredBadgeMaterial('/textures/badge');
   const badgeRoyal = badgeTextures[0];
   materials.set('mat_brand_badge', matBrandBadge);
   materials.set('mat_brand_badge_royal', matBrandBadge);
 
-  const luxBadgeBundle = createLuxBadgeMaterial(
-    '/assets/lego/badges/puffy_lux_badge_mask.png',
-    '/assets/lego/badges/puffy_lux_badge_normal.png',
-    maxAnisotropy,
-  );
-  const cloudBadgeBundle = createCloudBadgeMaterial(
-    '/assets/lego/badges/puffy_cloud_badge_mask.png',
-    '/assets/lego/badges/puffy_cloud_badge_normal.png',
-    maxAnisotropy,
-  );
-  const monarchBadgeBundle = createModelBadgeMaterial('MONARCH', maxAnisotropy);
+  const matBrandBadgeLux = new THREE.MeshPhysicalMaterial({
+    name: 'mat_brand_badge_lux',
+    color: new THREE.Color('#FFFFFF'),
+    normalScale: new THREE.Vector2(1.5, 1.5),
+    roughness: 0.55,
+    metalness: 0.1,
+    sheen: 1.0,
+    sheenRoughness: 0.38,
+    sheenColor: new THREE.Color('#FFFFFF'),
+    polygonOffset: true,
+    polygonOffsetFactor: -1.0,
+    transparent: true,
+    alphaTest: 0.05,
+    depthWrite: true,
+  });
+  const matBrandBadgeCloud = new THREE.MeshPhysicalMaterial({
+    name: 'mat_brand_badge_cloud',
+    color: new THREE.Color('#FFFFFF'),
+    normalScale: new THREE.Vector2(1.5, 1.5),
+    roughness: 0.55,
+    metalness: 0.1,
+    sheen: 1.0,
+    sheenRoughness: 0.38,
+    sheenColor: new THREE.Color('#FFFFFF'),
+    polygonOffset: true,
+    polygonOffsetFactor: -1.0,
+    transparent: true,
+    alphaTest: 0.05,
+    depthWrite: true,
+  });
+  const matBrandBadgeMonarch = new THREE.MeshPhysicalMaterial({
+    name: 'mat_brand_badge_monarch',
+    color: new THREE.Color('#FFFFFF'),
+    normalScale: new THREE.Vector2(1.0, 1.0),
+    roughness: 1.0,
+    metalness: 0.0,
+    aoMapIntensity: 0.9,
+    sheen: 1.0,
+    sheenRoughness: 0.4,
+    sheenColor: new THREE.Color('#FFFFFF'),
+    polygonOffset: true,
+    polygonOffsetFactor: -1.0,
+    transparent: true,
+    alphaTest: 0.5,
+  });
 
-  materials.set('mat_brand_badge_lux', luxBadgeBundle.material);
-  materials.set('mat_brand_badge_cloud', cloudBadgeBundle.material);
-  materials.set('mat_brand_badge_monarch', monarchBadgeBundle.material);
+  materials.set('mat_brand_badge_lux', matBrandBadgeLux);
+  materials.set('mat_brand_badge_cloud', matBrandBadgeCloud);
+  materials.set('mat_brand_badge_monarch', matBrandBadgeMonarch);
 
   disposables.push(
     ...badgeTextures,
     matBrandBadge,
-    ...luxBadgeBundle.disposables,
-    ...cloudBadgeBundle.disposables,
-    ...monarchBadgeBundle.disposables,
+    matBrandBadgeLux,
+    matBrandBadgeCloud,
+    matBrandBadgeMonarch,
   );
-
-  const badgeLux = luxBadgeBundle.albedoMap;
-  const badgeCloud = cloudBadgeBundle.albedoMap;
-  const badgeMonarch = monarchBadgeBundle.albedoMap;
 
   // 6. Internal Layers 2 through 9: Lightweight MeshStandardMaterial with roughness: 0.9 for 60 FPS
   // Layer 2: Authentic warm cream/sand wool texture (#EADCC3)
@@ -1274,6 +1246,17 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
   materials.set('mat_grip_base', matGripBase);
   disposables.push(matGripBase);
 
+  const lazyDisposables: Array<{dispose(): void}> = [];
+  const hydratedVariants = new Set<'lux' | 'cloud' | 'monarch'>();
+  disposables.push({
+    dispose: () => {
+      for (const d of lazyDisposables) {
+        d.dispose();
+      }
+      lazyDisposables.length = 0;
+    },
+  });
+
   const loadedAssets: LoadedAssets = {
     materials: {
       upperBand: matAccentStrip,
@@ -1282,9 +1265,9 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
       pipingCord: matPipingCord,
       brandBadge: matBrandBadge,
       brandBadgeRoyal: matBrandBadge,
-      brandBadgeLux: luxBadgeBundle.material,
-      brandBadgeCloud: cloudBadgeBundle.material,
-      brandBadgeMonarch: monarchBadgeBundle.material,
+      brandBadgeLux: matBrandBadgeLux,
+      brandBadgeCloud: matBrandBadgeCloud,
+      brandBadgeMonarch: matBrandBadgeMonarch,
       sidewallRoyal: sideWallMaterial,
       sidewallLux: matSidewallLux,
       sidewallCloudFront: matSidewallCloudFront,
@@ -1299,13 +1282,132 @@ export function createMattressPBRMaterials(maxAnisotropy: number): {
       verticalFlutesNormal: verticalFlutesMaps.normalMap,
       verticalFlutesRoughness: verticalFlutesMaps.roughnessMap,
       verticalFlutesAo: verticalFlutesMaps.aoMap,
-      microDiamondsNormal: microDiamondsMaps.normalMap,
-      microDiamondsRoughness: microDiamondsMaps.roughnessMap,
-      microDiamondsAo: microDiamondsMaps.aoMap,
+      microDiamondsNormal: null,
+      microDiamondsRoughness: null,
+      microDiamondsAo: null,
       badgeRoyal,
-      badgeMonarch,
-      badgeCloud,
-      badgeLux,
+      badgeMonarch: null,
+      badgeCloud: null,
+      badgeLux: null,
+    },
+    ensureVariantAssets: (variant: 'lux' | 'cloud' | 'monarch') => {
+      if (hydratedVariants.has(variant)) return;
+      hydratedVariants.add(variant);
+
+      if (variant === 'lux') {
+        const luxBundle = createLuxSidewallMaps(maxAnisotropy);
+        matSidewallLux.map = luxBundle.baseColorMap;
+        matSidewallLux.normalMap = sideWallNormal;
+        matSidewallLux.roughnessMap = sideWallRoughness;
+        matSidewallLux.sheenColorMap = luxBundle.sheenColorMap;
+        matSidewallLux.aoMap = sideWallAO;
+        matSidewallLux.needsUpdate = true;
+
+        const luxBadgeMaps = loadEmbossedBadgeTextures(
+          '/assets/lego/badges/puffy_lux_badge_mask.png',
+          '/assets/lego/badges/puffy_lux_badge_normal.png',
+          maxAnisotropy,
+        );
+        matBrandBadgeLux.map = luxBadgeMaps.albedoMap;
+        matBrandBadgeLux.normalMap = luxBadgeMaps.normalMap;
+        matBrandBadgeLux.needsUpdate = true;
+        loadedAssets.textures.badgeLux = luxBadgeMaps.albedoMap;
+
+        lazyDisposables.push(
+          luxBundle.baseColorMap,
+          luxBundle.sheenColorMap,
+          luxBadgeMaps.albedoMap,
+          luxBadgeMaps.normalMap,
+        );
+      } else if (variant === 'cloud') {
+        const cloudFrontBundle = createCloudFrontSidewallMaps(maxAnisotropy);
+        matSidewallCloudFront.map = cloudFrontBundle.albedoMap;
+        matSidewallCloudFront.normalMap = cloudFrontBundle.normalMap;
+        matSidewallCloudFront.roughnessMap = cloudFrontBundle.roughnessMap;
+        matSidewallCloudFront.aoMap = cloudFrontBundle.aoMap;
+        matSidewallCloudFront.needsUpdate = true;
+
+        const cloudWrapBundle = createCloudWrapSidewallMaps(maxAnisotropy);
+        matSidewallCloudWrap.map = cloudWrapBundle.albedoMap;
+        matSidewallCloudWrap.normalMap = cloudWrapBundle.normalMap;
+        matSidewallCloudWrap.roughnessMap = cloudWrapBundle.roughnessMap;
+        matSidewallCloudWrap.aoMap = cloudWrapBundle.aoMap;
+        matSidewallCloudWrap.needsUpdate = true;
+
+        const cloudBadgeMaps = loadEmbossedBadgeTextures(
+          '/assets/lego/badges/puffy_cloud_badge_mask.png',
+          '/assets/lego/badges/puffy_cloud_badge_normal.png',
+          maxAnisotropy,
+        );
+        matBrandBadgeCloud.map = cloudBadgeMaps.albedoMap;
+        matBrandBadgeCloud.normalMap = cloudBadgeMaps.normalMap;
+        matBrandBadgeCloud.needsUpdate = true;
+        loadedAssets.textures.badgeCloud = cloudBadgeMaps.albedoMap;
+
+        lazyDisposables.push(
+          cloudFrontBundle.albedoMap,
+          cloudFrontBundle.normalMap,
+          cloudFrontBundle.roughnessMap,
+          cloudFrontBundle.aoMap,
+          cloudWrapBundle.albedoMap,
+          cloudWrapBundle.normalMap,
+          cloudWrapBundle.roughnessMap,
+          cloudWrapBundle.aoMap,
+          cloudBadgeMaps.albedoMap,
+          cloudBadgeMaps.normalMap,
+        );
+      } else if (variant === 'monarch') {
+        const microDiamondCanvas = document.createElement('canvas');
+        microDiamondCanvas.width = 256;
+        microDiamondCanvas.height = 64;
+        const mdCtx = microDiamondCanvas.getContext('2d');
+        if (mdCtx) {
+          mdCtx.fillStyle = '#F2F2F2';
+          mdCtx.fillRect(0, 0, 256, 64);
+          mdCtx.strokeStyle = '#282828';
+          mdCtx.lineWidth = 2.6;
+          const stepX = 12;
+          for (let x = -64; x < 320; x += stepX) {
+            mdCtx.beginPath();
+            mdCtx.moveTo(x, 0);
+            mdCtx.lineTo(x + 64, 64);
+            mdCtx.stroke();
+
+            mdCtx.beginPath();
+            mdCtx.moveTo(x + 64, 0);
+            mdCtx.lineTo(x, 64);
+            mdCtx.stroke();
+          }
+        }
+        const microDiamondsMaps = generatePBRMapsFromHeightCanvas(
+          microDiamondCanvas,
+          3.6,
+          0.75,
+          0.18,
+          5,
+          1,
+          maxAnisotropy,
+        );
+        loadedAssets.textures.microDiamondsNormal = microDiamondsMaps.normalMap;
+        loadedAssets.textures.microDiamondsRoughness = microDiamondsMaps.roughnessMap;
+        loadedAssets.textures.microDiamondsAo = microDiamondsMaps.aoMap;
+
+        const monarchBadgeBundle = createModelBadgeMaterial('MONARCH', maxAnisotropy);
+        matBrandBadgeMonarch.map = monarchBadgeBundle.material.map;
+        matBrandBadgeMonarch.normalMap = monarchBadgeBundle.material.normalMap;
+        matBrandBadgeMonarch.roughnessMap = monarchBadgeBundle.material.roughnessMap;
+        matBrandBadgeMonarch.aoMap = monarchBadgeBundle.material.aoMap;
+        matBrandBadgeMonarch.needsUpdate = true;
+        loadedAssets.textures.badgeMonarch = monarchBadgeBundle.albedoMap;
+
+        lazyDisposables.push(
+          microDiamondsMaps.normalMap,
+          microDiamondsMaps.roughnessMap,
+          microDiamondsMaps.aoMap,
+          ...monarchBadgeBundle.disposables.filter((d) => d !== monarchBadgeBundle.material),
+        );
+        monarchBadgeBundle.material.dispose();
+      }
     },
   };
 
@@ -1379,6 +1481,31 @@ function drawPuffyCloudEmblem(
   ctx.restore();
 }
 
+function loadEmbossedBadgeTextures(
+  maskPath: string,
+  normalPath: string,
+  maxAnisotropy: number,
+): {
+  albedoMap: THREE.Texture;
+  normalMap: THREE.Texture;
+} {
+  const textureLoader = new THREE.TextureLoader();
+
+  const albedoMap = textureLoader.load(maskPath);
+  albedoMap.colorSpace = THREE.SRGBColorSpace;
+  albedoMap.anisotropy = maxAnisotropy;
+  albedoMap.wrapS = THREE.ClampToEdgeWrapping;
+  albedoMap.wrapT = THREE.ClampToEdgeWrapping;
+
+  const normalMap = textureLoader.load(normalPath);
+  normalMap.colorSpace = THREE.NoColorSpace;
+  normalMap.anisotropy = maxAnisotropy;
+  normalMap.wrapS = THREE.ClampToEdgeWrapping;
+  normalMap.wrapT = THREE.ClampToEdgeWrapping;
+
+  return { albedoMap, normalMap };
+}
+
 /**
  * Loads the master Puffy Lux badge mask (/assets/lego/badges/puffy_lux_badge_mask.png)
  * and binds it to MeshPhysicalMaterial with sRGB color space, physical sheen, and alpha transparency.
@@ -1392,19 +1519,11 @@ export function createLuxBadgeMaterial(
   albedoMap: THREE.Texture;
   disposables: Array<{dispose(): void}>;
 } {
-  const textureLoader = new THREE.TextureLoader();
-
-  const badgeMap = textureLoader.load(maskPath);
-  badgeMap.colorSpace = THREE.SRGBColorSpace;
-  badgeMap.anisotropy = maxAnisotropy;
-  badgeMap.wrapS = THREE.ClampToEdgeWrapping;
-  badgeMap.wrapT = THREE.ClampToEdgeWrapping;
-
-  const badgeNormal = textureLoader.load(normalPath);
-  badgeNormal.colorSpace = THREE.NoColorSpace;
-  badgeNormal.anisotropy = maxAnisotropy;
-  badgeNormal.wrapS = THREE.ClampToEdgeWrapping;
-  badgeNormal.wrapT = THREE.ClampToEdgeWrapping;
+  const { albedoMap: badgeMap, normalMap: badgeNormal } = loadEmbossedBadgeTextures(
+    maskPath,
+    normalPath,
+    maxAnisotropy,
+  );
 
   const material = new THREE.MeshPhysicalMaterial({
     name: 'mat_brand_badge_lux',
@@ -1446,19 +1565,11 @@ export function createCloudBadgeMaterial(
   albedoMap: THREE.Texture;
   disposables: Array<{dispose(): void}>;
 } {
-  const textureLoader = new THREE.TextureLoader();
-
-  const badgeMap = textureLoader.load(maskPath);
-  badgeMap.colorSpace = THREE.SRGBColorSpace;
-  badgeMap.anisotropy = maxAnisotropy;
-  badgeMap.wrapS = THREE.ClampToEdgeWrapping;
-  badgeMap.wrapT = THREE.ClampToEdgeWrapping;
-
-  const badgeNormal = textureLoader.load(normalPath);
-  badgeNormal.colorSpace = THREE.NoColorSpace;
-  badgeNormal.anisotropy = maxAnisotropy;
-  badgeNormal.wrapS = THREE.ClampToEdgeWrapping;
-  badgeNormal.wrapT = THREE.ClampToEdgeWrapping;
+  const { albedoMap: badgeMap, normalMap: badgeNormal } = loadEmbossedBadgeTextures(
+    maskPath,
+    normalPath,
+    maxAnisotropy,
+  );
 
   const material = new THREE.MeshPhysicalMaterial({
     name: 'mat_brand_badge_cloud',

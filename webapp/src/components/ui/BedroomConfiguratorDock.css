@@ -268,15 +268,81 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 767px) {
+  .bedroom-config-dock-root {
+    position: absolute;
+    bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    width: calc(100% - 16px);
+    max-width: 440px;
+    gap: 6px;
+  }
+
+  .bedroom-config-pill-bar {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 5px;
+  }
+
+  .bedroom-config-pill-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bedroom-config-drawer {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px;
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .bedroom-dock-row-1,
+  .bedroom-dock-row-2 {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0;
+    justify-content: center;
+  }
+
+  .bedroom-stepper-group {
+    padding: 2px 3px 2px 8px;
+    gap: 5px;
+  }
+
+  .bedroom-stepper-label {
+    font-size: 11px;
+  }
+
+  .bedroom-stepper-btn {
+    min-width: 24px;
+    height: 24px;
+    padding: 0 7px;
+    font-size: 11px;
+  }
+
+  .bedroom-toggle-pill {
+    padding: 4px 9px;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .bedroom-explode-btn {
+    padding: 0 9px;
+    height: 26px;
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 640px) {
   .bedroom-config-tab {
     padding: 4px 9px;
     font-size: 11px;
   }
+}
 
-  .bedroom-config-drawer {
-    border-radius: 20px;
-    padding: 6px 8px;
-    gap: 6px;
+@media (max-width: 480px) {
+  .bedroom-room-switcher-label {
+    display: none;
   }
 }

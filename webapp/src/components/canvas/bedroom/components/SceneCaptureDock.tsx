@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useBannerStore } from '../../../../store/useBannerStore.ts';
 import { useBedroomConfigStore } from '../../../../store/useBedroomConfigStore.ts';
 import { useShowroomViewStore } from '../../../../store/useShowroomViewStore.ts';
+import './SceneCaptureDock.css';
 
 export interface SceneCaptureDockProps {
   // Classic snapshot & video recording props
@@ -365,48 +366,6 @@ export function findLogoBadgeObject(
 }
 
 // UI STYLES (Apple VisionOS / Cybernetic Minimalist Glassmorphism per ui-rules.md)
-const dockContainerStyle: React.CSSProperties = {
-  position: 'absolute',
-  right: 16,
-  bottom: 16,
-  zIndex: 30,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',
-  gap: 8,
-  pointerEvents: 'none',
-  fontFamily: 'Inter, "SF Pro Display", system-ui, sans-serif',
-};
-
-const capsuleRowStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '6px 8px',
-  borderRadius: 9999,
-  backgroundColor: 'rgba(18, 20, 26, 0.82)',
-  backdropFilter: 'blur(20px) saturate(160%)',
-  WebkitBackdropFilter: 'blur(20px) saturate(160%)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.28)',
-  pointerEvents: 'auto',
-};
-
-const circleBtnStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: 36,
-  height: 36,
-  borderRadius: 9999,
-  border: '1px solid rgba(255, 255, 255, 0.14)',
-  fontSize: 18,
-  cursor: 'pointer',
-  background: 'rgba(255, 255, 255, 0.10)',
-  color: '#fff',
-  transition: 'all 0.2s ease',
-};
-
 const studioBtnStyle: React.CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
@@ -426,22 +385,6 @@ const studioBtnStyle: React.CSSProperties = {
   cursor: 'pointer',
   whiteSpace: 'nowrap',
   transition: 'all 0.2s ease',
-};
-
-const modalRowStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  padding: 12,
-  borderRadius: 16,
-  backgroundColor: 'rgba(18, 20, 26, 0.90)',
-  backdropFilter: 'blur(20px) saturate(160%)',
-  WebkitBackdropFilter: 'blur(20px) saturate(160%)',
-  border: '1px solid rgba(255, 255, 255, 0.15)',
-  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.40)',
-  color: '#fff',
-  fontSize: 12,
-  pointerEvents: 'auto',
 };
 
 
@@ -510,8 +453,8 @@ export function SceneCaptureDock({
 
   return (
     <div
-      style={{ ...dockContainerStyle, ...style }}
-      className={className}
+      style={style}
+      className={`scene-capture-dock${className ? ` ${className}` : ''}`}
       data-testid="scene-capture-dock"
     >
 
@@ -520,12 +463,12 @@ export function SceneCaptureDock({
         <div
           role="dialog"
           aria-label="Snapshot ready"
-          style={modalRowStyle}
+          className="scene-capture-modal"
         >
           <img
             src={pendingSnapshot}
             alt="Snapshot preview"
-            style={{ width: 180, borderRadius: 8 }}
+            style={{ width: 180, maxWidth: '100%', borderRadius: 8 }}
           />
           <button
             type="button"
@@ -577,8 +520,8 @@ export function SceneCaptureDock({
       {isRecording && (
         <div
           role="status"
+          className="scene-capture-modal"
           style={{
-            ...modalRowStyle,
             gap: 4,
             padding: '8px 12px',
           }}
@@ -606,12 +549,12 @@ export function SceneCaptureDock({
       )}
 
       {/* 3. Horizontal Capsule Dock Controls */}
-      <div style={capsuleRowStyle}>
+      <div className="scene-capture-capsule">
         {(onSnapshot || hasTwoPassCaptureInputs) && (
           <button
             type="button"
+            className="scene-capture-btn"
             style={{
-              ...circleBtnStyle,
               filter: 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.40))',
               color: '#38BDF8',
               opacity: isCaptureDisabled ? 0.5 : 1,
@@ -631,8 +574,8 @@ export function SceneCaptureDock({
         {onRecord && (
           <button
             type="button"
+            className="scene-capture-btn"
             style={{
-              ...circleBtnStyle,
               opacity: isRecording ? 0.5 : 1,
               filter: isRecording ? 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.4))' : 'none',
               color: isRecording ? '#38BDF8' : 'rgba(255, 255, 255, 0.65)',

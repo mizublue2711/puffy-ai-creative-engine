@@ -28,7 +28,7 @@ export const BedroomRoomSwitcher: React.FC = () => {
       }}
     >
       <span
-        className="bedroom-stepper-label pl-2 pr-1 text-xs text-white/70 font-medium hidden sm:inline"
+        className="bedroom-stepper-label bedroom-room-switcher-label pl-2 pr-1 text-xs text-white/70 font-medium hidden sm:inline"
         style={{
           color: 'rgba(255, 255, 255, 0.70)',
           fontSize: '11.5px',
